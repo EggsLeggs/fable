@@ -12,6 +12,7 @@
     "@fable/api": "*",
     "@fable/auth": "*",
     "@fable/db": "*",
+    "@fable/stripe": "*",
     "@fable/formats": "*",
     "@fable/ui": "*",
     "@radix-ui/react-dialog": "^1.1.15",

@@ -1,8 +1,10 @@
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
+import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
-import { organizations, orgMembers } from "@fable/db";
+import { organizations, orgMembers, users } from "@fable/db";
+import { PLAN_LIMITS } from "@fable/stripe";
 
 export const organizationRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -83,4 +85,55 @@ export const organizationRouter = router({
 
     return org!;
   }),
+
+  inviteMember: protectedProcedure
+    .input(
+      z.object({
+        orgId: z.string(),
+        userId: z.string(),
+        role: z.enum(["admin", "member"]).default("member"),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const callerMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, input.orgId)
+        ),
+      });
+      if (!callerMember || callerMember.role === "member") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      // Limit based on the org owner's plan
+      const owner = await ctx.db.query.orgMembers.findFirst({
+        where: and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.role, "owner")),
+        with: { user: { columns: { plan: true } } },
+      });
+
+      if (owner?.user.plan === "free") {
+        const [{ value: memberCount }] = await ctx.db
+          .select({ value: count() })
+          .from(orgMembers)
+          .where(eq(orgMembers.orgId, input.orgId));
+        if (memberCount >= PLAN_LIMITS.free.members) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "MEMBER_LIMIT_REACHED",
+          });
+        }
+      }
+
+      const [member] = await ctx.db
+        .insert(orgMembers)
+        .values({
+          id: uuid(),
+          orgId: input.orgId,
+          userId: input.userId,
+          role: input.role,
+        })
+        .returning();
+
+      return member!;
+    }),
 });

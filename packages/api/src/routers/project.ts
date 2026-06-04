@@ -1,12 +1,13 @@
 import { z } from "zod";
-import { eq, and } from "drizzle-orm";
+import { eq, and, count } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
-import { projects, projectLocales, orgMembers } from "@fable/db";
+import { projects, projectLocales, orgMembers, users, type Db } from "@fable/db";
 import { TRPCError } from "@trpc/server";
+import { PLAN_LIMITS } from "@fable/stripe";
 
 async function assertOrgAccess(
-  db: Parameters<Parameters<typeof protectedProcedure.use>[0]>[0]["ctx"]["db"],
+  db: Db,
   userId: string,
   orgId: string
 ) {
@@ -74,6 +75,25 @@ export const projectRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       await assertOrgAccess(ctx.db, ctx.session.user.id, input.orgId);
+
+      // Enforce project limit based on the org owner's plan
+      const owner = await ctx.db.query.orgMembers.findFirst({
+        where: and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.role, "owner")),
+        with: { user: { columns: { plan: true } } },
+      });
+
+      if (owner?.user.plan === "free") {
+        const [{ value: projectCount }] = await ctx.db
+          .select({ value: count() })
+          .from(projects)
+          .where(eq(projects.orgId, input.orgId));
+        if (projectCount >= PLAN_LIMITS.free.projects) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "PROJECT_LIMIT_REACHED",
+          });
+        }
+      }
 
       const id = uuid();
       const [project] = await ctx.db

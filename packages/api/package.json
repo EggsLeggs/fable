@@ -10,6 +10,7 @@
   "dependencies": {
     "@fable/auth": "*",
     "@fable/db": "*",
+    "@fable/stripe": "*",
     "@trpc/server": "^11.1.2",
     "drizzle-orm": "^0.45.2",
     "superjson": "^2.2.2",

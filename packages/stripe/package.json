@@ -1,0 +1,17 @@
+{
+  "name": "@fable/stripe",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@fable/db": "*",
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "@fable/tsconfig": "*",
+    "@types/node": "^20",
+    "typescript": "^5.8.3"
+  }
+}
