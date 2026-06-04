@@ -1,0 +1,25 @@
+{
+  "name": "@fable/api",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./root": "./src/root.ts",
+    "./trpc": "./src/trpc.ts"
+  },
+  "dependencies": {
+    "@fable/auth": "*",
+    "@fable/db": "*",
+    "@trpc/server": "^11.1.2",
+    "drizzle-orm": "^0.45.2",
+    "superjson": "^2.2.2",
+    "uuid": "^14.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@fable/tsconfig": "*",
+    "@types/node": "^20",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.8.3"
+  }
+}

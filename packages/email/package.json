@@ -1,0 +1,20 @@
+{
+  "name": "@fable/email",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.35",
+    "@react-email/render": "^1.1.2"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@fable/tsconfig": "*",
+    "@types/react": "^19",
+    "typescript": "^5.8.3"
+  }
+}

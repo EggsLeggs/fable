@@ -1,0 +1,19 @@
+{
+  "name": "@fable/auth",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "dependencies": {
+    "@fable/db": "*",
+    "better-auth": "^1.2.8",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "@fable/tsconfig": "*",
+    "@types/node": "^20",
+    "typescript": "^5.8.3"
+  }
+}

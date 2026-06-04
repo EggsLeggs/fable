@@ -1,0 +1,16 @@
+{
+  "name": "@fable/formats",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@fable/tsconfig": "*",
+    "@types/js-yaml": "^4.0.9",
+    "typescript": "^5.8.3"
+  }
+}
