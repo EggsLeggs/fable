@@ -6,6 +6,8 @@ import { router, protectedProcedure } from "../trpc";
 import { organizations, orgMembers, users } from "@fable/db";
 import { PLAN_LIMITS } from "@fable/stripe";
 
+
+
 export const organizationRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
     const memberships = await ctx.db.query.orgMembers.findMany({
@@ -85,6 +87,93 @@ export const organizationRouter = router({
 
     return org!;
   }),
+
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const member = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, input.id)
+        ),
+      });
+      if (!member) throw new TRPCError({ code: "FORBIDDEN" });
+      const org = await ctx.db.query.organizations.findFirst({
+        where: eq(organizations.id, input.id),
+        with: { members: { with: { user: true } } },
+      });
+      if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+      return org;
+    }),
+
+  removeMember: protectedProcedure
+    .input(z.object({ orgId: z.string(), userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const callerMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, input.orgId)
+        ),
+      });
+      if (!callerMember || callerMember.role !== "owner") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      if (input.userId === ctx.session.user.id) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "CANNOT_REMOVE_SELF" });
+      }
+      await ctx.db
+        .delete(orgMembers)
+        .where(
+          and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.userId, input.userId))
+        );
+    }),
+
+  inviteByEmail: protectedProcedure
+    .input(z.object({ orgId: z.string(), email: z.string().email() }))
+    .mutation(async ({ ctx, input }) => {
+      const callerMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, input.orgId)
+        ),
+      });
+      if (!callerMember || callerMember.role === "member") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      const targetUser = await ctx.db.query.users.findFirst({
+        where: eq(users.email, input.email),
+      });
+      if (!targetUser) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "USER_NOT_FOUND" });
+      }
+      const existingMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.orgId, input.orgId),
+          eq(orgMembers.userId, targetUser.id)
+        ),
+      });
+      if (existingMember) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "ALREADY_MEMBER" });
+      }
+      const owner = await ctx.db.query.orgMembers.findFirst({
+        where: and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.role, "owner")),
+        with: { user: { columns: { plan: true } } },
+      });
+      if (owner?.user.plan === "free") {
+        const [{ value: memberCount }] = await ctx.db
+          .select({ value: count() })
+          .from(orgMembers)
+          .where(eq(orgMembers.orgId, input.orgId));
+        if (memberCount >= PLAN_LIMITS.free.members) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "MEMBER_LIMIT_REACHED" });
+        }
+      }
+      const [member] = await ctx.db
+        .insert(orgMembers)
+        .values({ id: uuid(), orgId: input.orgId, userId: targetUser.id, role: "member" })
+        .returning();
+      return member!;
+    }),
 
   inviteMember: protectedProcedure
     .input(

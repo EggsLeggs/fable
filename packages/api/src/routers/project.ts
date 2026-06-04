@@ -2,7 +2,7 @@ import { z } from "zod";
 import { eq, and, count } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
-import { projects, projectLocales, orgMembers, users, type Db } from "@fable/db";
+import { projects, projectLocales, orgMembers, type Db } from "@fable/db";
 import { TRPCError } from "@trpc/server";
 import { PLAN_LIMITS } from "@fable/stripe";
 
@@ -19,6 +19,35 @@ async function assertOrgAccess(
 }
 
 export const projectRouter = router({
+  listAll: protectedProcedure.query(async ({ ctx }) => {
+    const memberships = await ctx.db.query.orgMembers.findMany({
+      where: eq(orgMembers.userId, ctx.session.user.id),
+      with: {
+        org: {
+          with: {
+            projects: {
+              with: { locales: true },
+              orderBy: (p, { desc }) => [desc(p.updatedAt)],
+            },
+          },
+        },
+      },
+    });
+    return memberships.flatMap((m) => m.org.projects);
+  }),
+
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.id),
+        with: { locales: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertOrgAccess(ctx.db, ctx.session.user.id, project.orgId);
+      return project;
+    }),
+
   list: protectedProcedure
     .input(z.object({ orgId: z.string() }))
     .query(async ({ ctx, input }) => {

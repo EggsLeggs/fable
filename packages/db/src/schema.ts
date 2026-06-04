@@ -34,6 +34,25 @@ export const planStatusEnum = pgEnum("plan_status", [
 
 export const billingCycleEnum = pgEnum("billing_cycle", ["monthly", "annual"]);
 
+export const timeFormatEnum = pgEnum("time_format", ["12h", "24h"]);
+
+export const profileVisibilityEnum = pgEnum("profile_visibility", [
+  "public",
+  "private",
+]);
+
+export type SpokenLanguageLevel =
+  | "elementary"
+  | "limited_working"
+  | "professional_working"
+  | "full_professional"
+  | "native";
+
+export type SpokenLanguage = {
+  language: string;
+  level: SpokenLanguageLevel;
+};
+
 // Better Auth core tables
 export const users = pgTable("user", {
   id: text("id").primaryKey(),
@@ -41,6 +60,17 @@ export const users = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("emailVerified").notNull().default(false),
   image: text("image"),
+  username: text("username").unique(),
+  siteLocale: text("site_locale").notNull().default("en"),
+  timezone: text("timezone").notNull().default("UTC"),
+  timeFormat: timeFormatEnum("time_format").notNull().default("24h"),
+  spokenLanguages: jsonb("spoken_languages")
+    .$type<SpokenLanguage[]>()
+    .notNull()
+    .default([]),
+  profileVisibility: profileVisibilityEnum("profile_visibility")
+    .notNull()
+    .default("private"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
   // Billing — plan belongs to the user, limits apply to their org
@@ -262,3 +292,5 @@ export type ProjectVisibility = (typeof projectVisibilityEnum.enumValues)[number
 export type Plan = (typeof planEnum.enumValues)[number];
 export type PlanStatus = (typeof planStatusEnum.enumValues)[number];
 export type BillingCycle = (typeof billingCycleEnum.enumValues)[number];
+export type TimeFormat = (typeof timeFormatEnum.enumValues)[number];
+export type ProfileVisibility = (typeof profileVisibilityEnum.enumValues)[number];

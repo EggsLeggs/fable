@@ -4,17 +4,27 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn, signUp } from "@fable/auth/client";
+import type { SignUpEmailInput } from "@fable/auth/client";
+import { trpc } from "@/lib/trpc/client";
 
 type Props = {
   mode: "login" | "signup";
 };
 
+const USERNAME_PATTERN = /^[a-z0-9_]+$/;
+
+function normalizeUsername(value: string) {
+  return value.trim().toLowerCase();
+}
+
 export function AuthForm({ mode }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
+  const trpcUtils = trpc.useUtils();
 
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +37,38 @@ export function AuthForm({ mode }: Props) {
 
     try {
       if (mode === "signup") {
-        const result = await signUp.email({ name, email, password });
+        const normalizedUsername = normalizeUsername(username);
+
+        if (normalizedUsername.length < 3) {
+          setError("Username must be at least 3 characters.");
+          setLoading(false);
+          return;
+        }
+
+        if (!USERNAME_PATTERN.test(normalizedUsername)) {
+          setError(
+            "Username can only contain lowercase letters, numbers, and underscores."
+          );
+          setLoading(false);
+          return;
+        }
+
+        const availability = await trpcUtils.user.checkUsernameAvailable.fetch({
+          username: normalizedUsername,
+        });
+
+        if (!availability.available) {
+          setError("This username is already taken.");
+          setLoading(false);
+          return;
+        }
+
+        const result = await signUp.email({
+          name,
+          email,
+          password,
+          username: normalizedUsername,
+        } as SignUpEmailInput & Parameters<typeof signUp.email>[0]);
         if (result.error) {
           setError(result.error.message ?? "Sign up failed");
           setLoading(false);
@@ -56,16 +97,31 @@ export function AuthForm({ mode }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-2">
       {mode === "signup" && (
-        <div>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
-            required
-            className="input"
-          />
-        </div>
+        <>
+          <div>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+              required
+              className="input"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value.toLowerCase())}
+              placeholder="Choose a username"
+              required
+              minLength={3}
+              maxLength={30}
+              autoComplete="username"
+              className="input"
+            />
+          </div>
+        </>
       )}
       <div>
         <input

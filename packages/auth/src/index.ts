@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { z } from "zod";
 import { db, users, sessions, accounts, verifications } from "@fable/db";
 
 export const auth = betterAuth({
@@ -10,6 +11,25 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
+  },
+  user: {
+    deleteUser: {
+      enabled: true,
+    },
+    additionalFields: {
+      username: {
+        type: "string",
+        required: true,
+        input: true,
+        validator: {
+          input: z
+            .string()
+            .min(3)
+            .max(30)
+            .regex(/^[a-z0-9_]+$/),
+        },
+      },
+    },
   },
   session: {
     expiresIn: 60 * 60 * 24 * 30,
