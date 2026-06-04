@@ -72,7 +72,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
   }
 
   return (
-    <div className="relative min-w-0 flex-1" ref={ref}>
+    <div className="min-w-0 flex-1" ref={ref}>
       {hasProjects ? (
         <button
           type="button"
@@ -100,7 +100,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
       )}
 
       {open && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-full min-w-[200px] rounded-lg border border-border bg-popover shadow-lg">
+        <div className="absolute inset-x-0 top-full z-50 mt-1 rounded-lg border border-border bg-popover shadow-lg">
           <div className="p-1.5">
             <input
               autoFocus
