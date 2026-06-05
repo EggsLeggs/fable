@@ -23,6 +23,17 @@ export const projectVisibilityEnum = pgEnum("project_visibility", [
   "private",
 ]);
 
+export const planEnum = pgEnum("plan", ["free", "pro", "enterprise"]);
+
+export const planStatusEnum = pgEnum("plan_status", [
+  "active",
+  "trialing",
+  "past_due",
+  "canceled",
+]);
+
+export const billingCycleEnum = pgEnum("billing_cycle", ["monthly", "annual"]);
+
 // Better Auth core tables
 export const users = pgTable("user", {
   id: text("id").primaryKey(),
@@ -32,6 +43,16 @@ export const users = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
+  // Billing — plan belongs to the user, limits apply to their org
+  plan: planEnum("plan").notNull().default("free"),
+  planStatus: planStatusEnum("plan_status").notNull().default("active"),
+  billingCycle: billingCycleEnum("billing_cycle").notNull().default("monthly"),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  planCurrentPeriodEnd: timestamp("plan_current_period_end", { mode: "date" }),
+  mtCharsUsed: integer("mt_chars_used").notNull().default(0),
+  mtCharsResetAt: timestamp("mt_chars_reset_at", { mode: "date" }),
+  mtCharsCap: integer("mt_chars_cap"),
 });
 
 export const sessions = pgTable("session", {
@@ -238,3 +259,6 @@ export type DbGlossaryEntry = typeof glossaryEntries.$inferSelect;
 export type TranslationState = (typeof translationStateEnum.enumValues)[number];
 export type OrgRole = (typeof orgRoleEnum.enumValues)[number];
 export type ProjectVisibility = (typeof projectVisibilityEnum.enumValues)[number];
+export type Plan = (typeof planEnum.enumValues)[number];
+export type PlanStatus = (typeof planStatusEnum.enumValues)[number];
+export type BillingCycle = (typeof billingCycleEnum.enumValues)[number];

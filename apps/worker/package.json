@@ -12,6 +12,7 @@
     "@fable/ai": "*",
     "@fable/db": "*",
     "@fable/qa": "*",
+    "@fable/stripe": "*",
     "bullmq": "^5.51.3",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",

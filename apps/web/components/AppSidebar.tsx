@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   Settings,
+  CreditCard,
   PanelLeftClose,
   PanelLeft,
   type LucideIcon,
@@ -26,6 +27,7 @@ type Props = {
 const nav: { href: string; label: string; icon: LucideIcon; shortcut: string }[] = [
   { href: "/dashboard", label: "Projects", icon: LayoutGrid, shortcut: "p" },
   { href: "/settings", label: "Settings", icon: Settings, shortcut: "s" },
+  { href: "/settings/billing", label: "Billing", icon: CreditCard, shortcut: "b" },
 ];
 
 function isTypingTarget(target: EventTarget | null) {

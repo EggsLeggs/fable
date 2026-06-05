@@ -1,6 +1,14 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "STRIPE_PRO_MONTHLY_PRICE_ID",
+    "STRIPE_PRO_ANNUAL_PRICE_ID",
+    "STRIPE_MT_METERED_PRICE_ID",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

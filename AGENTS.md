@@ -22,6 +22,7 @@ Fable is an open source localisation platform for developer-led teams and open s
 
 A few things to know:
 
+- To use Stripe's local webhook, run `stripe listen --forward-to localhost:3000/api/stripe/webhook`
 - The worker is only needed if you're testing MT translation or QA jobs. You can skip it and just use the web app for UI/auth/tRPC work.
 - If you don't have Docker, you can use a free Supabase project instead — grab the connection string from Project Settings > Database and use the non-pooling URL for DIRECT_URL and the pooled one for DATABASE_URL.
 - npm run db:studio opens Drizzle Studio in the browser so you can inspect tables while developing.
@@ -245,6 +246,102 @@ Update all of the following:
 - Use `workspace:*` for internal package references (e.g. `"@fable/db": "workspace:*"`).
 - Add external dependencies to the specific `package.json` of the app or package that needs them, not the root.
 - Do not duplicate `tsconfig.json` settings across packages — extend from `packages/tsconfig`.
+
+## Billing & Pricing
+
+### Tier limits
+
+| | Free | Pro | Enterprise |
+|---|---|---|---|
+| Price | $0 | $29/mo or $313/yr (10% off) | Coming soon |
+| Projects | 1 | Unlimited | Unlimited |
+| Members | 3 | Unlimited | Unlimited |
+| Translation keys | 1,000 | Unlimited | Unlimited |
+| MT included | none | 50k chars/mo | Custom |
+| MT overage | n/a | $2/100k chars | Custom |
+| Webhooks | No | Yes | Yes |
+| Glossary | No | Yes | Yes |
+
+Limit constants live in `packages/stripe/src/prices.ts` (`PLAN_LIMITS`). Enterprise is schema-ready (`plan` enum includes `"enterprise"`) but not sold yet.
+
+### Stripe package (`packages/stripe`)
+
+- `src/client.ts` - Stripe singleton (`stripe` export), requires `STRIPE_SECRET_KEY`
+- `src/prices.ts` - `PLAN_LIMITS`, `PRICE_IDS`, price constants
+- `src/checkout.ts` - `createCheckoutSession(...)` - creates a Checkout Session with the Pro flat price and the MT metered price as line items
+- `src/portal.ts` - `createPortalSession(...)` - opens the Stripe billing portal
+- `src/usage.ts` - `reportMtUsage(stripeCustomerId, chars)` reports to Stripe; `resetMtUsageIfDue(user)` lazily zeroes `mtCharsUsed` every 30 days (handles annual plan monthly resets)
+
+### Billing state on the `user` table
+
+Columns: `plan`, `planStatus`, `billingCycle`, `stripeCustomerId`, `stripeSubscriptionId`, `planCurrentPeriodEnd`, `mtCharsUsed`, `mtCharsResetAt`, `mtCharsCap`.
+
+Billing belongs to the user, not the org. The org owner's plan governs limits for their projects and members. MT chars are pooled across all orgs the user owns. Webhook matches by `session.metadata.userId`.
+
+### tRPC billing router (`packages/api/src/routers/billing.ts`)
+
+All procedures use `ctx.session.user.id` directly - no `orgId` input needed.
+
+- `billing.getUsage` - plan info + usage counts (projects, members, keys, MT chars across all user's orgs)
+- `billing.checkout` - returns Stripe Checkout URL
+- `billing.portal` - returns Stripe billing portal URL
+- `billing.updateMtCap` - sets `mtCharsCap` on the user (null = uncapped, still billed)
+
+### Webhook handler (`apps/web/app/api/stripe/webhook/route.ts`)
+
+Handles: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`. User is matched via `session.metadata.userId` set at checkout creation. Uses raw `req.text()` body for Stripe signature verification.
+
+### Enforcing limits
+
+To check limits on an org resource, look up the org owner's plan:
+
+```typescript
+const owner = await ctx.db.query.orgMembers.findFirst({
+  where: and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.role, "owner")),
+  with: { user: { columns: { plan: true } } },
+});
+if (owner?.user.plan === "free") {
+  const [{ value }] = await ctx.db.select({ value: count() }).from(table).where(...);
+  if (value >= PLAN_LIMITS.free.someLimit) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "LIMIT_REACHED" });
+  }
+}
+```
+
+Currently enforced: `project.create` (1 project on free), `organization.inviteMember` (3 members on free).
+
+### MT usage in the worker
+
+`apps/worker/src/jobs/mt-translate.ts` finds the org owner via `orgMembers`, calls `resetMtUsageIfDue(owner)`, checks `mtCharsCap`, translates, then increments `mtCharsUsed` on the owner's user row and calls `reportMtUsage(owner.stripeCustomerId, charCount)`. Usage is pooled across all the owner's orgs.
+
+### Annual billing note
+
+For annual plans, Stripe's `invoice.paid` fires once per year. MT usage is reset monthly via the lazy `resetMtUsageIfDue` helper regardless of billing cycle. Stripe accumulates metered records and bills them at annual renewal (the overage cap protects users from surprises).
+
+### Frontend
+
+- Public pricing page: `apps/web/app/pricing/page.tsx`
+- Billing settings: `apps/web/app/(dashboard)/settings/billing/page.tsx`
+
+### Environment variables
+
+```
+STRIPE_SECRET_KEY            Secret key from Stripe dashboard
+STRIPE_WEBHOOK_SECRET        Signing secret for webhook endpoint
+STRIPE_PRO_MONTHLY_PRICE_ID  Price ID for Fable Pro monthly ($29)
+STRIPE_PRO_ANNUAL_PRICE_ID   Price ID for Fable Pro annual ($313.20)
+STRIPE_MT_METERED_PRICE_ID   Price ID for MT Characters metered product
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY  Publishable key (client-side)
+```
+
+Local webhook testing: `stripe listen --forward-to localhost:3000/api/stripe/webhook`
+
+### Stripe dashboard setup
+
+1. Create product "Fable Pro" with two prices: monthly ($29) and annual ($313.20)
+2. Create a Meter (Billing > Meters, event name: `mt_characters`, aggregation: sum), then create product "MT Characters" with a usage-based price attached to that meter at $0.00002/unit (1 unit = 1 char, code reports raw char counts)
+3. Copy the four price IDs into `.env.local`
+4. Create a webhook endpoint at `https://yourdomain.com/api/stripe/webhook` subscribing to: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`
 
 ## Git & Commits
 
