@@ -6,6 +6,7 @@ import { t } from "@lingui/core/macro";
 import { useLingui } from "@/components/lingui-provider";
 import type { Locale } from "@/locales";
 import { localeNames } from "@/locales";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 function Section({
   title,
@@ -69,17 +70,15 @@ export default function PreferencesSettingsPage() {
         description={t`Choose the language used across the Fable interface.`}
       >
         <FieldGroup label={t`Language`}>
-          <select
+          <SelectCombobox
             value={locale}
-            onChange={(e) => setLocale(e.target.value as Locale)}
-            className="input"
-          >
-            {availableLocales.map((code) => (
-              <option key={code} value={code}>
-                {localeNames[code]}
-              </option>
-            ))}
-          </select>
+            onValueChange={(value) => setLocale(value as Locale)}
+            options={availableLocales.map((code) => ({
+              value: code,
+              label: localeNames[code],
+            }))}
+            searchable={availableLocales.length > 6}
+          />
         </FieldGroup>
       </Section>
 

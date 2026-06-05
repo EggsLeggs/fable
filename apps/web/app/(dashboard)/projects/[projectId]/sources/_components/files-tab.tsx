@@ -17,6 +17,7 @@ import { useDropzone } from "react-dropzone";
 import { trpc } from "@/lib/trpc/client";
 import { detectFormat, FORMAT_LABELS } from "@fable/formats";
 import type { FileFormat } from "@fable/formats";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 const ALL_FORMATS: FileFormat[] = [
   "json_flat",
@@ -165,21 +166,19 @@ function UploadModal({
             <label className="block text-xs font-medium text-foreground">
               Format
             </label>
-            <select
+            <SelectCombobox
               value={selectedFormat ?? ""}
-              onChange={(e) =>
-                setSelectedFormat((e.target.value as FileFormat) || null)
+              onValueChange={(value) =>
+                setSelectedFormat((value as FileFormat) || null)
               }
               disabled={uploading}
-              className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              <option value="">Select format...</option>
-              {ALL_FORMATS.map((fmt) => (
-                <option key={fmt} value={fmt}>
-                  {FORMAT_LABELS[fmt]}
-                </option>
-              ))}
-            </select>
+              placeholder="Select format..."
+              options={ALL_FORMATS.map((fmt) => ({
+                value: fmt,
+                label: FORMAT_LABELS[fmt],
+              }))}
+              searchable={false}
+            />
             {selectedFormat === "lingui_json" && (
               <p className="text-xs text-muted-foreground">
                 Detected Lingui format - only message and translation fields will be imported.

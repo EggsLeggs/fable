@@ -30,6 +30,8 @@ import {
 import { toast } from "sonner";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { trpc } from "@/lib/trpc/client";
+import { UserDisplayName } from "@/lib/user-display";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 type Props = {
   params: Promise<{ projectId: string; locale: string }>;
@@ -156,18 +158,17 @@ function StringListPanel({
       {/* Language selector */}
       <div className="flex items-center gap-2 border-b border-border px-3 py-2">
         <div className="relative min-w-0 flex-1">
-          <Languages className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <select
+          <Languages className="pointer-events-none absolute left-2 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <SelectCombobox
             value={locale}
-            onChange={(e) => handleLocaleChange(e.target.value)}
-            className="h-7 w-full rounded-md border border-border bg-background py-0 pl-7 pr-2 text-sm font-medium text-foreground outline-none hover:border-foreground/40 focus:ring-1 focus:ring-ring"
-          >
-            {targetLocales.map((l) => (
-              <option key={l.locale} value={l.locale}>
-                {l.locale}
-              </option>
-            ))}
-          </select>
+            onValueChange={handleLocaleChange}
+            options={targetLocales.map((l) => ({
+              value: l.locale,
+              label: l.locale,
+            }))}
+            triggerClassName="h-7 w-full rounded-md py-0 pl-7 pr-2 text-sm font-medium shadow-none"
+            searchable={targetLocales.length > 6}
+          />
         </div>
         <span className="shrink-0 text-xs text-muted-foreground">
           {total} strings
@@ -658,7 +659,10 @@ function TranslationEditorPanel({
                     </div>
                     {translationData.approved.translatedByUser && (
                       <p className="text-xs text-muted-foreground">
-                        by @{translationData.approved.translatedByUser.username ?? translationData.approved.translatedByUser.name}
+                        by{" "}
+                        <UserDisplayName
+                          user={translationData.approved.translatedByUser}
+                        />
                       </p>
                     )}
                   </div>
@@ -675,7 +679,7 @@ function TranslationEditorPanel({
                     <div className="flex items-center gap-2">
                       {s.translatedByUser && (
                         <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
-                          @{s.translatedByUser.username ?? s.translatedByUser.name}
+                          <UserDisplayName user={s.translatedByUser} />
                         </p>
                       )}
                       {/* Voting */}
@@ -854,7 +858,10 @@ function ContextPanel({ keyId }: { keyId: string }) {
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs font-medium">
-                      @{c.author.username ?? c.author.name}
+                      <UserDisplayName
+                        user={c.author}
+                        primaryClassName="font-medium"
+                      />
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(c.createdAt).toLocaleDateString()}

@@ -28,6 +28,8 @@ export const billingRouter = router({
         mtCharsUsed: true,
         mtCharsResetAt: true,
         mtCharsCap: true,
+        referredBy: true,
+        lifetimePro: true,
       },
     });
 
@@ -60,8 +62,16 @@ export const billingRouter = router({
         ])
       : [0, 0, 0];
 
+    const isProSubscriber =
+      effectivePlan === "pro" ||
+      effectivePlan === "enterprise" ||
+      user.lifetimePro;
+
     return {
       plan: effectivePlan,
+      lifetimePro: user.lifetimePro,
+      wasReferred: Boolean(user.referredBy),
+      isProSubscriber,
       billingAvailable,
       planStatus: billingAvailable ? user.planStatus : "active",
       billingCycle: user.billingCycle,
@@ -84,7 +94,13 @@ export const billingRouter = router({
   }),
 
   checkout: protectedProcedure
-    .input(z.object({ billingCycle: z.enum(["monthly", "annual"]) }))
+    .input(
+      z.object({
+        billingCycle: z.enum(["monthly", "annual"]),
+        successPath: z.string().optional(),
+        cancelPath: z.string().optional(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       assertStripeConfigured();
 
@@ -92,7 +108,13 @@ export const billingRouter = router({
 
       const user = await ctx.db.query.users.findFirst({
         where: eq(users.id, userId),
-        columns: { plan: true, stripeCustomerId: true, email: true, referredBy: true },
+        columns: {
+          plan: true,
+          stripeCustomerId: true,
+          email: true,
+          referredBy: true,
+          stripeReferralCouponId: true,
+        },
       });
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
@@ -104,13 +126,17 @@ export const billingRouter = router({
       }
 
       const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+      const isReferred = Boolean(user.referredBy);
 
       const url = await createCheckoutSession({
         userId,
         billingCycle: input.billingCycle,
         stripeCustomerId: user.stripeCustomerId,
         returnBaseUrl: appUrl,
-        trialDays: user.referredBy ? 60 : undefined,
+        couponId: user.stripeReferralCouponId ?? undefined,
+        trialDays: isReferred && !user.stripeReferralCouponId ? 60 : undefined,
+        successPath: input.successPath,
+        cancelPath: input.cancelPath,
       });
 
       return { url };

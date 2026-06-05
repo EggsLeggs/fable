@@ -16,7 +16,129 @@ import {
   type Db,
 } from "@fable/db";
 import { logActivity } from "../log-activity";
-import { assertGitHubAppConfigured } from "../integration-config";
+import {
+  assertGitHubAppConfigured,
+  getInstallationToken,
+} from "../integration-config";
+import type { IngestQueue } from "../trpc";
+
+function matchesPattern(path: string, patterns: string[]): boolean {
+  if (patterns.length === 0) return true;
+  return patterns.some((pattern) => {
+    const regex = new RegExp(
+      "^" +
+        pattern
+          .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+          .replace(/\*\*/g, "__DOUBLE_STAR__")
+          .replace(/\*/g, "[^/]*")
+          .replace(/__DOUBLE_STAR__/g, ".*") +
+        "$"
+    );
+    return regex.test(path);
+  });
+}
+
+async function triggerInitialVcsSync(
+  db: Db,
+  queue: IngestQueue,
+  integration: {
+    id: string;
+    projectId: string;
+    installationId: string;
+    repoOwner: string;
+    repoName: string;
+    defaultBranch: string;
+    filePatterns: string[];
+  }
+): Promise<number> {
+  if (integration.filePatterns.length === 0) return 0;
+
+  const token = await getInstallationToken(integration.installationId);
+  const res = await fetch(
+    `https://api.github.com/repos/${integration.repoOwner}/${integration.repoName}/git/trees/${integration.defaultBranch}?recursive=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
+  if (!res.ok) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: `Failed to read repository tree: ${res.status}`,
+    });
+  }
+
+  const data = (await res.json()) as {
+    tree: Array<{ path: string; type: string }>;
+    truncated?: boolean;
+  };
+
+  const matchedPaths = data.tree
+    .filter(
+      (item) =>
+        item.type === "blob" &&
+        matchesPattern(item.path, integration.filePatterns)
+    )
+    .map((item) => item.path);
+
+  let queued = 0;
+  for (const filePath of matchedPaths) {
+    const filename = filePath.split("/").pop() ?? filePath;
+
+    const existing = await db.query.sourceFiles.findFirst({
+      where: and(
+        eq(sourceFiles.projectId, integration.projectId),
+        eq(sourceFiles.path, filePath)
+      ),
+    });
+
+    let sourceFileId: string;
+    if (existing) {
+      sourceFileId = existing.id;
+      await db
+        .update(sourceFiles)
+        .set({
+          vcsIntegrationId: integration.id,
+          vcsBranch: integration.defaultBranch,
+          status: "active",
+          updatedAt: new Date(),
+        })
+        .where(eq(sourceFiles.id, existing.id));
+    } else {
+      sourceFileId = uuid();
+      await db.insert(sourceFiles).values({
+        id: sourceFileId,
+        projectId: integration.projectId,
+        name: filename,
+        path: filePath,
+        format: "json_flat",
+        sourceType: "vcs",
+        vcsIntegrationId: integration.id,
+        vcsPath: filePath,
+        vcsBranch: integration.defaultBranch,
+        pushEnabled: true,
+        status: "active",
+      });
+    }
+
+    const ingestJobId = uuid();
+    await db.insert(ingestJobs).values({
+      id: ingestJobId,
+      sourceFileId,
+      trigger: "vcs_manual_sync",
+      status: "queued",
+    });
+
+    await queue.add("ingest", { ingestJobId, sourceFileId }, { jobId: ingestJobId });
+
+    queued++;
+  }
+
+  return queued;
+}
 
 async function assertProjectAccess(db: Db, userId: string, projectId: string) {
   const project = await db.query.projects.findFirst({
@@ -209,7 +331,12 @@ export const sourceFileRouter = router({
         },
       });
 
-      return integration!;
+      let filesQueued = 0;
+      if (ctx.ingestQueue && integration) {
+        filesQueued = await triggerInitialVcsSync(ctx.db, ctx.ingestQueue, integration!);
+      }
+
+      return { ...integration!, filesQueued };
     }),
 
   updateVcsIntegration: protectedProcedure
@@ -249,6 +376,33 @@ export const sourceFileRouter = router({
       });
 
       return updated!;
+    }),
+
+  deleteVcsIntegration: protectedProcedure
+    .input(z.object({ integrationId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const integration = await ctx.db.query.vcsIntegrations.findFirst({
+        where: eq(vcsIntegrations.id, input.integrationId),
+      });
+      if (!integration) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertProjectAccess(ctx.db, ctx.session.user.id, integration.projectId);
+
+      await ctx.db
+        .delete(vcsIntegrations)
+        .where(eq(vcsIntegrations.id, input.integrationId));
+
+      await logActivity(ctx.db, {
+        projectId: integration.projectId,
+        userId: ctx.session.user.id,
+        type: "integration_deleted",
+        metadata: {
+          provider: integration.provider,
+          repoOwner: integration.repoOwner,
+          repoName: integration.repoName,
+        },
+      });
+
+      return { success: true };
     }),
 
   listVcsIntegrations: protectedProcedure

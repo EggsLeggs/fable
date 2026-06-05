@@ -19,17 +19,17 @@ export async function AppShell({ children, contentClassName }: Props) {
     redirect("/login");
   }
 
-  const username =
-    (session.user as AuthUser & { username?: string | null }).username ??
-    session.user.email?.split("@")[0] ??
-    "User";
+  const authUser = session.user as AuthUser & { username?: string | null };
+  const userName = authUser.name?.trim() || authUser.email || "User";
+  const userHandle = authUser.username ?? null;
   const userEmail = session.user.email ?? "";
   const userAvatarUrl = resolveUserAvatarUrl(session.user.image, userEmail);
 
   return (
     <div className="flex h-dvh overflow-hidden bg-sidebar text-foreground md:py-3 md:pr-3">
       <AppSidebar
-        userName={username}
+        userName={userName}
+        userHandle={userHandle}
         userEmail={userEmail}
         userAvatarUrl={userAvatarUrl}
       />

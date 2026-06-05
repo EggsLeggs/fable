@@ -8,6 +8,7 @@ import { Button, Input } from "@fable/ui";
 import { trpc } from "@/lib/trpc/client";
 import { LANGUAGES, getLanguageName } from "@/lib/language-constants";
 import type { CustomLocale } from "@fable/db";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 type Props = { params: Promise<{ projectId: string }> };
 
@@ -166,23 +167,21 @@ export default function LanguagesSettingsPage({ params }: Props) {
         title={t`Source language`}
         description={t`The language your strings are written in. All translations are derived from this.`}
       >
-        <select
+        <SelectCombobox
           value={sourceLocale}
-          onChange={(e) => handleSourceLocaleChange(e.target.value)}
+          onValueChange={handleSourceLocaleChange}
           disabled={updatingSource}
-          className="input w-full"
-        >
-          {LANGUAGES.map(({ code, name }) => (
-            <option key={code} value={code}>
-              {name} ({code})
-            </option>
-          ))}
-          {customLocales.map(({ code, name }) => (
-            <option key={code} value={code}>
-              {name} ({code})
-            </option>
-          ))}
-        </select>
+          options={[
+            ...LANGUAGES.map(({ code, name }) => ({
+              value: code,
+              label: `${name} (${code})`,
+            })),
+            ...customLocales.map(({ code, name }) => ({
+              value: code,
+              label: `${name} (${code})`,
+            })),
+          ]}
+        />
       </Section>
 
       <Section
@@ -226,24 +225,18 @@ export default function LanguagesSettingsPage({ params }: Props) {
 
         <div className="pt-1">
           <p className="mb-2 text-xs font-medium text-muted-foreground">{t`Add a language`}</p>
-          <select
-            defaultValue=""
-            onChange={(e) => {
-              if (e.target.value) handleAddTargetLocale(e.target.value);
-              e.target.value = "";
+          <SelectCombobox
+            value=""
+            onValueChange={(code) => {
+              if (code) handleAddTargetLocale(code);
             }}
             disabled={addLocaleMutation.isPending}
-            className="input w-full"
-          >
-            <option value="" disabled>
-              {t`Select a language to add...`}
-            </option>
-            {availableToAdd.map(({ code, name }) => (
-              <option key={code} value={code}>
-                {name} ({code})
-              </option>
-            ))}
-          </select>
+            placeholder={t`Select a language to add...`}
+            options={availableToAdd.map(({ code, name }) => ({
+              value: code,
+              label: `${name} (${code})`,
+            }))}
+          />
         </div>
       </Section>
 

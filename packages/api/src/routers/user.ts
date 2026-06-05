@@ -4,40 +4,11 @@ import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { users, githubInstallations, type SpokenLanguageLevel } from "@fable/db";
 import {
-  assertGitHubAppConfigured,
   getIntegrationAvailability,
+  getInstallationToken,
   isGitHubAppConfigured,
+  isInstallationActive,
 } from "../integration-config";
-
-async function getInstallationToken(installationId: string): Promise<string> {
-  assertGitHubAppConfigured();
-  const appId = process.env.GITHUB_APP_ID!;
-  const privateKey = process.env.GITHUB_PRIVATE_KEY!.replace(/\\n/g, "\n");
-  const jwt = await import("jsonwebtoken");
-  const appToken = jwt.default.sign({ iss: appId }, privateKey, {
-    algorithm: "RS256",
-    expiresIn: "10m",
-  });
-  const res = await fetch(
-    `https://api.github.com/app/installations/${installationId}/access_tokens`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${appToken}`,
-        Accept: "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    }
-  );
-  if (!res.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to get GitHub installation token",
-    });
-  }
-  const data = (await res.json()) as { token: string };
-  return data.token;
-}
 
 const spokenLanguageLevelSchema = z.enum([
   "elementary",
@@ -52,20 +23,20 @@ const spokenLanguageSchema = z.object({
   level: spokenLanguageLevelSchema,
 });
 
-const usernameSchema = z
+const handleSchema = z
   .string()
-  .min(3, "Username must be at least 3 characters")
-  .max(30, "Username must be at most 30 characters")
+  .min(3, "Handle must be at least 3 characters")
+  .max(30, "Handle must be at most 30 characters")
   .regex(
     /^[a-z0-9_]+$/,
-    "Username can only contain lowercase letters, numbers, and underscores"
+    "Handle can only contain lowercase letters, numbers, and underscores"
   );
 
 export const userRouter = router({
   getIntegrationAvailability: publicProcedure.query(() => getIntegrationAvailability()),
 
   checkUsernameAvailable: publicProcedure
-    .input(z.object({ username: usernameSchema }))
+    .input(z.object({ username: handleSchema }))
     .query(async ({ ctx, input }) => {
       const taken = await ctx.db.query.users.findFirst({
         where: eq(users.username, input.username),
@@ -99,7 +70,7 @@ export const userRouter = router({
     .input(
       z.object({
         name: z.string().min(1).max(100).optional(),
-        username: usernameSchema.optional().nullable(),
+        username: handleSchema.optional().nullable(),
         timezone: z.string().min(1).max(100).optional(),
         timeFormat: z.enum(["12h", "24h"]).optional(),
         siteLocale: z.string().min(2).max(10).optional(),
@@ -118,7 +89,7 @@ export const userRouter = router({
         if (taken) {
           throw new TRPCError({
             code: "CONFLICT",
-            message: "This username is already taken.",
+            message: "This handle is already taken.",
           });
         }
       }
@@ -137,7 +108,19 @@ export const userRouter = router({
       where: eq(githubInstallations.userId, ctx.session.user.id),
       orderBy: (t, { desc }) => [desc(t.createdAt)],
     });
-    return result ?? null;
+    if (!result) return null;
+
+    if (isGitHubAppConfigured()) {
+      const active = await isInstallationActive(result.installationId);
+      if (!active) {
+        await ctx.db
+          .delete(githubInstallations)
+          .where(eq(githubInstallations.id, result.id));
+        return null;
+      }
+    }
+
+    return result;
   }),
 
   disconnectGitHub: protectedProcedure.mutation(async ({ ctx }) => {

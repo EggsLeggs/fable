@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
 import { trpc } from "@/lib/trpc/client";
 
 function UsageMeter({
@@ -81,9 +82,28 @@ export default function BillingPage() {
     return <div className="text-sm text-muted-foreground">{t`Loading...`}</div>;
   }
 
+  const showReferralOffer = !isPro && billingAvailable && usage?.wasReferred;
+
   return (
     <div className="flex w-full flex-1 flex-col">
       <div className="max-w-xl space-y-8">
+        {showReferralOffer && (
+          <section className="rounded-lg border border-primary/30 bg-primary/5 p-5">
+            <p className="text-sm font-medium text-foreground">{t`2 months of Pro free`}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              <Trans>
+                You were referred. Your discount is saved and will be applied when you add your card.
+              </Trans>
+            </p>
+            <a
+              href={`/api/referral/start-trial?billingCycle=${billingCycle}`}
+              className="btn-primary mt-4 inline-block text-sm"
+            >
+              {t`Start trial`}
+            </a>
+          </section>
+        )}
+
         {/* Plan summary */}
         <section className="rounded-lg border border-border bg-card p-6">
           <div className="mb-4 flex items-center justify-between">

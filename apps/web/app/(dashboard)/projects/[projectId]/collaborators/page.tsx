@@ -8,6 +8,8 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { trpc } from "@/lib/trpc/client";
 import { UserAvatar } from "@/components/UserAvatar";
+import { InviteLinkSection } from "@/components/InviteLinkSection";
+import { UserDisplayName, getUserAvatarLabel } from "@/lib/user-display";
 
 type Props = { params: Promise<{ projectId: string }> };
 
@@ -20,29 +22,14 @@ type OrgMember = {
   };
 };
 
-function memberAvatarLabel(member: OrgMember["user"], isTeamMember: boolean): string {
-  if (!isTeamMember) {
-    return member.username ? `@${member.username}` : "?";
-  }
-  return member.name || member.email;
+function memberAvatarLabel(member: OrgMember["user"]): string {
+  return getUserAvatarLabel(member);
 }
 
-function memberPrimaryLine(member: OrgMember["user"], isTeamMember: boolean) {
-  if (!isTeamMember) {
-    return (
-      <p className="truncate text-sm font-medium">
-        {member.username ? `@${member.username}` : "?"}
-      </p>
-    );
-  }
-
-  const name = member.name || member.email;
+function memberPrimaryLine(member: OrgMember["user"]) {
   return (
     <p className="truncate text-sm font-medium">
-      {name}
-      {member.username && (
-        <span className="font-normal text-muted-foreground"> @{member.username}</span>
-      )}
+      <UserDisplayName user={member} />
     </p>
   );
 }
@@ -157,6 +144,18 @@ export default function CollaboratorsPage({ params }: Props) {
     onError: (err) => toast.error(err.message ?? t`Could not remove translator.`),
   });
 
+  const inviteLinksQuery = trpc.organization.getInviteLinks.useQuery(
+    { orgId: orgId ?? "" },
+    { enabled: !!orgId }
+  );
+
+  const setInviteLink = trpc.organization.setInviteLink.useMutation({
+    onSuccess: () => {
+      void utils.organization.getInviteLinks.invalidate({ orgId });
+    },
+    onError: (err) => toast.error(err.message ?? t`Could not update invite link.`),
+  });
+
   const org = orgQuery.data;
   const allMembers = org?.members ?? [];
 
@@ -204,7 +203,7 @@ export default function CollaboratorsPage({ params }: Props) {
         </div>
 
         {isOwner && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <InviteForm
               onInvite={(email) => {
                 if (!orgId) return;
@@ -227,6 +226,15 @@ export default function CollaboratorsPage({ params }: Props) {
                   </Trans>
                 </p>
               )}
+            <InviteLinkSection
+              label={t`Invite by link`}
+              inviteLink={inviteLinksQuery.data?.member ?? null}
+              isPending={setInviteLink.isPending}
+              onToggle={(enabled) => {
+                if (!orgId) return;
+                setInviteLink.mutate({ orgId, type: "member", enabled });
+              }}
+            />
           </div>
         )}
 
@@ -241,13 +249,13 @@ export default function CollaboratorsPage({ params }: Props) {
                 className="flex items-center gap-3 rounded-lg border border-border p-3"
               >
                 <UserAvatar
-                  name={memberAvatarLabel(member.user, isTeamMember)}
+                  name={memberAvatarLabel(member.user)}
                   email={isTeamMember ? member.user.email : undefined}
                   src={member.user.image}
                   className="h-8 w-8"
                 />
                 <div className="min-w-0 flex-1">
-                  {memberPrimaryLine(member.user, isTeamMember)}
+                  {memberPrimaryLine(member.user)}
                   {isOwner && isTeamMember && member.user.email && (
                     <p className="truncate text-xs text-muted-foreground">
                       {member.user.email}
@@ -288,16 +296,27 @@ export default function CollaboratorsPage({ params }: Props) {
         </div>
 
         {isTeamMember && (
-          <InviteForm
-            onInvite={(email) => {
-              if (!orgId) return;
-              inviteTranslator.mutate({ orgId, email });
-            }}
-            isPending={inviteTranslator.isPending}
-            placeholder={t`Email address`}
-            buttonLabel={t`Add translator`}
-            pendingLabel={t`Adding...`}
-          />
+          <div className="flex flex-col gap-4">
+            <InviteForm
+              onInvite={(email) => {
+                if (!orgId) return;
+                inviteTranslator.mutate({ orgId, email });
+              }}
+              isPending={inviteTranslator.isPending}
+              placeholder={t`Email address`}
+              buttonLabel={t`Add translator`}
+              pendingLabel={t`Adding...`}
+            />
+            <InviteLinkSection
+              label={t`Invite by link`}
+              inviteLink={inviteLinksQuery.data?.translator ?? null}
+              isPending={setInviteLink.isPending}
+              onToggle={(enabled) => {
+                if (!orgId) return;
+                setInviteLink.mutate({ orgId, type: "translator", enabled });
+              }}
+            />
+          </div>
         )}
 
         {translators.length === 0 ? (
@@ -313,13 +332,13 @@ export default function CollaboratorsPage({ params }: Props) {
                   className="flex items-center gap-3 rounded-lg border border-border p-3"
                 >
                   <UserAvatar
-                    name={memberAvatarLabel(member.user, isTeamMember)}
+                    name={memberAvatarLabel(member.user)}
                     email={isTeamMember ? member.user.email : undefined}
                     src={member.user.image}
                     className="h-8 w-8"
                   />
                   <div className="min-w-0 flex-1">
-                    {memberPrimaryLine(member.user, isTeamMember)}
+                    {memberPrimaryLine(member.user)}
                     {isOwner && isTeamMember && member.user.email && (
                       <p className="truncate text-xs text-muted-foreground">
                         {member.user.email}

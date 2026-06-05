@@ -10,12 +10,19 @@ import { UserAvatar } from "@/components/UserAvatar";
 
 type Props = {
   userName: string;
+  userHandle: string | null;
   userEmail: string;
   userAvatarUrl: string | null;
   collapsed?: boolean;
 };
 
-export function UserMenu({ userName, userEmail, userAvatarUrl, collapsed }: Props) {
+export function UserMenu({
+  userName,
+  userHandle,
+  userEmail,
+  userAvatarUrl,
+  collapsed,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -56,7 +63,12 @@ export function UserMenu({ userName, userEmail, userAvatarUrl, collapsed }: Prop
       >
         <UserAvatar src={userAvatarUrl} name={userName} />
         {!collapsed && (
-          <span className="truncate text-sidebar-foreground">{userName}</span>
+          <span className="truncate text-sidebar-foreground">
+            {userName}
+            {userHandle ? (
+              <span className="text-muted-foreground"> @{userHandle}</span>
+            ) : null}
+          </span>
         )}
       </button>
 
@@ -67,7 +79,12 @@ export function UserMenu({ userName, userEmail, userAvatarUrl, collapsed }: Prop
           }`}
         >
           <div className="border-b border-border px-3 py-2">
-            <p className="truncate text-sm font-medium text-popover-foreground">{userName}</p>
+            <p className="truncate text-sm font-medium text-popover-foreground">
+              {userName}
+              {userHandle ? (
+                <span className="font-normal text-muted-foreground"> @{userHandle}</span>
+              ) : null}
+            </p>
             <p className="truncate text-xs text-muted-foreground">{userEmail}</p>
           </div>
           <div className="p-1">

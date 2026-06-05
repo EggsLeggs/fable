@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 import type { DbProject } from "@fable/db";
 
 const COMMON_LOCALES = [
@@ -233,18 +234,12 @@ export function NewProjectWizard() {
           <label htmlFor="source-locale" className="text-sm font-medium">
             {t`Source language`}
           </label>
-          <select
+          <SelectCombobox
             id="source-locale"
             value={sourceLocale}
-            onChange={(e) => setSourceLocale(e.target.value)}
-            className="input"
-          >
-            {COMMON_LOCALES.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+            onValueChange={setSourceLocale}
+            options={COMMON_LOCALES}
+          />
         </div>
 
         {createError === "limit" ? (

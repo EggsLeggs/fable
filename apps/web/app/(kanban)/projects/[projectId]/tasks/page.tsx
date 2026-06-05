@@ -33,8 +33,16 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { getLanguageName } from "@/lib/language-constants";
 import { cn } from "@/lib/utils";
+import { formatUserOptionLabel, getUserPrimaryLabel } from "@/lib/user-display";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 type TaskStatus = "todo" | "in_progress" | "done";
+
+const STATUS_OPTIONS = [
+  { value: "todo", label: "To Do" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "done", label: "Done" },
+] as const;
 
 type TaskUser = { id: string; name: string; email: string; username: string | null };
 type TaskFile = { id: string; name: string };
@@ -264,9 +272,7 @@ function TaskCard({
                   {getInitials(task.assignedToUser.name)}
                 </div>
                 <span className="max-w-[90px] truncate text-xs text-muted-foreground">
-                  {task.assignedToUser.username
-                    ? `@${task.assignedToUser.username}`
-                    : task.assignedToUser.name.split(" ")[0]}
+                  {getUserPrimaryLabel(task.assignedToUser).split(" ")[0]}
                 </span>
               </div>
             ) : null}
@@ -534,72 +540,58 @@ function CreateTaskDialog({
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Status</label>
-              <select
+              <SelectCombobox
                 value={status}
-                onChange={(e) => setStatus(e.target.value as TaskStatus)}
-                className="input"
-              >
-                <option value="todo">To Do</option>
-                <option value="in_progress">In Progress</option>
-                <option value="done">Done</option>
-              </select>
+                onValueChange={(value) => setStatus(value as TaskStatus)}
+                options={[...STATUS_OPTIONS]}
+                searchable={false}
+              />
             </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Language</label>
-              <select
+              <SelectCombobox
                 value={locale}
-                onChange={(e) => setLocale(e.target.value)}
-                className="input"
-              >
-                <option value="">No language</option>
-                {locales
-                  .filter((l) => !l.isSource)
-                  .map((l) => (
-                    <option key={l.id} value={l.locale}>
-                      {getLanguageName(l.locale)}
-                    </option>
-                  ))}
-                {project?.customLocales?.map((cl) => (
-                  <option key={cl.code} value={cl.code}>
-                    {cl.name}
-                  </option>
-                ))}
-              </select>
+                onValueChange={setLocale}
+                emptyOption="No language"
+                options={[
+                  ...locales
+                    .filter((l) => !l.isSource)
+                    .map((l) => ({
+                      value: l.locale,
+                      label: getLanguageName(l.locale),
+                    })),
+                  ...(project?.customLocales?.map((cl) => ({
+                    value: cl.code,
+                    label: cl.name,
+                  })) ?? []),
+                ]}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Source file</label>
-              <select
+              <SelectCombobox
                 value={sourceFileId}
-                onChange={(e) => setSourceFileId(e.target.value)}
-                className="input"
-              >
-                <option value="">No file</option>
-                {sourceFiles.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {f.name}
-                  </option>
-                ))}
-              </select>
+                onValueChange={setSourceFileId}
+                emptyOption="No file"
+                options={sourceFiles.map((f) => ({ value: f.id, label: f.name }))}
+              />
             </div>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Assigned to</label>
-              <select
+              <SelectCombobox
                 value={assignedTo}
-                onChange={(e) => setAssignedTo(e.target.value)}
-                className="input"
-              >
-                <option value="">Unassigned</option>
-                {members.map((m) => (
-                  <option key={m.userId} value={m.userId}>
-                    {m.user.username ? `@${m.user.username}` : m.user.name || m.user.email}
-                  </option>
-                ))}
-              </select>
+                onValueChange={setAssignedTo}
+                emptyOption="Unassigned"
+                options={members.map((m) => ({
+                  value: m.userId,
+                  label: formatUserOptionLabel(m.user),
+                }))}
+              />
             </div>
           </div>
 
@@ -772,72 +764,62 @@ export default function TasksPage({ params }: Props) {
         <div className="flex items-center gap-2">
           {/* Filters */}
           <div className="flex items-center gap-2">
-            <select
+            <SelectCombobox
               value={filters.locale ?? ""}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, locale: e.target.value || null }))
+              onValueChange={(value) =>
+                setFilters((f) => ({ ...f, locale: value || null }))
               }
-              className="h-8 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-ring"
-            >
-              <option value="">All languages</option>
-              {locales
-                .filter((l) => !l.isSource)
-                .map((l) => (
-                  <option key={l.id} value={l.locale}>
-                    {getLanguageName(l.locale)}
-                  </option>
-                ))}
-              {project?.customLocales?.map((cl) => (
-                <option key={cl.code} value={cl.code}>
-                  {cl.name}
-                </option>
-              ))}
-            </select>
+              emptyOption="All languages"
+              options={[
+                ...locales
+                  .filter((l) => !l.isSource)
+                  .map((l) => ({
+                    value: l.locale,
+                    label: getLanguageName(l.locale),
+                  })),
+                ...(project?.customLocales?.map((cl) => ({
+                  value: cl.code,
+                  label: cl.name,
+                })) ?? []),
+              ]}
+              triggerClassName="h-8 w-auto min-w-[8rem] rounded-lg px-2.5 py-0 text-xs shadow-none"
+            />
 
-            <select
+            <SelectCombobox
               value={filters.assignedTo ?? ""}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, assignedTo: e.target.value || null }))
+              onValueChange={(value) =>
+                setFilters((f) => ({ ...f, assignedTo: value || null }))
               }
-              className="h-8 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-ring"
-            >
-              <option value="">Assigned to anyone</option>
-              {members.map((m) => (
-                <option key={m.userId} value={m.userId}>
-                  {m.user.name || m.user.email}
-                </option>
-              ))}
-            </select>
+              emptyOption="Assigned to anyone"
+              options={members.map((m) => ({
+                value: m.userId,
+                label: m.user.name || m.user.email,
+              }))}
+              triggerClassName="h-8 w-auto min-w-[8rem] rounded-lg px-2.5 py-0 text-xs shadow-none"
+            />
 
-            <select
+            <SelectCombobox
               value={filters.createdBy ?? ""}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, createdBy: e.target.value || null }))
+              onValueChange={(value) =>
+                setFilters((f) => ({ ...f, createdBy: value || null }))
               }
-              className="h-8 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-ring"
-            >
-              <option value="">Created by anyone</option>
-              {members.map((m) => (
-                <option key={m.userId} value={m.userId}>
-                  {m.user.name || m.user.email}
-                </option>
-              ))}
-            </select>
+              emptyOption="Created by anyone"
+              options={members.map((m) => ({
+                value: m.userId,
+                label: m.user.name || m.user.email,
+              }))}
+              triggerClassName="h-8 w-auto min-w-[8rem] rounded-lg px-2.5 py-0 text-xs shadow-none"
+            />
 
-            <select
+            <SelectCombobox
               value={filters.sourceFileId ?? ""}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, sourceFileId: e.target.value || null }))
+              onValueChange={(value) =>
+                setFilters((f) => ({ ...f, sourceFileId: value || null }))
               }
-              className="h-8 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-ring"
-            >
-              <option value="">Any file</option>
-              {sourceFiles.map((f) => (
-                <option key={f.id} value={f.id}>
-                  {f.name}
-                </option>
-              ))}
-            </select>
+              emptyOption="Any file"
+              options={sourceFiles.map((f) => ({ value: f.id, label: f.name }))}
+              triggerClassName="h-8 w-auto min-w-[8rem] rounded-lg px-2.5 py-0 text-xs shadow-none"
+            />
 
             {activeFilterCount > 0 && (
               <button

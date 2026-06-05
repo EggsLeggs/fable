@@ -23,8 +23,14 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { trpc } from "@/lib/trpc/client";
 import { UserAvatar } from "@/components/UserAvatar";
+import {
+  UserDisplayName,
+  formatUserOptionLabel,
+  getUserAvatarLabel,
+} from "@/lib/user-display";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 import type { ActivityType } from "@fable/db";
 
 type Props = { params: Promise<{ projectId: string }> };
@@ -460,33 +466,27 @@ export default function ActivityPage({ params }: Props) {
         <DateRangeFilter value={dateRange} onChange={setDateRange} />
 
         {locales.length > 0 && (
-          <select
+          <SelectCombobox
             value={selectedLocale}
-            onChange={(e) => setSelectedLocale(e.target.value)}
-            className="h-8 rounded-md border border-border bg-background px-3 text-sm text-foreground hover:border-foreground/40"
-          >
-            <option value="">{t`All languages`}</option>
-            {locales.map((l) => (
-              <option key={l.id} value={l.locale}>
-                {l.locale}
-              </option>
-            ))}
-          </select>
+            onValueChange={setSelectedLocale}
+            emptyOption={t`All languages`}
+            options={locales.map((l) => ({ value: l.locale, label: l.locale }))}
+            triggerClassName="h-8 w-auto min-w-[8rem] rounded-md px-3 py-0 text-sm shadow-none"
+            searchable={locales.length > 6}
+          />
         )}
 
         {actors.length > 0 && (
-          <select
+          <SelectCombobox
             value={selectedUserId}
-            onChange={(e) => setSelectedUserId(e.target.value)}
-            className="h-8 rounded-md border border-border bg-background px-3 text-sm text-foreground hover:border-foreground/40"
-          >
-            <option value="">{t`All users`}</option>
-            {actors.map((actor: Actor) => (
-              <option key={actor.id} value={actor.id}>
-                {actor.username ? `@${actor.username}` : (actor.name ?? actor.email)}
-              </option>
-            ))}
-          </select>
+            onValueChange={setSelectedUserId}
+            emptyOption={t`All users`}
+            options={actors.map((actor: Actor) => ({
+              value: actor.id,
+              label: formatUserOptionLabel(actor),
+            }))}
+            triggerClassName="h-8 w-auto min-w-[8rem] rounded-md px-3 py-0 text-sm shadow-none"
+          />
         )}
 
         {hasFilters && (
@@ -529,13 +529,21 @@ export default function ActivityPage({ params }: Props) {
                         <p className="text-sm">{activityDescription(item.type, item.metadata)}</p>
                         <div className="mt-0.5 flex items-center gap-1.5">
                           <UserAvatar
-                            name={item.user?.username ? `@${item.user.username}` : (item.user?.name ?? item.user?.email ?? "")}
+                            name={
+                              item.user
+                                ? getUserAvatarLabel(item.user)
+                                : "Unknown"
+                            }
                             email={item.user?.email}
                             src={item.user?.image}
                             className="h-5 w-5"
                           />
                           <span className="text-xs text-muted-foreground">
-                            {item.user?.username ? `@${item.user.username}` : (item.user?.name ?? item.user?.email ?? "Unknown")}
+                            {item.user ? (
+                              <UserDisplayName user={item.user} />
+                            ) : (
+                              "Unknown"
+                            )}
                           </span>
                           <span className="text-xs text-muted-foreground">·</span>
                           <time className="text-xs text-muted-foreground">

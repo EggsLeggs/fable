@@ -6,11 +6,18 @@ function parseRedisOptions(url: string) {
     return {
       host: u.hostname || "localhost",
       port: parseInt(u.port) || 6379,
+      username: u.username || undefined,
       password: u.password || undefined,
       maxRetriesPerRequest: null as null,
+      enableOfflineQueue: false,
     };
   } catch {
-    return { host: "localhost", port: 6379, maxRetriesPerRequest: null as null };
+    return {
+      host: "localhost",
+      port: 6379,
+      maxRetriesPerRequest: null as null,
+      enableOfflineQueue: false,
+    };
   }
 }
 

@@ -2,14 +2,21 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { t } from "@lingui/core/macro";
 import { AuthForm } from "@/components/auth/AuthForm";
-import { PatternedBackground } from "@/components/PatternedBackground";
+
+function SignupAuthForm() {
+  const searchParams = useSearchParams();
+  const ref = searchParams.get("ref") ?? "";
+
+  return <AuthForm key={ref} mode="signup" />;
+}
 
 export default function SignupPage() {
   return (
-    <main className="relative h-screen overflow-hidden bg-muted pt-20 sm:pt-0">
-      <div className="relative z-10 flex h-full flex-col items-center justify-start px-4 sm:justify-center">
+    <main className="h-screen pt-20 sm:pt-0">
+      <div className="flex h-full flex-col items-center justify-start px-4 sm:justify-center">
         <div className="flex w-full max-w-md flex-col items-center">
           <Link href="/">
             <h1 className="mb-6 text-lg font-bold tracking-tight text-foreground">fable</h1>
@@ -21,12 +28,11 @@ export default function SignupPage() {
                 <p className="text-center text-sm text-muted-foreground">{t`Loading...`}</p>
               }
             >
-              <AuthForm mode="signup" />
+              <SignupAuthForm />
             </Suspense>
           </div>
         </div>
       </div>
-      <PatternedBackground className="opacity-50" />
     </main>
   );
 }

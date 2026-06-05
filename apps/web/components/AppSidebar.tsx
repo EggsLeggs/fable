@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { t } from "@lingui/core/macro";
 import { UserMenu } from "@/components/UserMenu";
+import { SidebarAdCard } from "@/components/SidebarAdCard";
 import { ProjectSwitcher } from "@/components/ProjectSwitcher";
 import { ProjectCommandMenu } from "@/components/ProjectCommandMenu";
 import { Separator } from "@/components/ui/separator";
@@ -29,6 +30,7 @@ const iconClass =
 
 type Props = {
   userName: string;
+  userHandle: string | null;
   userEmail: string;
   userAvatarUrl: string | null;
 };
@@ -51,7 +53,7 @@ function isTypingTarget(target: EventTarget | null) {
   );
 }
 
-export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
+export function AppSidebar({ userName, userHandle, userEmail, userAvatarUrl }: Props) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [commandMenuOpen, setCommandMenuOpen] = useState(false);
@@ -174,9 +176,11 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
           )}
         </nav>
 
-        <div className="px-2 pt-2">
+        <div className="px-2 pb-2 pt-2">
+          <SidebarAdCard collapsed={collapsed} />
           <UserMenu
             userName={userName}
+            userHandle={userHandle}
             userEmail={userEmail}
             userAvatarUrl={userAvatarUrl}
             collapsed={collapsed}

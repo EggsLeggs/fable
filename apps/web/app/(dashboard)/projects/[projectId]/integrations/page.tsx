@@ -2,10 +2,11 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
-import { Loader2, CheckCircle2, ExternalLink, Plus, Pencil, Sparkles } from "lucide-react";
+import { Loader2, CheckCircle2, ExternalLink, Plus, Pencil, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 type Props = { params: Promise<{ projectId: string }> };
 
@@ -28,9 +29,11 @@ type VcsIntegration = {
 function ConnectedRepo({
   integration,
   onUpdated,
+  onDeleted,
 }: {
   integration: VcsIntegration;
   onUpdated: () => void;
+  onDeleted: () => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [branch, setBranch] = useState(integration.defaultBranch);
@@ -41,6 +44,14 @@ function ConnectedRepo({
       toast.success("Saved");
       setEditing(false);
       onUpdated();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const remove = trpc.sourceFile.deleteVcsIntegration.useMutation({
+    onSuccess: () => {
+      toast.success("Repository disconnected");
+      onDeleted();
     },
     onError: (err) => toast.error(err.message),
   });
@@ -99,6 +110,19 @@ function ConnectedRepo({
           >
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
+          <button
+            type="button"
+            onClick={() => remove.mutate({ integrationId: integration.id })}
+            disabled={remove.isPending}
+            className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-destructive"
+            title="Disconnect repository"
+          >
+            {remove.isPending ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Trash2 className="h-3.5 w-3.5" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -175,8 +199,14 @@ function AddRepoForm({
   const [showForm, setShowForm] = useState(false);
 
   const create = trpc.sourceFile.createVcsIntegration.useMutation({
-    onSuccess: () => {
-      toast.success("Repository connected");
+    onSuccess: (data) => {
+      if (data.filesQueued > 0) {
+        toast.success(
+          `Repository connected — ${data.filesQueued} file${data.filesQueued !== 1 ? "s" : ""} queued for import`
+        );
+      } else {
+        toast.success("Repository connected");
+      }
       setShowForm(false);
       setSelectedRepo("");
       setBranch("");
@@ -243,19 +273,15 @@ function AddRepoForm({
             Loading repositories...
           </div>
         ) : (
-          <select
-            className="input"
+          <SelectCombobox
             value={selectedRepo}
-            onChange={(e) => handleRepoChange(e.target.value)}
-            required
-          >
-            <option value="">Select a repository</option>
-            {repos.map((repo) => (
-              <option key={repo.id} value={repo.fullName}>
-                {repo.fullName}{repo.private ? " (private)" : ""}
-              </option>
-            ))}
-          </select>
+            onValueChange={handleRepoChange}
+            placeholder="Select a repository"
+            options={repos.map((repo) => ({
+              value: repo.fullName,
+              label: `${repo.fullName}${repo.private ? " (private)" : ""}`,
+            }))}
+          />
         )}
       </div>
 
@@ -379,6 +405,20 @@ export default function IntegrationsPage({ params }: Props) {
 
               {!isLoading && githubAvailable && installation && (
                 <>
+                  <div className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-500" />
+                    <span>{t`Connected`}</span>
+                    <a
+                      href={`https://github.com/settings/installations/${installation.installationId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-1 inline-flex items-center gap-1 font-medium text-foreground underline-offset-2 hover:underline"
+                    >
+                      {t`Manage integration`}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+
                   {integrations.length > 0 && (
                     <ul className="mt-3 flex flex-col gap-3 border-t border-border pt-3">
                       {integrations.map((integration) => (
@@ -386,6 +426,7 @@ export default function IntegrationsPage({ params }: Props) {
                           key={integration.id}
                           integration={integration}
                           onUpdated={() => integrationsQuery.refetch()}
+                          onDeleted={() => integrationsQuery.refetch()}
                         />
                       ))}
                     </ul>

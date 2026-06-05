@@ -4,9 +4,13 @@ import { auth } from "@fable/auth";
 import type { Session } from "@fable/auth";
 import { db } from "@fable/db";
 
-export async function createTRPCContext(req: Request) {
+export type IngestQueue = {
+  add: (name: string, data: unknown, opts?: { jobId?: string }) => Promise<unknown>;
+};
+
+export async function createTRPCContext(req: Request, ingestQueue?: IngestQueue) {
   const session = await auth.api.getSession({ headers: req.headers });
-  return { db, session };
+  return { db, session, ingestQueue: ingestQueue ?? null };
 }
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;

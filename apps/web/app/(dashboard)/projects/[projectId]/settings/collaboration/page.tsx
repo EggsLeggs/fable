@@ -153,7 +153,7 @@ export default function CollaborationSettingsPage({ params }: Props) {
     {
       field: "adminSelfReview",
       label: t`Require a second team member to approve team member translations`,
-      description: t`When on, admins cannot approve their own translations - another admin must review them.`,
+      description: t`When on, team members cannot approve their own translations - another team member must review them.`,
       checked: adminSelfReviewRequired,
       onChange: handleAdminSelfReviewChange,
     },
@@ -164,12 +164,12 @@ export default function CollaborationSettingsPage({ params }: Props) {
       return t`All translations are approved immediately without review.`;
     }
     if (translatorApprovalRequired && !adminSelfReviewRequired) {
-      return t`Translators must have their translations approved by an admin. Admins can approve their own translations.`;
+      return t`Translators must have their translations approved by a team member. Team members can approve their own translations.`;
     }
     if (!translatorApprovalRequired && adminSelfReviewRequired) {
-      return t`Translator translations are approved immediately. Admins require another admin to approve their translations.`;
+      return t`Translator translations are approved immediately. Team members require another team member to approve their translations.`;
     }
-    return t`All translations must be approved by another admin before they are published.`;
+    return t`All translations must be approved by another team member before they are published.`;
   }
 
   return (

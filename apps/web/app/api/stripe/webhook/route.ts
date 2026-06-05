@@ -5,7 +5,11 @@ import { stripe } from "@fable/stripe";
 import { db, users, referrals } from "@fable/db";
 import { eq, and, count } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
-import { getMilestone, fulfillReferralReward } from "@fable/api/referral-rewards";
+import {
+  getMilestone,
+  fulfillReferralReward,
+  isReferralQualified,
+} from "@fable/api/referral-rewards";
 
 export const dynamic = "force-dynamic";
 
@@ -179,9 +183,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           console.log(`[webhook] user ${userId} MT usage reset`);
         }
 
-        // Qualify referral on first real payment (amount_paid > 0 excludes $0 trial invoices)
-        if (invoice.amount_paid > 0) {
-          await qualifyReferral(userId);
+        // Qualify referral after 3 paid months (monthly) or 1 paid year (annual)
+        if (invoice.amount_paid > 0 && subscription) {
+          const billingCycle =
+            subscription.items.data[0]?.price.recurring?.interval === "year"
+              ? "annual"
+              : "monthly";
+
+          const paidInvoices = await stripe.invoices.list({
+            subscription: subscription.id,
+            status: "paid",
+            limit: 100,
+          });
+          const paidCount = paidInvoices.data.filter((inv) => inv.amount_paid > 0).length;
+
+          if (isReferralQualified(billingCycle, paidCount)) {
+            await qualifyReferral(userId);
+          }
         }
         break;
       }

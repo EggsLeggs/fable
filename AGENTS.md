@@ -60,7 +60,7 @@ A few things to know:
 
 - No en-dashes or em-dashes anywhere: not in comments, UI strings, labels, error messages, or documentation. Use a hyphen or rewrite the sentence.
 - No filler phrases ("straightforward", "simply", "just", "easy", "let's explore", "certainly").
-- Always display users by `username` (as `@username`) in the UI and activity feed. Fall back to `name` then `email` only if `username` is null. Never use real name as the primary identifier.
+- Always display users by `name` as the primary label in the UI and activity feed. Show their handle (the `username` field, as `@handle`) in muted text where space allows. Fall back to `email` only if `name` is null.
 
 ### Database Layer (/packages/db)
 

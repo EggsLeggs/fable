@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { cn } from "@/lib/utils";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 type SourceString = {
   id: string;
@@ -296,18 +297,16 @@ export function StringsTab({ projectId }: Props) {
           )}
         </div>
 
-        <select
+        <SelectCombobox
           value={fileFilter}
-          onChange={(e) => setFileFilter(e.target.value)}
-          className="h-9 rounded-md border border-input bg-background px-2 text-sm outline-none focus:ring-1 focus:ring-ring"
-        >
-          <option value="">All files</option>
-          {(filesQuery.data ?? []).map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.name}
-            </option>
-          ))}
-        </select>
+          onValueChange={setFileFilter}
+          emptyOption="All files"
+          options={(filesQuery.data ?? []).map((f) => ({
+            value: f.id,
+            label: f.name,
+          }))}
+          triggerClassName="h-9 w-auto min-w-[10rem] rounded-md px-2 py-0 text-sm shadow-none"
+        />
 
         <div className="relative">
           <input

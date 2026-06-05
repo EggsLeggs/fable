@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle2, Loader2, Unlink } from "lucide-react";
+import { CheckCircle2, ExternalLink, Loader2, Unlink } from "lucide-react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
@@ -69,19 +69,30 @@ export default function ConnectionsPage() {
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               ) : installation ? (
-                <button
-                  type="button"
-                  onClick={() => disconnect.mutate()}
-                  disabled={disconnect.isPending}
-                  className="btn-secondary inline-flex items-center gap-1.5 text-sm"
-                >
-                  {disconnect.isPending ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Unlink className="h-3.5 w-3.5" />
-                  )}
-                  {t`Disconnect`}
-                </button>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`https://github.com/settings/installations/${installation.installationId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary inline-flex items-center gap-1.5 text-sm"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t`Manage`}
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => disconnect.mutate()}
+                    disabled={disconnect.isPending}
+                    className="btn-secondary inline-flex items-center gap-1.5 text-sm"
+                  >
+                    {disconnect.isPending ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Unlink className="h-3.5 w-3.5" />
+                    )}
+                    {t`Disconnect`}
+                  </button>
+                </div>
               ) : connectUrl ? (
                 <a href={connectUrl} className="btn-primary text-sm">
                   {t`Connect`}
@@ -96,7 +107,7 @@ export default function ConnectionsPage() {
 
           {!isLoading && !githubAvailable && (
             <p className="mt-3 border-t border-border pt-3 text-xs text-muted-foreground">
-              {t`GitHub integration requires server configuration. Set GITHUB_APP_ID, GITHUB_PRIVATE_KEY, GITHUB_WEBHOOK_SECRET, and NEXT_PUBLIC_GITHUB_APP_SLUG to enable it.`}
+              {t`GitHub integration requires server configuration. Set GITHUB_APP_ID, GITHUB_PRIVATE_KEY, GITHUB_WEBHOOK_SECRET, and GITHUB_APP_SLUG to enable it.`}
             </p>
           )}
 

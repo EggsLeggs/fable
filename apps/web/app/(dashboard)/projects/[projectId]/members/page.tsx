@@ -4,6 +4,7 @@ import { use, useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
+import { UserDisplayName, getUserPrimaryLabel } from "@/lib/user-display";
 
 type Props = { params: Promise<{ projectId: string }> };
 
@@ -132,7 +133,7 @@ export default function MembersPage({ params }: Props) {
         </h2>
         <ul className="flex flex-col gap-2">
           {members.map((member) => {
-            const displayName = member.user.name || member.user.email;
+            const displayName = getUserPrimaryLabel(member.user);
             const isSelf = member.userId === currentUserId;
             const memberRole = member.role === "owner" ? "Owner" : "Collaborator";
             const canRemove = isOwner && !isSelf && member.role !== "owner";
@@ -146,9 +147,13 @@ export default function MembersPage({ params }: Props) {
                   {displayName.charAt(0)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{displayName}</p>
-                  {member.user.name && (
-                    <p className="truncate text-xs text-muted-foreground">{member.user.email}</p>
+                  <p className="truncate text-sm font-medium">
+                    <UserDisplayName user={member.user} />
+                  </p>
+                  {!member.user.username && member.user.name && (
+                    <p className="truncate text-xs text-muted-foreground">
+                      {member.user.email}
+                    </p>
                   )}
                 </div>
                 <span

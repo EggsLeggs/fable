@@ -150,6 +150,7 @@ export const users = pgTable("user", {
   // Referral program
   referralCode: text("referral_code").unique(),
   referredBy: text("referred_by").references((): AnyPgColumn => users.id, { onDelete: "set null" }),
+  stripeReferralCouponId: text("stripe_referral_coupon_id"),
   lifetimePro: boolean("lifetime_pro").notNull().default(false),
 });
 
@@ -198,6 +199,10 @@ export const organizations = pgTable("organization", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
+  memberInviteToken: text("member_invite_token").unique(),
+  memberInviteEnabled: boolean("member_invite_enabled").notNull().default(false),
+  translatorInviteToken: text("translator_invite_token").unique(),
+  translatorInviteEnabled: boolean("translator_invite_enabled").notNull().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
 });

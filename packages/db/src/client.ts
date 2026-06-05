@@ -18,6 +18,9 @@ function createDb(url: string) {
   const isSupabase = url.includes("supabase");
   const client = postgres(url, {
     prepare: false,
+    max: 10,
+    idle_timeout: 20,
+    max_lifetime: 60 * 30,
     ...(isSupabase ? { ssl: "require" as const } : {}),
   });
   return drizzle(client, { schema: { ...schema, ...relations } });

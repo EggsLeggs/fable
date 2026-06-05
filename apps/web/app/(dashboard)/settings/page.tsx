@@ -15,6 +15,7 @@ import {
   TIME_FORMATS,
   TIMEZONES,
 } from "@/lib/profile-constants";
+import { SelectCombobox } from "@/components/ui/select-combobox";
 
 type UpdateProfileInput = {
   name?: string;
@@ -121,10 +122,8 @@ export default function ProfileSettingsPage() {
 
   const [nameDraft, setNameDraft] = useState<string | undefined>(undefined);
   const name = nameDraft ?? user?.name ?? "";
-  const [usernameDraft, setUsernameDraft] = useState<string | undefined>(
-    undefined
-  );
-  const username = usernameDraft ?? user?.username ?? "";
+  const [handleDraft, setHandleDraft] = useState<string | undefined>(undefined);
+  const handle = handleDraft ?? user?.username ?? "";
   const [timezone, setTimezone] = useState("UTC");
   const [timeFormat, setTimeFormat] = useState<"12h" | "24h">("24h");
   const [spokenLanguages, setSpokenLanguages] = useState<SpokenLanguage[]>([]);
@@ -150,7 +149,7 @@ export default function ProfileSettingsPage() {
     setSpokenLanguages(user.spokenLanguages ?? []);
     setProfileVisibility(user.profileVisibility);
     setNameDraft(undefined);
-    setUsernameDraft(undefined);
+    setHandleDraft(undefined);
   }, [user]);
 
   const updateProfileMutation = trpc.user.updateProfile.useMutation({
@@ -171,7 +170,7 @@ export default function ProfileSettingsPage() {
           setNameDraft(undefined);
         }
         if (input.username !== undefined) {
-          setUsernameDraft(undefined);
+          setHandleDraft(undefined);
         }
         if (options.refresh) {
           router.refresh();
@@ -196,17 +195,17 @@ export default function ProfileSettingsPage() {
     saveProfile({ name: trimmed }, { field: "name", refresh: true });
   }
 
-  function handleUpdateUsername() {
-    const normalized = username.trim().toLowerCase();
+  function handleUpdateHandle() {
+    const normalized = handle.trim().toLowerCase();
     if (normalized && !/^[a-z0-9_]{3,30}$/.test(normalized)) {
       toast.error(
-        t`Username must be 3-30 characters and use only lowercase letters, numbers, and underscores.`
+        t`Handle must be 3-30 characters and use only lowercase letters, numbers, and underscores.`
       );
       return;
     }
     saveProfile(
       { username: normalized === "" ? null : normalized },
-      { field: "username", refresh: true }
+      { field: "handle", refresh: true }
     );
   }
 
@@ -313,7 +312,7 @@ export default function ProfileSettingsPage() {
   }
 
   const savedName = user.name;
-  const savedUsername = user.username ?? "";
+  const savedHandle = user.username ?? "";
 
   return (
     <div className="flex w-full flex-1 flex-col">
@@ -338,15 +337,15 @@ export default function ProfileSettingsPage() {
             />
 
             <InlineTextField
-              label={t`Username`}
-              description={t`Lowercase letters, numbers, and underscores only.`}
-              value={username}
-              savedValue={savedUsername}
-              onChange={(value) => setUsernameDraft(value.toLowerCase())}
-              onUpdate={handleUpdateUsername}
-              updating={updatingField === "username"}
+              label={t`Handle`}
+              description={t`Your unique @handle. Lowercase letters, numbers, and underscores only.`}
+              value={handle}
+              savedValue={savedHandle}
+              onChange={(value) => setHandleDraft(value.toLowerCase())}
+              onUpdate={handleUpdateHandle}
+              updating={updatingField === "handle"}
               inputProps={{
-                placeholder: "your_username",
+                placeholder: "your_handle",
                 autoComplete: "username",
               }}
             />
@@ -362,35 +361,24 @@ export default function ProfileSettingsPage() {
 
           <Section title={t`Date & time`}>
             <FieldGroup label={t`Timezone`}>
-              <select
+              <SelectCombobox
                 value={timezone}
-                onChange={(e) => handleTimezoneChange(e.target.value)}
+                onValueChange={handleTimezoneChange}
                 disabled={updatingField === "timezone"}
-                className="input"
-              >
-                {TIMEZONES.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+                options={TIMEZONES.map(({ value, label }) => ({ value, label }))}
+              />
             </FieldGroup>
 
             <FieldGroup label={t`Time format`}>
-              <select
+              <SelectCombobox
                 value={timeFormat}
-                onChange={(e) =>
-                  handleTimeFormatChange(e.target.value as "12h" | "24h")
+                onValueChange={(value) =>
+                  handleTimeFormatChange(value as "12h" | "24h")
                 }
                 disabled={updatingField === "timeFormat"}
-                className="input"
-              >
-                {TIME_FORMATS.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+                options={TIME_FORMATS.map(({ value, label }) => ({ value, label }))}
+                searchable={false}
+              />
             </FieldGroup>
           </Section>
 
@@ -406,34 +394,31 @@ export default function ProfileSettingsPage() {
               )}
               {spokenLanguages.map((entry, index) => (
                 <div key={index} className="flex items-start gap-2">
-                  <select
+                  <SelectCombobox
                     value={entry.language}
-                    onChange={(e) =>
-                      updateSpokenLanguage(index, "language", e.target.value)
+                    onValueChange={(value) =>
+                      updateSpokenLanguage(index, "language", value)
                     }
                     disabled={updatingField === "spokenLanguages"}
-                    className="input flex-1"
-                  >
-                    {SPOKEN_LANGUAGES.map(({ value, label }) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                  <select
+                    options={SPOKEN_LANGUAGES.map(({ value, label }) => ({
+                      value,
+                      label,
+                    }))}
+                    triggerClassName="flex-1"
+                  />
+                  <SelectCombobox
                     value={entry.level}
-                    onChange={(e) =>
-                      updateSpokenLanguage(index, "level", e.target.value)
+                    onValueChange={(value) =>
+                      updateSpokenLanguage(index, "level", value)
                     }
                     disabled={updatingField === "spokenLanguages"}
-                    className="input flex-[1.5]"
-                  >
-                    {SPOKEN_LANGUAGE_LEVELS.map(({ value, label }) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
+                    options={SPOKEN_LANGUAGE_LEVELS.map(({ value, label }) => ({
+                      value,
+                      label,
+                    }))}
+                    triggerClassName="flex-[1.5]"
+                    searchable={false}
+                  />
                   <button
                     type="button"
                     onClick={() => removeSpokenLanguage(index)}

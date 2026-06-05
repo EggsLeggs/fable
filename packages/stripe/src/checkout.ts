@@ -8,15 +8,23 @@ export async function createCheckoutSession({
   stripeCustomerId,
   returnBaseUrl,
   trialDays,
+  couponId,
+  successPath = "/settings/billing?success=true",
+  cancelPath = "/settings/billing?canceled=true",
 }: {
   userId: string;
   billingCycle: BillingCycle;
   stripeCustomerId?: string | null;
   returnBaseUrl: string;
   trialDays?: number;
+  couponId?: string;
+  successPath?: string;
+  cancelPath?: string;
 }): Promise<string> {
   const planPriceId =
     billingCycle === "annual" ? PRICE_IDS.proAnnual : PRICE_IDS.proMonthly;
+
+  const requiresCardUpfront = Boolean(couponId || trialDays);
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
@@ -26,12 +34,14 @@ export async function createCheckoutSession({
       { price: PRICE_IDS.mtMetered },
     ],
     metadata: { userId },
+    ...(couponId ? { discounts: [{ coupon: couponId }] } : {}),
+    ...(requiresCardUpfront ? { payment_method_collection: "always" as const } : {}),
     subscription_data: {
       metadata: { userId },
-      ...(trialDays ? { trial_period_days: trialDays } : {}),
+      ...(!couponId && trialDays ? { trial_period_days: trialDays } : {}),
     },
-    success_url: `${returnBaseUrl}/settings/billing?success=true`,
-    cancel_url: `${returnBaseUrl}/settings/billing?canceled=true`,
+    success_url: `${returnBaseUrl}${successPath}`,
+    cancel_url: `${returnBaseUrl}${cancelPath}`,
   });
 
   if (!session.url) throw new Error("Stripe did not return a checkout URL");
