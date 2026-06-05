@@ -7,6 +7,7 @@
     "./root": "./src/root.ts",
     "./trpc": "./src/trpc.ts",
     "./log-activity": "./src/log-activity.ts",
+    "./referral-rewards": "./src/referral-rewards.ts",
     "./integration-config": "./src/integration-config.ts"
   },
   "dependencies": {
