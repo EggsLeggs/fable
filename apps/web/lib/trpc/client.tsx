@@ -1,13 +1,13 @@
 "use client";
 
 import type { AppRouter } from "@fable/api";
-import { createTRPCReact } from "@trpc/react-query";
+import { createTRPCReact, type CreateTRPCReact } from "@trpc/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import superjson from "superjson";
 import * as React from "react";
 
-export const trpc = createTRPCReact<AppRouter>();
+export const trpc: CreateTRPCReact<AppRouter, unknown> = createTRPCReact<AppRouter>();
 
 function makeQueryClient() {
   return new QueryClient({
