@@ -2,7 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, PanelLeftClose, PanelLeft, Search } from "lucide-react";
+import {
+  Users,
+  PanelLeftClose,
+  PanelLeft,
+  Search,
+  LayoutDashboard,
+  Database,
+  Languages,
+  ListChecks,
+  Plug,
+  Activity,
+  Settings,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { UserMenu } from "@/components/UserMenu";
 import { ProjectSwitcher } from "@/components/ProjectSwitcher";
@@ -96,7 +108,7 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
         </div>
 
         <div
-          className={`flex items-center gap-1 px-2 pb-2 ${
+          className={`relative flex items-center gap-1 px-2 pb-2 ${
             collapsed ? "justify-center" : ""
           }`}
         >
@@ -120,20 +132,42 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
 
         <nav className="flex flex-1 flex-col gap-1 px-2 pt-2">
           {displayProjectId && (
-            <Link
-              href={`/projects/${displayProjectId}/members`}
-              title={collapsed ? "Members" : undefined}
-              className={`group flex items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors ${
-                collapsed ? "justify-center" : "w-full"
-              } ${
-                pathname.endsWith("/members")
-                  ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-                  : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              }`}
-            >
-              <Users className={iconClass} />
-              {!collapsed && <span className="min-w-0 flex-1 truncate">Members</span>}
-            </Link>
+            <>
+              {(
+                [
+                  { href: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
+                  { href: "sources", label: "Sources", Icon: Database },
+                  { href: "translations", label: "Translations", Icon: Languages },
+                  { href: "tasks", label: "Tasks", Icon: ListChecks },
+                  { href: "integrations", label: "Integrations", Icon: Plug },
+                  { href: "activity", label: "Activity", Icon: Activity },
+                  { href: "members", label: "Members", Icon: Users },
+                  { href: "settings", label: "Settings", Icon: Settings },
+                ] as const
+              ).map(({ href, label, Icon }) => {
+                const base = `/projects/${displayProjectId}/${href}`;
+                const active = pathname === base || pathname.startsWith(`${base}/`);
+                return (
+                  <Link
+                    key={href}
+                    href={`/projects/${displayProjectId}/${href}`}
+                    title={collapsed ? label : undefined}
+                    className={`group flex items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors ${
+                      collapsed ? "justify-center" : "w-full"
+                    } ${
+                      active
+                        ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
+                        : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    }`}
+                  >
+                    <Icon className={iconClass} />
+                    {!collapsed && (
+                      <span className="min-w-0 flex-1 truncate">{label}</span>
+                    )}
+                  </Link>
+                );
+              })}
+            </>
           )}
         </nav>
 
