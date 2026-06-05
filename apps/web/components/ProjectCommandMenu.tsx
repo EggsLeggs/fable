@@ -5,6 +5,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Command } from "cmdk";
 import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
+import { ProjectAvatar } from "@/components/ProjectAvatar";
 
 type Props = {
   open: boolean;
@@ -46,9 +47,11 @@ export function ProjectCommandMenu({ open, onOpenChange }: Props) {
                   onSelect={() => navigate(project.id)}
                   className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary data-[selected=true]:bg-secondary"
                 >
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-accent text-[11px] font-semibold text-accent-foreground">
-                    {project.name.charAt(0).toUpperCase()}
-                  </div>
+                  <ProjectAvatar
+                    projectId={project.id}
+                    name={project.name}
+                    className="h-6 w-6 text-[11px]"
+                  />
                   <span>{project.name}</span>
                   {project.sourceLocale && (
                     <span className="ml-auto text-xs text-muted-foreground">{project.sourceLocale}</span>

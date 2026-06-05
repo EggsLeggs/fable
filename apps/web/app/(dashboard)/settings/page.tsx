@@ -233,9 +233,17 @@ export default function ProfileSettingsPage() {
   }
 
   function addSpokenLanguage() {
+    const usedLanguages = new Set(spokenLanguages.map((entry) => entry.language));
+    const nextLanguage = SPOKEN_LANGUAGES.find(
+      ({ value }) => !usedLanguages.has(value)
+    )?.value;
+    if (!nextLanguage) {
+      toast.error(t`You have added all available languages.`);
+      return;
+    }
     saveSpokenLanguages([
       ...spokenLanguages,
-      { language: "en", level: "professional_working" },
+      { language: nextLanguage, level: "professional_working" },
     ]);
   }
 
@@ -244,6 +252,13 @@ export default function ProfileSettingsPage() {
     field: "language" | "level",
     value: string
   ) {
+    if (
+      field === "language" &&
+      spokenLanguages.some((entry, i) => i !== index && entry.language === value)
+    ) {
+      toast.error(t`You already added this language.`);
+      return;
+    }
     const next = spokenLanguages.map((entry, i) =>
       i === index
         ? {
@@ -400,7 +415,13 @@ export default function ProfileSettingsPage() {
                       updateSpokenLanguage(index, "language", value)
                     }
                     disabled={updatingField === "spokenLanguages"}
-                    options={SPOKEN_LANGUAGES.map(({ value, label }) => ({
+                    options={SPOKEN_LANGUAGES.filter(
+                      ({ value }) =>
+                        value === entry.language ||
+                        !spokenLanguages.some(
+                          (other, i) => i !== index && other.language === value
+                        )
+                    ).map(({ value, label }) => ({
                       value,
                       label,
                     }))}
@@ -434,7 +455,10 @@ export default function ProfileSettingsPage() {
             <button
               type="button"
               onClick={addSpokenLanguage}
-              disabled={updatingField === "spokenLanguages"}
+              disabled={
+                updatingField === "spokenLanguages" ||
+                spokenLanguages.length >= SPOKEN_LANGUAGES.length
+              }
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
             >
               <Plus className="h-4 w-4" />

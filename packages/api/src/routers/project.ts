@@ -102,6 +102,7 @@ export const projectRouter = router({
           .regex(/^[a-z0-9-]+$/, "Slug may only contain lowercase letters, numbers, and hyphens"),
         description: z.string().max(500).optional(),
         sourceLocale: z.string().default("en"),
+        targetLocales: z.array(z.string()).default([]),
         visibility: z.enum(["public", "private"]).default("private"),
       })
     )
@@ -139,6 +140,22 @@ export const projectRouter = router({
         locale: input.sourceLocale,
         isSource: true,
       });
+
+      const uniqueTargetLocales = [
+        ...new Set(
+          input.targetLocales.filter((locale) => locale !== input.sourceLocale)
+        ),
+      ];
+      if (uniqueTargetLocales.length > 0) {
+        await ctx.db.insert(projectLocales).values(
+          uniqueTargetLocales.map((locale) => ({
+            id: uuid(),
+            projectId: id,
+            locale,
+            isSource: false,
+          }))
+        );
+      }
 
       await logActivity(ctx.db, {
         projectId: id,

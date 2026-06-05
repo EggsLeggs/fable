@@ -354,6 +354,7 @@ function TranslationEditorPanel({
   keyId,
   onNavigatePrev,
   onNavigateNext,
+  onSelectString,
   hasPrev,
   hasNext,
 }: {
@@ -362,6 +363,7 @@ function TranslationEditorPanel({
   keyId: string;
   onNavigatePrev: () => void;
   onNavigateNext: () => void;
+  onSelectString: (id: string) => void;
   hasPrev: boolean;
   hasNext: boolean;
 }) {
@@ -780,7 +782,13 @@ function TranslationEditorPanel({
               </p>
               <div className="flex flex-col gap-1">
                 {nearbyQuery.data.map((n) => (
-                  <div key={n.id} className="rounded-lg border border-border p-2.5">
+                  <button
+                    key={n.id}
+                    type="button"
+                    onClick={() => onSelectString(n.id)}
+                    className="flex flex-col rounded-lg border border-border p-2.5 text-left hover:bg-muted/50"
+                    title="Go to this string"
+                  >
                     <div className="flex items-baseline gap-1.5">
                       <p className="truncate text-xs font-medium text-foreground">
                         {n.sourceValue ?? n.key}
@@ -794,7 +802,7 @@ function TranslationEditorPanel({
                         {n.translatedValue}
                       </p>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
             </section>
@@ -1027,6 +1035,7 @@ export default function StringsEditorPage({ params }: Props) {
             keyId={selectedId}
             onNavigatePrev={navigatePrev}
             onNavigateNext={navigateNext}
+            onSelectString={selectString}
             hasPrev={currentIdx > 0}
             hasNext={currentIdx < strings.length - 1}
           />

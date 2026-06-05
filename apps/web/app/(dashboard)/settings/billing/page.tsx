@@ -82,6 +82,10 @@ export default function BillingPage() {
     return <div className="text-sm text-muted-foreground">{t`Loading...`}</div>;
   }
 
+  if (usageQuery.isError) {
+    return <div className="text-sm text-destructive">{t`Failed to load billing information.`}</div>;
+  }
+
   const showReferralOffer = !isPro && billingAvailable && usage?.wasReferred;
 
   return (

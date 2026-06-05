@@ -74,7 +74,17 @@ export const userRouter = router({
         timezone: z.string().min(1).max(100).optional(),
         timeFormat: z.enum(["12h", "24h"]).optional(),
         siteLocale: z.string().min(2).max(10).optional(),
-        spokenLanguages: z.array(spokenLanguageSchema).max(20).optional(),
+        spokenLanguages: z
+          .array(spokenLanguageSchema)
+          .max(20)
+          .refine(
+            (langs) => {
+              const codes = langs.map((lang) => lang.language);
+              return new Set(codes).size === codes.length;
+            },
+            { message: "Each language can only be added once." }
+          )
+          .optional(),
         profileVisibility: z.enum(["public", "private"]).optional(),
       })
     )

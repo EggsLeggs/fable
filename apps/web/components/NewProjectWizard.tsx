@@ -3,28 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { X } from "lucide-react";
 import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
+import { LANGUAGES, getLanguageName } from "@/lib/language-constants";
 import { SelectCombobox } from "@/components/ui/select-combobox";
 import type { DbProject } from "@fable/db";
-
-const COMMON_LOCALES = [
-  { value: "en", label: "English" },
-  { value: "es", label: "Spanish" },
-  { value: "fr", label: "French" },
-  { value: "de", label: "German" },
-  { value: "zh", label: "Chinese" },
-  { value: "ja", label: "Japanese" },
-  { value: "ko", label: "Korean" },
-  { value: "pt", label: "Portuguese" },
-  { value: "it", label: "Italian" },
-  { value: "ru", label: "Russian" },
-  { value: "ar", label: "Arabic" },
-  { value: "nl", label: "Dutch" },
-  { value: "pl", label: "Polish" },
-  { value: "sv", label: "Swedish" },
-  { value: "tr", label: "Turkish" },
-];
 
 function toSlug(name: string): string {
   return name
@@ -45,6 +29,7 @@ export function NewProjectWizard() {
   const [step, setStep] = useState<1 | 2>(1);
   const [name, setName] = useState("");
   const [sourceLocale, setSourceLocale] = useState("en");
+  const [targetLocales, setTargetLocales] = useState<string[]>([]);
   const [createError, setCreateError] = useState<string | null>(null);
   const [createdProject, setCreatedProject] = useState<DbProject | null>(null);
   const [createdOrgId, setCreatedOrgId] = useState<string | null>(null);
@@ -60,6 +45,25 @@ export function NewProjectWizard() {
 
   const creating = getOrCreate.isPending || createProject.isPending;
 
+  const addedCodes = new Set([sourceLocale, ...targetLocales]);
+  const availableToAdd = LANGUAGES.filter(
+    (l) => !addedCodes.has(l.code) && l.code !== sourceLocale
+  );
+
+  function handleSourceLocaleChange(value: string) {
+    setSourceLocale(value);
+    setTargetLocales((prev) => prev.filter((locale) => locale !== value));
+  }
+
+  function handleAddTargetLocale(locale: string) {
+    if (!locale || locale === sourceLocale || targetLocales.includes(locale)) return;
+    setTargetLocales((prev) => [...prev, locale]);
+  }
+
+  function handleRemoveTargetLocale(locale: string) {
+    setTargetLocales((prev) => prev.filter((code) => code !== locale));
+  }
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
@@ -71,6 +75,7 @@ export function NewProjectWizard() {
         name: name.trim(),
         slug,
         sourceLocale,
+        targetLocales,
       });
       setCreatedProject(project);
       setCreatedOrgId(org.id);
@@ -237,8 +242,61 @@ export function NewProjectWizard() {
           <SelectCombobox
             id="source-locale"
             value={sourceLocale}
-            onValueChange={setSourceLocale}
-            options={COMMON_LOCALES}
+            onValueChange={handleSourceLocaleChange}
+            options={LANGUAGES.map(({ code, name }) => ({
+              value: code,
+              label: `${name} (${code})`,
+            }))}
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <div>
+            <p className="text-sm font-medium">{t`Target languages`}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {t`Languages your project will be translated into.`}
+            </p>
+          </div>
+
+          {targetLocales.length > 0 ? (
+            <ul className="space-y-1.5">
+              {targetLocales.map((locale) => {
+                const label = getLanguageName(locale) || locale;
+                return (
+                  <li
+                    key={locale}
+                    className="flex items-center justify-between rounded-md border border-border bg-muted/40 px-3 py-2"
+                  >
+                    <span className="text-sm">
+                      {label}
+                      <span className="ml-2 font-mono text-xs text-muted-foreground">
+                        {locale}
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTargetLocale(locale)}
+                      className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                      aria-label={t`Remove language`}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+
+          <SelectCombobox
+            value=""
+            onValueChange={(code) => {
+              if (code) handleAddTargetLocale(code);
+            }}
+            placeholder={t`Select a language to add...`}
+            options={availableToAdd.map(({ code, name }) => ({
+              value: code,
+              label: `${name} (${code})`,
+            }))}
           />
         </div>
 

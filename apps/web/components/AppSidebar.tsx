@@ -128,10 +128,7 @@ export function AppSidebar({ userName, userHandle, userEmail, userAvatarUrl }: P
             collapsed ? "justify-center" : ""
           }`}
         >
-          <ProjectSwitcher
-            collapsed={collapsed}
-            onSearchOpen={() => setCommandMenuOpen(true)}
-          />
+          <ProjectSwitcher collapsed={collapsed} />
           {!collapsed && (
             <button
               type="button"

@@ -45,7 +45,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        260
+        261
       ]
     ],
     "translation": "{0} types"
@@ -197,7 +197,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        114
+        115
       ]
     ],
     "translation": "A custom language with that code already exists."
@@ -209,7 +209,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        206
+        207
       ]
     ],
     "translation": "A project is a workspace for your translation files and team."
@@ -233,7 +233,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        321
+        337
       ]
     ],
     "translation": "Account"
@@ -245,7 +245,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        455
+        456
       ],
       [
         "components/AppSidebar.tsx",
@@ -261,7 +261,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        306
+        299
       ]
     ],
     "translation": "Add"
@@ -273,7 +273,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        284
+        277
       ]
     ],
     "translation": "Add a custom language"
@@ -285,7 +285,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        228
+        227
       ]
     ],
     "translation": "Add a language"
@@ -297,7 +297,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        454
+        465
       ]
     ],
     "translation": "Add language"
@@ -309,7 +309,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        397
+        402
       ]
     ],
     "translation": "Add languages and your proficiency level, similar to LinkedIn."
@@ -321,7 +321,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        252
+        245
       ]
     ],
     "translation": "Add languages that are not in the standard list, such as regional variants or internal codes."
@@ -333,7 +333,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        125
+        126
       ]
     ],
     "translation": "Add people who should have access to this project."
@@ -389,7 +389,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        473
+        472
       ]
     ],
     "translation": "All languages"
@@ -420,7 +420,6 @@
     "obsolete": true
   },
   "jOeL62": {
-    "translation": "All translations must be approved by another team member before they are published.",
     "message": "All translations must be approved by another team member before they are published.",
     "placeholders": {},
     "comments": [],
@@ -429,7 +428,8 @@
         "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
         172
       ]
-    ]
+    ],
+    "translation": "All translations must be approved by another team member before they are published."
   },
   "h6zvpR": {
     "message": "All types",
@@ -438,7 +438,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        257
+        258
       ]
     ],
     "translation": "All types"
@@ -450,7 +450,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        488
+        483
       ]
     ],
     "translation": "All users"
@@ -522,7 +522,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        354
+        355
       ]
     ],
     "translation": "Any date"
@@ -546,7 +546,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        493
+        504
       ]
     ],
     "translation": "Anyone can view your profile page."
@@ -608,7 +608,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        469
+        466
       ]
     ],
     "translation": "Available on this server."
@@ -656,7 +656,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        107
+        108
       ]
     ],
     "translation": "Both a name and a code are required."
@@ -672,7 +672,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        584
+        595
       ]
     ],
     "translation": "Cancel"
@@ -721,7 +721,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        88
+        87
       ]
     ],
     "translation": "Choose how Fable looks on this device."
@@ -733,7 +733,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        69
+        70
       ]
     ],
     "translation": "Choose the language used across the Fable interface."
@@ -782,7 +782,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        503
+        498
       ]
     ],
     "translation": "Clear"
@@ -794,7 +794,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        299
+        300
       ]
     ],
     "translation": "Clear selection"
@@ -806,7 +806,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        295
+        288
       ]
     ],
     "translation": "Code (e.g. en-GB)"
@@ -830,7 +830,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        178
+        179
       ]
     ],
     "translation": "Collaborator"
@@ -918,7 +918,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        574
+        585
       ]
     ],
     "translation": "Confirm deletion"
@@ -930,7 +930,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        520
+        531
       ]
     ],
     "translation": "Confirm new password"
@@ -942,7 +942,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        558
+        569
       ]
     ],
     "translation": "Confirm with your password"
@@ -966,7 +966,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        413
+        410
       ],
       [
         "app/(dashboard)/settings/connections/page.tsx",
@@ -1054,7 +1054,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        460
+        471
       ]
     ],
     "translation": "Control who can see your public profile."
@@ -1154,7 +1154,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        71
+        72
       ]
     ],
     "translation": "Could not add language."
@@ -1166,7 +1166,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        281
+        297
       ]
     ],
     "translation": "Could not change password."
@@ -1178,7 +1178,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        302
+        318
       ]
     ],
     "translation": "Could not delete account."
@@ -1226,7 +1226,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        76
+        77
       ]
     ],
     "translation": "Could not remove language."
@@ -1280,7 +1280,6 @@
     "translation": "Could not update cap."
   },
   "9sW6Gt": {
-    "translation": "Could not update invite link.",
     "message": "Could not update invite link.",
     "placeholders": {},
     "comments": [],
@@ -1289,7 +1288,8 @@
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
         156
       ]
-    ]
+    ],
+    "translation": "Could not update invite link."
   },
   "BGDt6y": {
     "message": "Could not update profile.",
@@ -1298,7 +1298,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        155
+        156
       ]
     ],
     "translation": "Could not update profile."
@@ -1314,7 +1314,7 @@
       ],
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        80
+        81
       ],
       [
         "app/(dashboard)/projects/[projectId]/settings/page.tsx",
@@ -1330,7 +1330,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        64
+        65
       ]
     ],
     "translation": "Could not update source language."
@@ -1354,7 +1354,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        204
+        205
       ]
     ],
     "translation": "Create a new project"
@@ -1366,7 +1366,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        263
+        258
       ]
     ],
     "translation": "Create project"
@@ -1378,7 +1378,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        263
+        258
       ]
     ],
     "translation": "Creating..."
@@ -1390,7 +1390,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        503
+        514
       ]
     ],
     "translation": "Current password"
@@ -1454,7 +1454,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        128
+        129
       ]
     ],
     "translation": "Custom language added."
@@ -1466,7 +1466,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        251
+        244
       ]
     ],
     "translation": "Custom language codes"
@@ -1478,7 +1478,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        146
+        147
       ]
     ],
     "translation": "Custom language removed."
@@ -1506,7 +1506,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        542
+        553
       ]
     ],
     "translation": "Danger zone"
@@ -1518,7 +1518,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        62
+        63
       ],
       [
         "components/UserMenu.tsx",
@@ -1546,7 +1546,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        361
+        377
       ]
     ],
     "translation": "Date & time"
@@ -1570,7 +1570,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        554
+        565
       ]
     ],
     "translation": "Delete account"
@@ -1602,7 +1602,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        574
+        585
       ]
     ],
     "translation": "Deleting..."
@@ -1650,7 +1650,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        352
+        368
       ]
     ],
     "translation": "Email"
@@ -1670,7 +1670,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        134
+        135
       ]
     ],
     "translation": "Email address"
@@ -1730,7 +1730,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        564
+        575
       ],
       [
         "components/auth/AuthForm.tsx",
@@ -1746,7 +1746,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        293
+        309
       ]
     ],
     "translation": "Enter your password to confirm deletion."
@@ -1806,7 +1806,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        83
+        84
       ]
     ],
     "translation": "Failed to create project. Please try again."
@@ -1830,7 +1830,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        108
+        109
       ]
     ],
     "translation": "Failed to invite member. Please try again."
@@ -1902,7 +1902,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        152
+        153
       ]
     ],
     "translation": "for unlimited members."
@@ -2034,7 +2034,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        392
+        389
       ]
     ],
     "translation": "GitHub integration is not configured on this server. Ask your administrator to set the GitHub App environment variables."
@@ -2115,7 +2115,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        187
+        188
       ]
     ],
     "translation": "Go to project"
@@ -2127,7 +2127,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        339
+        355
       ]
     ],
     "translation": "Handle"
@@ -2151,7 +2151,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        201
+        202
       ]
     ],
     "translation": "Handle must be 3-30 characters and use only lowercase letters, numbers, and underscores."
@@ -2227,7 +2227,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        68
+        69
       ]
     ],
     "translation": "Interface language"
@@ -2255,7 +2255,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        142
+        143
       ]
     ],
     "translation": "Invite"
@@ -2307,7 +2307,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        123
+        124
       ]
     ],
     "translation": "Invite team members"
@@ -2323,7 +2323,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        142
+        143
       ]
     ],
     "translation": "Inviting..."
@@ -2367,7 +2367,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        71
+        72
       ]
     ],
     "translation": "Language"
@@ -2379,7 +2379,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        289
+        282
       ]
     ],
     "translation": "Language name"
@@ -2403,7 +2403,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        396
+        401
       ]
     ],
     "translation": "Languages you speak"
@@ -2415,7 +2415,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        190
+        189
       ]
     ],
     "translation": "Languages your project will be translated into."
@@ -2427,7 +2427,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        61
+        62
       ],
       [
         "components/UserMenu.tsx",
@@ -2443,7 +2443,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        580
+        575
       ]
     ],
     "translation": "Load more"
@@ -2463,7 +2463,7 @@
       ],
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        577
+        572
       ],
       [
         "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
@@ -2471,7 +2471,7 @@
       ],
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        154
+        155
       ],
       [
         "app/(dashboard)/projects/[projectId]/settings/page.tsx",
@@ -2483,7 +2483,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        310
+        326
       ],
       [
         "app/(dashboard)/settings/referrals/page.tsx",
@@ -2552,7 +2552,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        453
+        450
       ]
     ],
     "translation": "Machine translation"
@@ -2564,7 +2564,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        475
+        472
       ]
     ],
     "translation": "Machine translation is not configured on this server. Set OPENAI_API_KEY to enable it."
@@ -2600,7 +2600,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        420
+        417
       ]
     ],
     "translation": "Manage integration"
@@ -2770,7 +2770,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        220
+        221
       ]
     ],
     "translation": "My project"
@@ -2786,7 +2786,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        325
+        341
       ]
     ],
     "translation": "Name"
@@ -2798,7 +2798,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        191
+        192
       ]
     ],
     "translation": "Name cannot be empty."
@@ -2810,7 +2810,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        511
+        522
       ]
     ],
     "translation": "New password"
@@ -2822,7 +2822,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        264
+        280
       ]
     ],
     "translation": "New passwords do not match."
@@ -2866,7 +2866,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        102
+        103
       ]
     ],
     "translation": "No account found with that email address."
@@ -2878,7 +2878,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        516
+        511
       ]
     ],
     "translation": "No activity matches your filters."
@@ -2890,7 +2890,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        516
+        511
       ]
     ],
     "translation": "No activity yet."
@@ -2902,7 +2902,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        255
+        248
       ]
     ],
     "translation": "No custom languages added yet."
@@ -2914,7 +2914,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        402
+        407
       ]
     ],
     "translation": "No languages added yet."
@@ -2950,7 +2950,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        193
+        192
       ]
     ],
     "translation": "No target languages yet."
@@ -3063,7 +3063,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        476
+        487
       ]
     ],
     "translation": "Only you can view your profile."
@@ -3075,7 +3075,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        461
+        458
       ]
     ],
     "translation": "OpenAI"
@@ -3127,7 +3127,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        178
+        179
       ]
     ],
     "translation": "Owner"
@@ -3139,7 +3139,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        502
+        513
       ]
     ],
     "translation": "Password"
@@ -3151,7 +3151,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        268
+        284
       ]
     ],
     "translation": "Password must be at least 8 characters."
@@ -3163,7 +3163,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        288
+        304
       ]
     ],
     "translation": "Password updated."
@@ -3224,7 +3224,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        544
+        555
       ]
     ],
     "translation": "Permanently delete your account and all associated data. This action cannot be undone."
@@ -3260,7 +3260,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
-        463
+        460
       ]
     ],
     "translation": "Pre-translate keys with GPT-4o-mini. Requires a Pro plan and an OpenAI API key on the server."
@@ -3288,7 +3288,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        474
+        485
       ]
     ],
     "translation": "Private"
@@ -3348,7 +3348,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        459
+        470
       ]
     ],
     "translation": "Profile privacy"
@@ -3400,7 +3400,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        213
+        214
       ]
     ],
     "translation": "Project name"
@@ -3464,7 +3464,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        491
+        502
       ]
     ],
     "translation": "Public"
@@ -3512,7 +3512,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        457
+        458
       ]
     ],
     "translation": "Recent changes and events across this project."
@@ -3588,7 +3588,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        274
+        267
       ]
     ],
     "translation": "Remove custom language"
@@ -3600,11 +3600,11 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        217
+        216
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        440
+        448
       ]
     ],
     "translation": "Remove language"
@@ -3760,7 +3760,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        239
+        234
       ]
     ],
     "translation": "Select a language to add..."
@@ -3949,7 +3949,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        194
+        195
       ]
     ],
     "translation": "Skip for now"
@@ -3973,7 +3973,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        227
+        228
       ]
     ],
     "translation": "Slug:"
@@ -4005,11 +4005,11 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        166
+        167
       ],
       [
         "components/NewProjectWizard.tsx",
-        234
+        235
       ]
     ],
     "translation": "Source language"
@@ -4021,7 +4021,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        61
+        62
       ]
     ],
     "translation": "Source language updated."
@@ -4121,7 +4121,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        60
+        61
       ],
       [
         "components/UserMenu.tsx",
@@ -4137,7 +4137,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        189
+        188
       ]
     ],
     "translation": "Target languages"
@@ -4213,7 +4213,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        104
+        105
       ]
     ],
     "translation": "That person is already a member."
@@ -4225,7 +4225,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        167
+        168
       ]
     ],
     "translation": "The language your strings are written in. All translations are derived from this."
@@ -4237,7 +4237,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/preferences/page.tsx",
-        87
+        86
       ],
       [
         "components/UserMenu.tsx",
@@ -4277,7 +4277,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
-        93
+        94
       ]
     ],
     "translation": "This language is already added."
@@ -4314,7 +4314,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        377
+        387
       ]
     ],
     "translation": "Time format"
@@ -4326,7 +4326,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        362
+        378
       ]
     ],
     "translation": "Timezone"
@@ -4338,7 +4338,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        256
+        251
       ]
     ],
     "translation": "to create unlimited projects."
@@ -4441,7 +4441,6 @@
     "obsolete": true
   },
   "fbaV5S": {
-    "translation": "Translator translations are approved immediately. Team members require another team member to approve their translations.",
     "message": "Translator translations are approved immediately. Team members require another team member to approve their translations.",
     "placeholders": {},
     "comments": [],
@@ -4450,7 +4449,8 @@
         "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
         170
       ]
-    ]
+    ],
+    "translation": "Translator translations are approved immediately. Team members require another team member to approve their translations."
   },
   "cW8Uak": {
     "message": "Translators",
@@ -4513,7 +4513,6 @@
     "translation": "Translators can view glossary terms but cannot edit or suggest."
   },
   "V+V6yJ": {
-    "translation": "Translators must have their translations approved by a team member. Team members can approve their own translations.",
     "message": "Translators must have their translations approved by a team member. Team members can approve their own translations.",
     "placeholders": {},
     "comments": [],
@@ -4522,7 +4521,8 @@
         "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
         167
       ]
-    ]
+    ],
+    "translation": "Translators must have their translations approved by a team member. Team members can approve their own translations."
   },
   "jk1tjT": {
     "message": "Translators must have their translations approved by an admin. Admins can approve their own translations.",
@@ -4616,7 +4616,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        108
+        109
       ]
     ],
     "translation": "Update"
@@ -4628,7 +4628,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        535
+        546
       ]
     ],
     "translation": "Update password"
@@ -4644,7 +4644,7 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        178
+        179
       ]
     ],
     "translation": "Updated."
@@ -4656,11 +4656,11 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        108
+        109
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        535
+        546
       ]
     ],
     "translation": "Updating..."
@@ -4704,11 +4704,11 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        150
+        151
       ],
       [
         "components/NewProjectWizard.tsx",
-        254
+        249
       ],
       [
         "components/SidebarAdCard.tsx",
@@ -4891,7 +4891,6 @@
     "obsolete": true
   },
   "Fsylpw": {
-    "translation": "When on, team members cannot approve their own translations - another team member must review them.",
     "message": "When on, team members cannot approve their own translations - another team member must review them.",
     "placeholders": {},
     "comments": [],
@@ -4900,7 +4899,8 @@
         "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
         156
       ]
-    ]
+    ],
+    "translation": "When on, team members cannot approve their own translations - another team member must review them."
   },
   "PWNh8X": {
     "message": "When on, translations from translators go into a review queue before being approved. When off, translator translations are approved immediately.",
@@ -4921,10 +4921,22 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        76
+        77
       ]
     ],
     "translation": "You"
+  },
+  "46mTv6": {
+    "translation": "You already added this language.",
+    "message": "You already added this language.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        259
+      ]
+    ]
   },
   "9FhlvZ": {
     "message": "You are already part of this workspace.",
@@ -4950,6 +4962,18 @@
     ],
     "translation": "You are invited"
   },
+  "+zy3Rx": {
+    "translation": "You have added all available languages.",
+    "message": "You have added all available languages.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        241
+      ]
+    ]
+  },
   "0bqfgW": {
     "message": "You have reached the member limit on the free plan.",
     "placeholders": {},
@@ -4957,7 +4981,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        148
+        149
       ]
     ],
     "translation": "You have reached the member limit on the free plan."
@@ -4981,7 +5005,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        252
+        247
       ]
     ],
     "translation": "You have reached the project limit on the free plan."
@@ -5030,7 +5054,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        326
+        342
       ]
     ],
     "translation": "Your display name shown across Fable."
@@ -5042,7 +5066,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        333
+        349
       ]
     ],
     "translation": "Your name"
@@ -5054,7 +5078,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        322
+        338
       ]
     ],
     "translation": "Your public identity on Fable."
@@ -5102,7 +5126,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        340
+        356
       ]
     ],
     "translation": "Your unique @handle. Lowercase letters, numbers, and underscores only."
