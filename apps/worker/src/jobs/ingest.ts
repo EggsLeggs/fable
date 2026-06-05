@@ -386,7 +386,7 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
                 keyId: keyRecord.id,
                 locale: targetLocale,
                 value,
-                state: "needs_review",
+                state: "approved",
               });
             }
           }
