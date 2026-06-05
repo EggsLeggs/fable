@@ -22,6 +22,13 @@
       "when": 1780691329405,
       "tag": "0002_org-invite-links",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1780800000000,
+      "tag": "0003_add-stripe-referral-coupon-id",
+      "breakpoints": true
     }
   ]
 }
