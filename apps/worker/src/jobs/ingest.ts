@@ -378,6 +378,7 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
 
         await db.transaction(async (tx) => {
           for (const [key, value] of Object.entries(parsedLocale)) {
+            if (!value.trim()) continue;
             const keyRecord = keyByKey.get(key);
             if (!keyRecord) continue;
             if (keyRecord.translations.length === 0) {
