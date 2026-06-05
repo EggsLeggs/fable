@@ -58,6 +58,7 @@ const TYPE_LABELS: Record<ActivityType, string> = {
   translation_suggested: "Suggestion added",
   translation_approved: "Translation approved",
   translation_rejected: "Suggestion rejected",
+  translations_pushed: "Translations pushed",
   comment_added: "Comment added",
 };
 
@@ -68,7 +69,7 @@ const TYPE_GROUPS: { label: string; types: ActivityType[] }[] = [
   { label: "Members", types: ["member_joined", "member_left"] },
   { label: "Tasks", types: ["task_created", "task_updated", "task_deleted"] },
   { label: "Integrations", types: ["integration_created", "integration_updated", "integration_deleted"] },
-  { label: "Translations", types: ["translation_suggested", "translation_approved", "translation_rejected"] },
+  { label: "Translations", types: ["translation_suggested", "translation_approved", "translation_rejected", "translations_pushed"] },
   { label: "Comments", types: ["comment_added"] },
 ];
 
@@ -128,6 +129,7 @@ type ActivityMetadata = {
   translationValue?: string;
   commentId?: string;
   commentBody?: string;
+  locales?: string[];
 };
 
 function formatStatus(s: unknown): string {
@@ -233,6 +235,11 @@ function activityDescription(type: ActivityType, meta: ActivityMetadata): string
       return meta.keyName ? `Rejected suggestion for "${meta.keyName}"` : "Rejected a translation suggestion";
     case "comment_added":
       return meta.keyName ? `Commented on "${meta.keyName}"` : "Added a comment";
+    case "translations_pushed": {
+      const repo = meta.repoName ? `${meta.repoOwner}/${meta.repoName}` : "repository";
+      const langs = meta.locales && meta.locales.length > 0 ? ` (${meta.locales.join(", ")})` : "";
+      return `Pushed translations to ${repo}${langs}`;
+    }
   }
 }
 

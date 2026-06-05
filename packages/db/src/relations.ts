@@ -15,6 +15,7 @@ import {
   vcsIntegrations,
   sourceFiles,
   ingestJobs,
+  pushJobs,
   tasks,
   activityLog,
   translationVotes,
@@ -107,8 +108,20 @@ export const vcsIntegrationsRelations = relations(
       references: [projects.id],
     }),
     sourceFiles: many(sourceFiles),
+    pushJobs: many(pushJobs),
   })
 );
+
+export const pushJobsRelations = relations(pushJobs, ({ one }) => ({
+  project: one(projects, {
+    fields: [pushJobs.projectId],
+    references: [projects.id],
+  }),
+  vcsIntegration: one(vcsIntegrations, {
+    fields: [pushJobs.vcsIntegrationId],
+    references: [vcsIntegrations.id],
+  }),
+}));
 
 export const sourceFilesRelations = relations(
   sourceFiles,

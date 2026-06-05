@@ -2,6 +2,7 @@ import { router } from "./trpc";
 import { activityRouter } from "./routers/activity";
 import { billingRouter } from "./routers/billing";
 import { commentsRouter } from "./routers/comments";
+import { exportRouter } from "./routers/export";
 import { organizationRouter } from "./routers/organization";
 import { projectRouter } from "./routers/project";
 import { referralRouter } from "./routers/referral";
@@ -16,6 +17,7 @@ export const appRouter = router({
   activity: activityRouter,
   billing: billingRouter,
   comments: commentsRouter,
+  export: exportRouter,
   organization: organizationRouter,
   project: projectRouter,
   referral: referralRouter,

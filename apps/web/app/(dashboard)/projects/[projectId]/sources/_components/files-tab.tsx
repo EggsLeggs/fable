@@ -11,6 +11,8 @@ import {
   Clock,
   FileText,
   Trash2,
+  Download,
+  GitPullRequest,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
@@ -18,6 +20,8 @@ import { trpc } from "@/lib/trpc/client";
 import { detectFormat, FORMAT_LABELS } from "@fable/formats";
 import type { FileFormat } from "@fable/formats";
 import { SelectCombobox } from "@/components/ui/select-combobox";
+import { ExportModal } from "./export-modal";
+import { PushModal } from "./push-modal";
 
 const ALL_FORMATS: FileFormat[] = [
   "json_flat",
@@ -390,6 +394,8 @@ type Props = {
 
 export function FilesTab({ projectId }: Props) {
   const [showUpload, setShowUpload] = useState(false);
+  const [showExport, setShowExport] = useState(false);
+  const [showPush, setShowPush] = useState(false);
   const utils = trpc.useUtils();
 
   const filesQuery = trpc.sourceFile.list.useQuery({ projectId });
@@ -423,6 +429,22 @@ export function FilesTab({ projectId }: Props) {
           <RefreshCw
             className={`h-4 w-4 ${filesQuery.isFetching ? "animate-spin" : ""}`}
           />
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowPush(true)}
+          className="btn-secondary flex items-center gap-1.5"
+        >
+          <GitPullRequest className="h-4 w-4" />
+          Push to git
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowExport(true)}
+          className="btn-secondary flex items-center gap-1.5"
+        >
+          <Download className="h-4 w-4" />
+          Export
         </button>
         <button
           type="button"
@@ -509,6 +531,14 @@ export function FilesTab({ projectId }: Props) {
           onClose={() => setShowUpload(false)}
           onUploaded={handleUploaded}
         />
+      )}
+
+      {showExport && (
+        <ExportModal projectId={projectId} onClose={() => setShowExport(false)} />
+      )}
+
+      {showPush && (
+        <PushModal projectId={projectId} onClose={() => setShowPush(false)} />
       )}
     </div>
   );
