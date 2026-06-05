@@ -12,7 +12,7 @@ import {
   projects,
   projectLocales,
 } from "@fable/db";
-import { getAdapter, detectFormat, parseLinguiJsonDetailed, inferTranslationPath } from "@fable/formats";
+import { getAdapter, detectFormat, parseLinguiJsonDetailed, parseLinguiJsonTranslations, inferTranslationPath } from "@fable/formats";
 import type { ParsedString } from "@fable/formats";
 
 export interface IngestJobPayload {
@@ -357,7 +357,13 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
 
         let parsedLocale: Record<string, string>;
         try {
-          parsedLocale = getAdapter(sourceFile.format).parse(localeContent);
+          // Lingui JSON stores source text in `message` and translated text in
+          // `translation` — we want the translated text, so use the dedicated
+          // helper instead of the generic adapter which returns `message`.
+          parsedLocale =
+            sourceFile.format === "lingui_json"
+              ? parseLinguiJsonTranslations(localeContent)
+              : getAdapter(sourceFile.format).parse(localeContent);
         } catch {
           continue;
         }

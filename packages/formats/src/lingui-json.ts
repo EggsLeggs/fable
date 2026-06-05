@@ -21,6 +21,24 @@ export interface ParsedString {
   existingTranslation?: string;
 }
 
+/**
+ * Reads the translation field (not message) from a Lingui locale catalog.
+ * Used when importing a locale file into Fable — we want the translated text,
+ * not the source message text that .parse() returns.
+ */
+export function parseLinguiJsonTranslations(content: string): Record<string, string> {
+  const raw = JSON.parse(content) as Record<string, unknown>;
+  const result: Record<string, string> = {};
+  for (const [key, entry] of Object.entries(raw)) {
+    if (!isLinguiEntry(entry)) continue;
+    const translation = (entry as LinguiEntry).translation;
+    if (typeof translation === "string" && translation.trim()) {
+      result[key] = translation;
+    }
+  }
+  return result;
+}
+
 export function parseLinguiJsonDetailed(content: string): ParsedString[] {
   const raw = JSON.parse(content) as Record<string, unknown>;
   const result: ParsedString[] = [];
