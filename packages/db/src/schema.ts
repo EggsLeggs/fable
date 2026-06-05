@@ -36,6 +36,12 @@ export const ingestJobStatusEnum = pgEnum("ingest_job_status", [
   "failed",
 ]);
 
+export const taskStatusEnum = pgEnum("task_status", [
+  "todo",
+  "in_progress",
+  "done",
+]);
+
 export const vcsProviderEnum = pgEnum("vcs_provider", ["github"]);
 
 export const vcsPushModeEnum = pgEnum("vcs_push_mode", [
@@ -406,6 +412,30 @@ export const webhookConfigs = pgTable("webhook_config", {
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
 });
 
+export const tasks = pgTable("task", {
+  id: text("id").primaryKey(),
+  projectId: text("projectId")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description"),
+  status: taskStatusEnum("status").notNull().default("todo"),
+  locale: text("locale"),
+  sourceFileId: text("source_file_id").references(() => sourceFiles.id, {
+    onDelete: "set null",
+  }),
+  assignedTo: text("assigned_to").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  dueDate: timestamp("due_date", { mode: "date" }),
+  deletedAt: timestamp("deleted_at", { mode: "date" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+});
+
 // Inferred types
 export type DbUser = typeof users.$inferSelect;
 export type DbOrganization = typeof organizations.$inferSelect;
@@ -435,3 +465,5 @@ export type IngestTrigger = (typeof ingestTriggerEnum.enumValues)[number];
 export type TranslationKeyStatus =
   (typeof translationKeyStatusEnum.enumValues)[number];
 export type GlossaryAccess = (typeof glossaryAccessEnum.enumValues)[number];
+export type DbTask = typeof tasks.$inferSelect;
+export type TaskStatus = (typeof taskStatusEnum.enumValues)[number];
