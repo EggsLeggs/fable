@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "@fable/qa": "*",
     "@fable/stripe": "*",
     "bullmq": "^5.51.3",
+    "tsx": "^4.22.3",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "jsonwebtoken": "^9.0.2",
@@ -26,7 +27,6 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
     "@types/uuid": "^10.0.0",
-    "tsx": "^4.22.3",
     "typescript": "^5.8.3"
   }
 }

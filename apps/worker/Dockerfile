@@ -30,4 +30,4 @@ COPY --from=builder --chown=worker:nodejs /app .
 
 USER worker
 
-CMD ["node", "apps/worker/dist/index.js"]
+CMD ["npm", "run", "start", "--workspace=@fable/worker"]
