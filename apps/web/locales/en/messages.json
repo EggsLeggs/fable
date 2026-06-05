@@ -1253,7 +1253,24 @@
         71
       ]
     ],
-    "translation": "Members"
+    "translation": "Members",
+    "obsolete": true
+  },
+  "bJPo3j": {
+    "message": "Collaborators",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        191
+      ],
+      [
+        "components/AppSidebar.tsx",
+        71
+      ]
+    ],
+    "translation": "Collaborators"
   },
   "+8Nek/": {
     "message": "Monthly",
