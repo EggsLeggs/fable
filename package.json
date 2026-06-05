@@ -4,6 +4,7 @@
   "private": true,
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
+    "postinstall": "node scripts/patch-kysely.cjs",
     "dev": "turbo dev",
     "build": "turbo build",
     "typecheck": "turbo typecheck",
