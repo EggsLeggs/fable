@@ -17,6 +17,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { t } from "@lingui/core/macro";
 import { UserMenu } from "@/components/UserMenu";
 import { ProjectSwitcher } from "@/components/ProjectSwitcher";
 import { ProjectCommandMenu } from "@/components/ProjectCommandMenu";
@@ -59,6 +60,18 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
   const projectId = projectIdFromPathname(pathname);
   const displayProjectId = projectId ?? projects[0]?.id ?? null;
 
+  const navItems = [
+    { href: "dashboard" as const, label: t`Dashboard`, Icon: LayoutDashboard },
+    { href: "strings" as const, label: t`Strings`, Icon: MessageSquare },
+    { href: "sources" as const, label: t`Sources`, Icon: Database },
+    { href: "translations" as const, label: t`Translations`, Icon: Languages },
+    { href: "tasks" as const, label: t`Tasks`, Icon: ListChecks },
+    { href: "integrations" as const, label: t`Integrations`, Icon: Plug },
+    { href: "activity" as const, label: t`Activity`, Icon: Activity },
+    { href: "members" as const, label: t`Members`, Icon: Users },
+    { href: "settings" as const, label: t`Settings`, Icon: Settings },
+  ];
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (isTypingTarget(e.target)) return;
@@ -98,7 +111,7 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
             className={`group rounded p-1 text-muted-foreground hover:bg-sidebar-accent ${
               collapsed ? "" : "ml-auto"
             }`}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={collapsed ? t`Expand sidebar` : t`Collapse sidebar`}
           >
             {collapsed ? (
               <PanelLeft className={iconClass} />
@@ -121,7 +134,7 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
             <button
               type="button"
               onClick={() => setCommandMenuOpen(true)}
-              title="Search projects (⌘K)"
+              title={t`Search projects (⌘K)`}
               className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             >
               <Search className="h-3.5 w-3.5" />
@@ -134,19 +147,7 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
         <nav className="flex flex-1 flex-col gap-1 px-2 pt-2">
           {displayProjectId && (
             <>
-              {(
-                [
-                  { href: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
-                  { href: "strings", label: "Strings", Icon: MessageSquare },
-                  { href: "sources", label: "Sources", Icon: Database },
-                  { href: "translations", label: "Translations", Icon: Languages },
-                  { href: "tasks", label: "Tasks", Icon: ListChecks },
-                  { href: "integrations", label: "Integrations", Icon: Plug },
-                  { href: "activity", label: "Activity", Icon: Activity },
-                  { href: "members", label: "Members", Icon: Users },
-                  { href: "settings", label: "Settings", Icon: Settings },
-                ] as const
-              ).map(({ href, label, Icon }) => {
+              {navItems.map(({ href, label, Icon }) => {
                 const base = `/projects/${displayProjectId}/${href}`;
                 const active = pathname === base || pathname.startsWith(`${base}/`);
                 return (

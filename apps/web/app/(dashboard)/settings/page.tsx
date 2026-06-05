@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { t } from "@lingui/core/macro";
 import { Button, Input } from "@fable/ui";
 import { changePassword, deleteUser } from "@fable/auth/client";
 import type { SpokenLanguage, SpokenLanguageLevel } from "@fable/db";
@@ -106,7 +107,7 @@ function InlineTextField({
             disabled={updating}
             className="shrink-0"
           >
-            {updating ? "Updating..." : "Update"}
+            {updating ? t`Updating...` : t`Update`}
           </Button>
         )}
       </div>
@@ -155,7 +156,7 @@ export default function ProfileSettingsPage() {
   }, [user]);
 
   const updateProfileMutation = trpc.user.updateProfile.useMutation({
-    onError: (err) => toast.error(err.message ?? "Could not update profile."),
+    onError: (err) => toast.error(err.message ?? t`Could not update profile.`),
   });
 
   function saveProfile(
@@ -178,7 +179,7 @@ export default function ProfileSettingsPage() {
           router.refresh();
         }
         if (options.toast !== false) {
-          toast.success("Updated.");
+          toast.success(t`Updated.`);
         }
         setUpdatingField(null);
       },
@@ -191,7 +192,7 @@ export default function ProfileSettingsPage() {
   function handleUpdateName() {
     const trimmed = name.trim();
     if (!trimmed) {
-      toast.error("Name cannot be empty.");
+      toast.error(t`Name cannot be empty.`);
       return;
     }
     saveProfile({ name: trimmed }, { field: "name", refresh: true });
@@ -201,7 +202,7 @@ export default function ProfileSettingsPage() {
     const normalized = username.trim().toLowerCase();
     if (normalized && !/^[a-z0-9_]{3,30}$/.test(normalized)) {
       toast.error(
-        "Username must be 3-30 characters and use only lowercase letters, numbers, and underscores."
+        t`Username must be 3-30 characters and use only lowercase letters, numbers, and underscores.`
       );
       return;
     }
@@ -264,11 +265,11 @@ export default function ProfileSettingsPage() {
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      toast.error("New passwords do not match.");
+      toast.error(t`New passwords do not match.`);
       return;
     }
     if (newPassword.length < 8) {
-      toast.error("Password must be at least 8 characters.");
+      toast.error(t`Password must be at least 8 characters.`);
       return;
     }
 
@@ -281,19 +282,19 @@ export default function ProfileSettingsPage() {
     setPasswordSaving(false);
 
     if (result.error) {
-      toast.error(result.error.message ?? "Could not change password.");
+      toast.error(result.error.message ?? t`Could not change password.`);
       return;
     }
 
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
-    toast.success("Password updated.");
+    toast.success(t`Password updated.`);
   }
 
   async function handleDeleteAccount() {
     if (!deletePassword) {
-      toast.error("Enter your password to confirm deletion.");
+      toast.error(t`Enter your password to confirm deletion.`);
       return;
     }
 
@@ -302,7 +303,7 @@ export default function ProfileSettingsPage() {
     setDeleting(false);
 
     if (result.error) {
-      toast.error(result.error.message ?? "Could not delete account.");
+      toast.error(result.error.message ?? t`Could not delete account.`);
       return;
     }
 
@@ -310,7 +311,7 @@ export default function ProfileSettingsPage() {
   }
 
   if (userQuery.isLoading || !user) {
-    return <div className="text-sm text-muted-foreground">Loading...</div>;
+    return <div className="text-sm text-muted-foreground">{t`Loading...`}</div>;
   }
 
   const savedName = user.name;
@@ -321,26 +322,26 @@ export default function ProfileSettingsPage() {
       <div className="max-w-xl space-y-6">
         <div className="space-y-6">
           <Section
-            title="Account"
-            description="Your public identity on Fable."
+            title={t`Account`}
+            description={t`Your public identity on Fable.`}
           >
             <InlineTextField
-              label="Name"
-              description="Your display name shown across Fable."
+              label={t`Name`}
+              description={t`Your display name shown across Fable.`}
               value={name}
               savedValue={savedName}
               onChange={setNameDraft}
               onUpdate={handleUpdateName}
               updating={updatingField === "name"}
               inputProps={{
-                placeholder: "Your name",
+                placeholder: t`Your name`,
                 autoComplete: "name",
               }}
             />
 
             <InlineTextField
-              label="Username"
-              description="Lowercase letters, numbers, and underscores only."
+              label={t`Username`}
+              description={t`Lowercase letters, numbers, and underscores only.`}
               value={username}
               savedValue={savedUsername}
               onChange={(value) => setUsernameDraft(value.toLowerCase())}
@@ -352,7 +353,7 @@ export default function ProfileSettingsPage() {
               }}
             />
 
-            <FieldGroup label="Email">
+            <FieldGroup label={t`Email`}>
               <Input
                 value={user.email}
                 disabled
@@ -361,10 +362,10 @@ export default function ProfileSettingsPage() {
             </FieldGroup>
           </Section>
 
-          <Section title="Preferences">
+          <Section title={t`Preferences`}>
             <FieldGroup
-              label="Site language"
-              description="More languages coming soon."
+              label={t`Site language`}
+              description={t`More languages coming soon.`}
             >
               <select
                 value="en"
@@ -379,7 +380,7 @@ export default function ProfileSettingsPage() {
               </select>
             </FieldGroup>
 
-            <FieldGroup label="Timezone">
+            <FieldGroup label={t`Timezone`}>
               <select
                 value={timezone}
                 onChange={(e) => handleTimezoneChange(e.target.value)}
@@ -394,7 +395,7 @@ export default function ProfileSettingsPage() {
               </select>
             </FieldGroup>
 
-            <FieldGroup label="Time format">
+            <FieldGroup label={t`Time format`}>
               <select
                 value={timeFormat}
                 onChange={(e) =>
@@ -413,13 +414,13 @@ export default function ProfileSettingsPage() {
           </Section>
 
           <Section
-            title="Languages you speak"
-            description="Add languages and your proficiency level, similar to LinkedIn."
+            title={t`Languages you speak`}
+            description={t`Add languages and your proficiency level, similar to LinkedIn.`}
           >
             <div className="space-y-3">
               {spokenLanguages.length === 0 && (
                 <p className="text-sm text-muted-foreground">
-                  No languages added yet.
+                  {t`No languages added yet.`}
                 </p>
               )}
               {spokenLanguages.map((entry, index) => (
@@ -457,7 +458,7 @@ export default function ProfileSettingsPage() {
                     onClick={() => removeSpokenLanguage(index)}
                     disabled={updatingField === "spokenLanguages"}
                     className="mt-2 rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50"
-                    aria-label="Remove language"
+                    aria-label={t`Remove language`}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -471,13 +472,13 @@ export default function ProfileSettingsPage() {
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
             >
               <Plus className="h-4 w-4" />
-              Add language
+              {t`Add language`}
             </button>
           </Section>
 
           <Section
-            title="Profile privacy"
-            description="Control who can see your public profile."
+            title={t`Profile privacy`}
+            description={t`Control who can see your public profile.`}
           >
             <div className="space-y-2">
               <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50">
@@ -491,9 +492,9 @@ export default function ProfileSettingsPage() {
                   className="mt-0.5"
                 />
                 <span>
-                  <span className="block text-sm font-medium">Private</span>
+                  <span className="block text-sm font-medium">{t`Private`}</span>
                   <span className="block text-xs text-muted-foreground">
-                    Only you can view your profile.
+                    {t`Only you can view your profile.`}
                   </span>
                 </span>
               </label>
@@ -508,9 +509,9 @@ export default function ProfileSettingsPage() {
                   className="mt-0.5"
                 />
                 <span>
-                  <span className="block text-sm font-medium">Public</span>
+                  <span className="block text-sm font-medium">{t`Public`}</span>
                   <span className="block text-xs text-muted-foreground">
-                    Anyone can view your profile page.
+                    {t`Anyone can view your profile page.`}
                   </span>
                 </span>
               </label>
@@ -519,8 +520,8 @@ export default function ProfileSettingsPage() {
         </div>
 
         <form onSubmit={handleChangePassword}>
-          <Section title="Password">
-            <FieldGroup label="Current password">
+          <Section title={t`Password`}>
+            <FieldGroup label={t`Current password`}>
               <Input
                 type="password"
                 value={currentPassword}
@@ -528,7 +529,7 @@ export default function ProfileSettingsPage() {
                 autoComplete="current-password"
               />
             </FieldGroup>
-            <FieldGroup label="New password">
+            <FieldGroup label={t`New password`}>
               <Input
                 type="password"
                 value={newPassword}
@@ -537,7 +538,7 @@ export default function ProfileSettingsPage() {
                 minLength={8}
               />
             </FieldGroup>
-            <FieldGroup label="Confirm new password">
+            <FieldGroup label={t`Confirm new password`}>
               <Input
                 type="password"
                 value={confirmPassword}
@@ -552,17 +553,16 @@ export default function ProfileSettingsPage() {
                 variant="secondary"
                 disabled={passwordSaving || !currentPassword || !newPassword}
               >
-                {passwordSaving ? "Updating..." : "Update password"}
+                {passwordSaving ? t`Updating...` : t`Update password`}
               </Button>
             </div>
           </Section>
         </form>
 
         <section className="rounded-lg border border-destructive/30 bg-card p-6">
-          <h2 className="text-sm font-semibold text-destructive">Danger zone</h2>
+          <h2 className="text-sm font-semibold text-destructive">{t`Danger zone`}</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Permanently delete your account and all associated data. This action
-            cannot be undone.
+            {t`Permanently delete your account and all associated data. This action cannot be undone.`}
           </p>
 
           {!showDeleteConfirm ? (
@@ -572,17 +572,17 @@ export default function ProfileSettingsPage() {
               className="mt-4"
               onClick={() => setShowDeleteConfirm(true)}
             >
-              Delete account
+              {t`Delete account`}
             </Button>
           ) : (
             <div className="mt-4 space-y-3">
-              <FieldGroup label="Confirm with your password">
+              <FieldGroup label={t`Confirm with your password`}>
                 <Input
                   type="password"
                   value={deletePassword}
                   onChange={(e) => setDeletePassword(e.target.value)}
                   autoComplete="current-password"
-                  placeholder="Enter your password"
+                  placeholder={t`Enter your password`}
                 />
               </FieldGroup>
               <div className="flex gap-2">
@@ -592,7 +592,7 @@ export default function ProfileSettingsPage() {
                   disabled={deleting}
                   onClick={handleDeleteAccount}
                 >
-                  {deleting ? "Deleting..." : "Confirm deletion"}
+                  {deleting ? t`Deleting...` : t`Confirm deletion`}
                 </Button>
                 <Button
                   type="button"
@@ -602,7 +602,7 @@ export default function ProfileSettingsPage() {
                     setDeletePassword("");
                   }}
                 >
-                  Cancel
+                  {t`Cancel`}
                 </Button>
               </div>
             </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 
 function UsageMeter({
@@ -48,12 +49,12 @@ export default function BillingPage() {
 
   const checkoutMutation = trpc.billing.checkout.useMutation({
     onSuccess: ({ url }) => { window.location.href = url; },
-    onError: (err) => toast.error(err.message ?? "Could not start checkout. Please try again."),
+    onError: (err) => toast.error(err.message ?? t`Could not start checkout. Please try again.`),
   });
 
   const portalMutation = trpc.billing.portal.useMutation({
     onSuccess: ({ url }) => { window.location.href = url; },
-    onError: (err) => toast.error(err.message ?? "Could not open billing portal. Please try again."),
+    onError: (err) => toast.error(err.message ?? t`Could not open billing portal. Please try again.`),
   });
 
   const updateCapMutation = trpc.billing.updateMtCap.useMutation({
@@ -61,10 +62,10 @@ export default function BillingPage() {
       void usageQuery.refetch();
       setCapInput("");
       setCapSaving(false);
-      toast.success("Overage cap updated.");
+      toast.success(t`Overage cap updated.`);
     },
     onError: (err) => {
-      toast.error(err.message ?? "Could not update cap.");
+      toast.error(err.message ?? t`Could not update cap.`);
       setCapSaving(false);
     },
   });
@@ -76,7 +77,7 @@ export default function BillingPage() {
   }
 
   if (usageQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading...</div>;
+    return <div className="text-sm text-muted-foreground">{t`Loading...`}</div>;
   }
 
   return (
@@ -87,7 +88,7 @@ export default function BillingPage() {
           <div className="mb-4 flex items-center justify-between">
             <div>
               <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-                Current plan
+                {t`Current plan`}
               </p>
               <div className="mt-1 flex items-center gap-2">
                 <span className="text-xl font-bold capitalize">
@@ -95,13 +96,13 @@ export default function BillingPage() {
                 </span>
                 {isPro && (
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                    {usage?.billingCycle === "annual" ? "Annual" : "Monthly"}
+                    {usage?.billingCycle === "annual" ? t`Annual` : t`Monthly`}
                   </span>
                 )}
               </div>
               {isPro && usage?.planCurrentPeriodEnd && (
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Renews {new Date(usage.planCurrentPeriodEnd).toLocaleDateString()}
+                  {t`Renews`} {new Date(usage.planCurrentPeriodEnd).toLocaleDateString()}
                 </p>
               )}
             </div>
@@ -113,7 +114,7 @@ export default function BillingPage() {
                 onClick={() => portalMutation.mutate()}
                 disabled={portalMutation.isPending}
               >
-                {portalMutation.isPending ? "Opening..." : "Manage billing"}
+                {portalMutation.isPending ? t`Opening...` : t`Manage billing`}
               </button>
             ) : (
               <div className="flex flex-col items-end gap-2">
@@ -123,14 +124,14 @@ export default function BillingPage() {
                     onClick={() => setBillingCycle("monthly")}
                     className={`rounded-md px-3 py-1 transition-colors ${billingCycle === "monthly" ? "bg-background font-medium shadow-sm" : "text-muted-foreground"}`}
                   >
-                    Monthly
+                    {t`Monthly`}
                   </button>
                   <button
                     type="button"
                     onClick={() => setBillingCycle("annual")}
                     className={`rounded-md px-3 py-1 transition-colors ${billingCycle === "annual" ? "bg-background font-medium shadow-sm" : "text-muted-foreground"}`}
                   >
-                    Annual
+                    {t`Annual`}
                     <span className="ml-1 text-[10px] font-semibold text-emerald-600">-10%</span>
                   </button>
                 </div>
@@ -141,10 +142,10 @@ export default function BillingPage() {
                   disabled={checkoutMutation.isPending}
                 >
                   {checkoutMutation.isPending
-                    ? "Redirecting..."
+                    ? t`Redirecting...`
                     : billingCycle === "annual"
-                    ? "Upgrade - $26/mo billed annually"
-                    : "Upgrade - $29/mo"}
+                    ? t`Upgrade - $26/mo billed annually`
+                    : t`Upgrade - $29/mo`}
                 </button>
               </div>
             )}
@@ -153,26 +154,26 @@ export default function BillingPage() {
 
         {/* Usage */}
         <section>
-          <h2 className="mb-4 text-sm font-semibold">Usage this period</h2>
+          <h2 className="mb-4 text-sm font-semibold">{t`Usage this period`}</h2>
           <div className="space-y-4 rounded-lg border border-border bg-card p-6">
             <UsageMeter
-              label="Projects"
+              label={t`Projects`}
               used={usage?.usage.projects ?? 0}
               limit={usage?.limits.projects ?? 1}
             />
             <UsageMeter
-              label="Team members"
+              label={t`Team members`}
               used={usage?.usage.members ?? 0}
               limit={usage?.limits.members ?? 3}
             />
             <UsageMeter
-              label="Translation keys"
+              label={t`Translation keys`}
               used={usage?.usage.translationKeys ?? 0}
               limit={usage?.limits.translationKeys ?? 1000}
             />
             {isPro && (
               <UsageMeter
-                label="MT characters this month"
+                label={t`MT characters this month`}
                 used={usage?.mtCharsUsed ?? 0}
                 limit={usage?.mtCharsCap ?? usage?.limits.mtCharsIncluded ?? null}
               />
@@ -183,11 +184,9 @@ export default function BillingPage() {
         {/* MT overage cap */}
         {isPro && (
           <section>
-            <h2 className="mb-1 text-sm font-semibold">MT overage cap</h2>
+            <h2 className="mb-1 text-sm font-semibold">{t`MT overage cap`}</h2>
             <p className="mb-4 text-xs text-muted-foreground">
-              Stop machine translation once your monthly usage reaches this limit.
-              This cap applies across all your projects. Leave blank for no cap
-              (you will be billed per character above the 50k included).
+              {t`Stop machine translation once your monthly usage reaches this limit. This cap applies across all your projects. Leave blank for no cap (you will be billed per character above the 50k included).`}
             </p>
             <div className="flex items-center gap-3">
               <input
@@ -195,8 +194,8 @@ export default function BillingPage() {
                 min={0}
                 placeholder={
                   usage?.mtCharsCap != null
-                    ? `Current: ${usage.mtCharsCap.toLocaleString()} chars`
-                    : "No limit (billed per use)"
+                    ? t`Current: ${usage.mtCharsCap.toLocaleString()} chars`
+                    : t`No limit (billed per use)`
                 }
                 value={capInput}
                 onChange={(e) => setCapInput(e.target.value)}
@@ -208,7 +207,7 @@ export default function BillingPage() {
                 onClick={handleSaveCap}
                 disabled={capSaving}
               >
-                {capSaving ? "Saving..." : "Save"}
+                {capSaving ? t`Saving...` : t`Save`}
               </button>
               {usage?.mtCharsCap != null && (
                 <button
@@ -216,7 +215,7 @@ export default function BillingPage() {
                   className="text-sm text-muted-foreground underline-offset-2 hover:underline"
                   onClick={() => updateCapMutation.mutate({ cap: null })}
                 >
-                  Remove cap
+                  {t`Remove cap`}
                 </button>
               )}
             </div>
@@ -225,7 +224,7 @@ export default function BillingPage() {
 
         <p className="text-xs text-muted-foreground">
           <a href="/pricing" className="underline underline-offset-2">
-            View full pricing details
+            {t`View full pricing details`}
           </a>
         </p>
       </div>

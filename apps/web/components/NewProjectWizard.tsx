@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 import type { DbProject } from "@fable/db";
 
@@ -72,14 +73,14 @@ export function NewProjectWizard() {
       });
       setCreatedProject(project);
       setCreatedOrgId(org.id);
-      setAddedMembers([{ name: "You", email: "", role: "owner" }]);
+      setAddedMembers([{ name: t`You`, email: "", role: "owner" }]);
       setStep(2);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("PROJECT_LIMIT_REACHED")) {
         setCreateError("limit");
       } else {
-        setCreateError("Failed to create project. Please try again.");
+        setCreateError(t`Failed to create project. Please try again.`);
       }
     }
   }
@@ -98,13 +99,13 @@ export function NewProjectWizard() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("USER_NOT_FOUND")) {
-        setInviteError("No account found with that email address.");
+        setInviteError(t`No account found with that email address.`);
       } else if (msg.includes("ALREADY_MEMBER")) {
-        setInviteError("That person is already a member.");
+        setInviteError(t`That person is already a member.`);
       } else if (msg.includes("MEMBER_LIMIT_REACHED")) {
         setInviteError("member-limit");
       } else {
-        setInviteError("Failed to invite member. Please try again.");
+        setInviteError(t`Failed to invite member. Please try again.`);
       }
     }
   }
@@ -119,9 +120,9 @@ export function NewProjectWizard() {
     return (
       <div className="flex w-full max-w-md flex-col gap-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Invite team members</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t`Invite team members`}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Add people who should have access to this project.
+            {t`Add people who should have access to this project.`}
           </p>
         </div>
 
@@ -130,7 +131,7 @@ export function NewProjectWizard() {
             type="email"
             value={inviteEmail}
             onChange={(e) => setInviteEmail(e.target.value)}
-            placeholder="Email address"
+            placeholder={t`Email address`}
             className="input flex-1"
           />
           <button
@@ -138,17 +139,17 @@ export function NewProjectWizard() {
             disabled={inviteByEmail.isPending || !inviteEmail.trim()}
             className="btn-primary shrink-0"
           >
-            {inviteByEmail.isPending ? "Inviting..." : "Invite"}
+            {inviteByEmail.isPending ? t`Inviting...` : t`Invite`}
           </button>
         </form>
 
         {inviteError === "member-limit" ? (
           <p className="text-sm text-destructive">
-            You have reached the member limit on the free plan.{" "}
+            {t`You have reached the member limit on the free plan.`}{" "}
             <Link href="/settings/billing" className="underline">
-              Upgrade to Pro
+              {t`Upgrade to Pro`}
             </Link>{" "}
-            for unlimited members.
+            {t`for unlimited members.`}
           </p>
         ) : inviteError ? (
           <p className="text-sm text-destructive">{inviteError}</p>
@@ -174,7 +175,7 @@ export function NewProjectWizard() {
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {m.role === "owner" ? "Owner" : "Collaborator"}
+                  {m.role === "owner" ? t`Owner` : t`Collaborator`}
                 </span>
               </li>
             ))}
@@ -183,14 +184,14 @@ export function NewProjectWizard() {
 
         <div className="flex gap-3">
           <button type="button" onClick={goToProject} className="btn-primary">
-            Go to project
+            {t`Go to project`}
           </button>
           <button
             type="button"
             onClick={goToProject}
             className="btn-secondary"
           >
-            Skip for now
+            {t`Skip for now`}
           </button>
         </div>
       </div>
@@ -200,37 +201,37 @@ export function NewProjectWizard() {
   return (
     <div className="flex w-full max-w-md flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Create a new project</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t`Create a new project`}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          A project is a workspace for your translation files and team.
+          {t`A project is a workspace for your translation files and team.`}
         </p>
       </div>
 
       <form onSubmit={handleCreate} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="project-name" className="text-sm font-medium">
-            Project name
+            {t`Project name`}
           </label>
           <input
             id="project-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="My project"
+            placeholder={t`My project`}
             required
             autoFocus
             className="input"
           />
           {slug && (
             <p className="text-xs text-muted-foreground">
-              Slug: <span className="font-mono">{slug}</span>
+              {t`Slug:`} <span className="font-mono">{slug}</span>
             </p>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="source-locale" className="text-sm font-medium">
-            Source language
+            {t`Source language`}
           </label>
           <select
             id="source-locale"
@@ -248,18 +249,18 @@ export function NewProjectWizard() {
 
         {createError === "limit" ? (
           <p className="text-sm text-destructive">
-            You have reached the project limit on the free plan.{" "}
+            {t`You have reached the project limit on the free plan.`}{" "}
             <Link href="/settings/billing" className="underline">
-              Upgrade to Pro
+              {t`Upgrade to Pro`}
             </Link>{" "}
-            to create unlimited projects.
+            {t`to create unlimited projects.`}
           </p>
         ) : createError ? (
           <p className="text-sm text-destructive">{createError}</p>
         ) : null}
 
         <button type="submit" disabled={creating || !name.trim()} className="btn-primary">
-          {creating ? "Creating..." : "Create project"}
+          {creating ? t`Creating...` : t`Create project`}
         </button>
       </form>
     </div>

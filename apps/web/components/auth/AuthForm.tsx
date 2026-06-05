@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { t } from "@lingui/core/macro";
 import { signIn, signUp } from "@fable/auth/client";
 import type { SignUpEmailInput } from "@fable/auth/client";
 import { trpc } from "@/lib/trpc/client";
@@ -40,15 +41,13 @@ export function AuthForm({ mode }: Props) {
         const normalizedUsername = normalizeUsername(username);
 
         if (normalizedUsername.length < 3) {
-          setError("Username must be at least 3 characters.");
+          setError(t`Username must be at least 3 characters.`);
           setLoading(false);
           return;
         }
 
         if (!USERNAME_PATTERN.test(normalizedUsername)) {
-          setError(
-            "Username can only contain lowercase letters, numbers, and underscores."
-          );
+          setError(t`Username can only contain lowercase letters, numbers, and underscores.`);
           setLoading(false);
           return;
         }
@@ -58,7 +57,7 @@ export function AuthForm({ mode }: Props) {
         });
 
         if (!availability.available) {
-          setError("This username is already taken.");
+          setError(t`This username is already taken.`);
           setLoading(false);
           return;
         }
@@ -70,7 +69,7 @@ export function AuthForm({ mode }: Props) {
           username: normalizedUsername,
         } as SignUpEmailInput & Parameters<typeof signUp.email>[0]);
         if (result.error) {
-          setError(result.error.message ?? "Sign up failed");
+          setError(result.error.message ?? t`Sign up failed`);
           setLoading(false);
           return;
         }
@@ -80,7 +79,7 @@ export function AuthForm({ mode }: Props) {
           password,
         });
         if (result.error) {
-          setError("Invalid email or password.");
+          setError(t`Invalid email or password.`);
           setLoading(false);
           return;
         }
@@ -89,7 +88,7 @@ export function AuthForm({ mode }: Props) {
       router.push(callbackUrl);
       router.refresh();
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError(t`Something went wrong. Please try again.`);
       setLoading(false);
     }
   }
@@ -103,7 +102,7 @@ export function AuthForm({ mode }: Props) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder={t`Enter your name`}
               required
               className="input"
             />
@@ -113,7 +112,7 @@ export function AuthForm({ mode }: Props) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value.toLowerCase())}
-              placeholder="Choose a username"
+              placeholder={t`Choose a username`}
               required
               minLength={3}
               maxLength={30}
@@ -128,7 +127,7 @@ export function AuthForm({ mode }: Props) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email address"
+          placeholder={t`Enter your email address`}
           required
           autoComplete="email"
           className="input"
@@ -139,7 +138,7 @@ export function AuthForm({ mode }: Props) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
+          placeholder={t`Enter your password`}
           required
           minLength={8}
           autoComplete={mode === "signup" ? "new-password" : "current-password"}
@@ -150,25 +149,25 @@ export function AuthForm({ mode }: Props) {
       <div className="mt-6">
         <button type="submit" disabled={loading} className="btn-primary w-full">
           {loading
-            ? "Please wait…"
+            ? t`Please wait...`
             : mode === "signup"
-              ? "Sign up with email"
-              : "Continue with email"}
+              ? t`Sign up with email`
+              : t`Continue with email`}
         </button>
       </div>
       <p className="pt-2 text-center text-xs text-muted-foreground">
         {mode === "login" ? (
           <>
-            Don&apos;t have an account?{" "}
+            {t`Don't have an account?`}{" "}
             <Link href="/signup" className="text-foreground underline">
-              Sign up
+              {t`Sign up`}
             </Link>
           </>
         ) : (
           <>
-            Already have an account?{" "}
+            {t`Already have an account?`}{" "}
             <Link href="/login" className="text-foreground underline">
-              Log in
+              {t`Log in`}
             </Link>
           </>
         )}

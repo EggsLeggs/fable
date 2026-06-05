@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Check, ChevronDown, Plus } from "lucide-react";
+import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 import Link from "next/link";
 
@@ -64,7 +65,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
         type="button"
         onClick={hasProjects ? () => setOpen((o) => !o) : () => router.push("/projects/new")}
         className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-xs font-semibold text-accent-foreground hover:opacity-80"
-        title={displayProject?.name ?? "Add project"}
+        title={displayProject?.name ?? t`Add project`}
       >
         {displayProject ? displayProject.name.charAt(0).toUpperCase() : <Plus className="h-3.5 w-3.5" />}
       </button>
@@ -95,7 +96,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
           <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-muted">
             <Plus className="h-3.5 w-3.5" />
           </div>
-          <span className="min-w-0 flex-1 truncate font-medium">Add project</span>
+          <span className="min-w-0 flex-1 truncate font-medium">{t`Add project`}</span>
         </Link>
       )}
 
@@ -107,7 +108,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search projects..."
+              placeholder={t`Search projects...`}
               className="w-full rounded bg-muted px-2 py-1.5 text-xs outline-none placeholder:text-muted-foreground"
             />
           </div>
@@ -120,7 +121,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
                 className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-secondary"
               >
                 <Plus className="h-3.5 w-3.5 shrink-0" />
-                Add project
+                {t`Add project`}
               </Link>
             ) : (
               filtered.map((project) => (
@@ -150,7 +151,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
                 className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-xs text-muted-foreground hover:bg-secondary"
               >
                 <Plus className="h-3.5 w-3.5" />
-                Upgrade to Pro for more projects
+                {t`Upgrade to Pro for more projects`}
               </Link>
             ) : (
               <Link
@@ -159,7 +160,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
                 className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-xs hover:bg-secondary"
               >
                 <Plus className="h-3.5 w-3.5" />
-                New project
+                {t`New project`}
               </Link>
             )}
           </div>

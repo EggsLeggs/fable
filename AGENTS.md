@@ -227,6 +227,96 @@ Update all of the following:
 - Use tRPC hooks for all server data. No raw `fetch` calls in components.
 - Add loading and error states for async operations.
 
+## Localisation
+
+Fable uses [Lingui v5](https://lingui.dev) for i18n. Catalogs live at `apps/web/locales/` and the runtime provider lives in `apps/web/components/lingui-provider.tsx`.
+
+### Supported locales
+
+| Code | Language |
+|------|----------|
+| `en` | English (source) |
+| `fr` | Français |
+| `de` | Deutsch |
+| `es` | Español |
+| `it` | Italiano |
+| `nl` | Nederlands |
+| `ru` | Русский |
+| `pl` | Polski |
+| `pt-BR` | Português (Brasil) |
+
+### Directory structure
+
+```
+apps/web/
+  lingui.config.ts          # Lingui config (locales, catalog paths, format)
+  i18n.json                 # Lingo.dev config for automated translation CI
+  locales/
+    index.ts                # Locale types, defaultLocale, localeNames
+    en/
+      messages.json         # Source catalog (updated by lingui extract)
+      messages.ts           # Compiled catalog (generated, do not edit)
+    fr/
+      messages.json
+      messages.ts
+    ...                     # Same for de, es, it, nl, ru, pl, pt-BR
+  lib/
+    i18n.ts                 # initializeI18n, activateLocale, i18n singleton
+  components/
+    lingui-provider.tsx     # LinguiProvider, useLingui hook
+```
+
+### Marking strings for translation
+
+Import macros from `@lingui/core/macro` (plain strings) or `@lingui/react/macro` (JSX):
+
+```typescript
+import { t } from "@lingui/core/macro";
+import { Trans } from "@lingui/react/macro";
+
+// Plain string (attributes, toast messages, etc.)
+const label = t`Save changes`;
+
+// JSX content
+<p><Trans>Welcome to <strong>Fable</strong></Trans></p>
+
+// With variables
+const msg = t`Deleting project "${name}"`;
+
+// Plurals (ICU MessageFormat)
+const count = t`{count, plural, one {# key} other {# keys}}`;
+```
+
+### Development workflow
+
+1. Wrap new UI strings with `t\`...\`` or `<Trans>`.
+2. Run `npm run lingui:extract` from `apps/web/` to update the `.json` catalogs.
+3. Send the non-English `.json` files to translators (or use Lingo.dev CI).
+4. Run `npm run lingui:compile` before building to regenerate the `.ts` files.
+
+The compiled `.ts` files are committed to the repository so the build does not require a compile step at deploy time.
+
+### Adding a new locale
+
+1. Add the locale code to the `locales` array in `apps/web/locales/index.ts` and add its display name to `localeNames`.
+2. Add the code to the `locales` array in `apps/web/lingui.config.ts` and to the `targets` list in `apps/web/i18n.json`.
+3. Run `npm run lingui:extract` — Lingui will create `locales/<code>/messages.json`.
+4. Run `npm run lingui:compile` to generate `messages.ts`.
+5. Add a dynamic import case for the new locale in `apps/web/lib/i18n.ts` (in the `loadMessages` switch).
+
+### Reading the active locale in components
+
+```typescript
+import { useLingui } from "@/components/lingui-provider";
+
+export function LocaleSwitcher() {
+  const { locale, setLocale, availableLocales } = useLingui();
+  // ...
+}
+```
+
+`setLocale` persists the choice to `localStorage` and activates the new catalog asynchronously.
+
 ## Performance Considerations
 
 - Eager-load relations with `with:` in Drizzle queries rather than issuing separate queries.

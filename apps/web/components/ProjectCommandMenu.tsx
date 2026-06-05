@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
+import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 
 type Props = {
@@ -22,19 +23,19 @@ export function ProjectCommandMenu({ open, onOpenChange }: Props) {
     <Command.Dialog
       open={open}
       onOpenChange={onOpenChange}
-      label="Search projects"
+      label={t`Search projects`}
       overlayClassName="fixed inset-0 z-50 bg-black/40"
       contentClassName="fixed left-1/2 top-[20%] z-50 w-full max-w-md -translate-x-1/2 rounded-xl border border-border bg-popover shadow-xl"
     >
       <div className="flex items-center border-b border-border px-3">
         <Command.Input
-          placeholder="Search projects..."
+          placeholder={t`Search projects...`}
           className="flex h-11 w-full bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
         />
       </div>
       <Command.List className="max-h-64 overflow-y-auto p-2">
         <Command.Empty className="py-6 text-center text-sm text-muted-foreground">
-          No projects found.
+          {t`No projects found.`}
         </Command.Empty>
         {projects.map((project) => (
           <Command.Item
