@@ -1,6 +1,5 @@
 {
   "j4292R": {
-    "translation": "",
     "message": "$313 billed annually",
     "placeholders": {},
     "comments": [],
@@ -9,10 +8,10 @@
         "app/pricing/page.tsx",
         147
       ]
-    ]
+    ],
+    "translation": ""
   },
   "XzLpsI": {
-    "translation": "",
     "message": "1 project",
     "placeholders": {},
     "comments": [],
@@ -21,10 +20,10 @@
         "app/pricing/page.tsx",
         21
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Q0B7GR": {
-    "translation": "",
     "message": "1,000 translation keys",
     "placeholders": {},
     "comments": [],
@@ -33,10 +32,10 @@
         "app/pricing/page.tsx",
         23
       ]
-    ]
+    ],
+    "translation": ""
   },
   "R1jRUZ": {
-    "translation": "",
     "message": "10% off",
     "placeholders": {},
     "comments": [],
@@ -45,10 +44,10 @@
         "app/pricing/page.tsx",
         90
       ]
-    ]
+    ],
+    "translation": ""
   },
   "sBvslV": {
-    "translation": "",
     "message": "3 team members",
     "placeholders": {},
     "comments": [],
@@ -57,10 +56,10 @@
         "app/pricing/page.tsx",
         22
       ]
-    ]
+    ],
+    "translation": ""
   },
   "zArA23": {
-    "translation": "",
     "message": "50,000 MT characters included",
     "placeholders": {},
     "comments": [],
@@ -69,10 +68,10 @@
         "app/pricing/page.tsx",
         32
       ]
-    ]
+    ],
+    "translation": ""
   },
   "QMv7jM": {
-    "translation": "",
     "message": "A project is a workspace for your translation files and team.",
     "placeholders": {},
     "comments": [],
@@ -81,22 +80,22 @@
         "components/NewProjectWizard.tsx",
         206
       ]
-    ]
+    ],
+    "translation": ""
   },
   "AeXO77": {
-    "translation": "",
     "message": "Account",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        325
+        323
       ]
-    ]
+    ],
+    "translation": ""
   },
   "XJOV1Y": {
-    "translation": "",
     "message": "Activity",
     "placeholders": {},
     "comments": [],
@@ -105,34 +104,34 @@
         "components/AppSidebar.tsx",
         70
       ]
-    ]
+    ],
+    "translation": ""
   },
   "1wdDm9": {
-    "translation": "",
     "message": "Add language",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        475
+        456
       ]
-    ]
+    ],
+    "translation": ""
   },
   "02T6ht": {
-    "translation": "",
     "message": "Add languages and your proficiency level, similar to LinkedIn.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        418
+        399
       ]
-    ]
+    ],
+    "translation": ""
   },
   "M/pFhS": {
-    "translation": "",
     "message": "Add people who should have access to this project.",
     "placeholders": {},
     "comments": [],
@@ -141,10 +140,10 @@
         "components/NewProjectWizard.tsx",
         125
       ]
-    ]
+    ],
+    "translation": ""
   },
   "aCl9zQ": {
-    "translation": "",
     "message": "Add project",
     "placeholders": {},
     "comments": [],
@@ -161,10 +160,10 @@
         "components/ProjectSwitcher.tsx",
         124
       ]
-    ]
+    ],
+    "translation": ""
   },
   "apkgHD": {
-    "translation": "",
     "message": "Allows projects to sync source files and push translations back as pull requests.",
     "placeholders": {},
     "comments": [],
@@ -173,10 +172,10 @@
         "app/(dashboard)/settings/connections/page.tsx",
         50
       ]
-    ]
+    ],
+    "translation": ""
   },
   "8wYDMp": {
-    "translation": "",
     "message": "Already have an account?",
     "placeholders": {},
     "comments": [],
@@ -185,10 +184,10 @@
         "components/auth/AuthForm.tsx",
         168
       ]
-    ]
+    ],
+    "translation": ""
   },
   "YkfDoz": {
-    "translation": "",
     "message": "Annual",
     "placeholders": {},
     "comments": [],
@@ -205,22 +204,22 @@
         "app/pricing/page.tsx",
         88
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Zovgax": {
-    "translation": "",
     "message": "Anyone can view your profile page.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        514
+        495
       ]
-    ]
+    ],
+    "translation": ""
   },
   "wTcjQo": {
-    "translation": "",
     "message": "Audit log",
     "placeholders": {},
     "comments": [],
@@ -229,34 +228,34 @@
         "app/pricing/page.tsx",
         45
       ]
-    ]
+    ],
+    "translation": ""
   },
   "R+w/Va": {
-    "translation": "",
     "message": "Billing",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/layout.tsx",
-        12
+        13
       ]
-    ]
+    ],
+    "translation": ""
   },
   "dEgA5A": {
-    "translation": "",
     "message": "Cancel",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        605
+        586
       ]
-    ]
+    ],
+    "translation": ""
   },
   "khEQ02": {
-    "translation": "",
     "message": "Choose a username",
     "placeholders": {},
     "comments": [],
@@ -265,10 +264,34 @@
         "components/auth/AuthForm.tsx",
         115
       ]
+    ],
+    "translation": ""
+  },
+  "jSLEfR": {
+    "translation": "",
+    "message": "Choose how Fable looks on this device.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        88
+      ]
+    ]
+  },
+  "KTL722": {
+    "translation": "",
+    "message": "Choose the language used across the Fable interface.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        69
+      ]
     ]
   },
   "an/9it": {
-    "translation": "",
     "message": "Collaborator",
     "placeholders": {},
     "comments": [],
@@ -277,10 +300,10 @@
         "components/NewProjectWizard.tsx",
         178
       ]
-    ]
+    ],
+    "translation": ""
   },
   "mkMLq4": {
-    "translation": "",
     "message": "Collapse sidebar",
     "placeholders": {},
     "comments": [],
@@ -289,10 +312,10 @@
         "components/AppSidebar.tsx",
         114
       ]
-    ]
+    ],
+    "translation": ""
   },
   "AUYALh": {
-    "translation": "",
     "message": "Coming soon",
     "placeholders": {},
     "comments": [],
@@ -301,10 +324,10 @@
         "app/pricing/page.tsx",
         177
       ]
-    ]
+    ],
+    "translation": ""
   },
   "8CLnho": {
-    "translation": "",
     "message": "Community support",
     "placeholders": {},
     "comments": [],
@@ -313,46 +336,46 @@
         "app/pricing/page.tsx",
         25
       ]
-    ]
+    ],
+    "translation": ""
   },
   "jPpVoJ": {
-    "translation": "",
     "message": "Confirm deletion",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        595
+        576
       ]
-    ]
+    ],
+    "translation": ""
   },
   "JRQitQ": {
-    "translation": "",
     "message": "Confirm new password",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        541
+        522
       ]
-    ]
+    ],
+    "translation": ""
   },
   "aGAeJL": {
-    "translation": "",
     "message": "Confirm with your password",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        579
+        560
       ]
-    ]
+    ],
+    "translation": ""
   },
   "iSLIjg": {
-    "translation": "",
     "message": "Connect",
     "placeholders": {},
     "comments": [],
@@ -361,10 +384,10 @@
         "app/(dashboard)/settings/connections/page.tsx",
         74
       ]
-    ]
+    ],
+    "translation": ""
   },
   "QHcLEN": {
-    "translation": "",
     "message": "Connected",
     "placeholders": {},
     "comments": [],
@@ -373,10 +396,10 @@
         "app/(dashboard)/settings/connections/page.tsx",
         88
       ]
-    ]
+    ],
+    "translation": ""
   },
   "9TzudL": {
-    "translation": "",
     "message": "Connected accounts",
     "placeholders": {},
     "comments": [],
@@ -385,22 +408,22 @@
         "app/(dashboard)/settings/connections/page.tsx",
         39
       ]
-    ]
+    ],
+    "translation": ""
   },
   "z5kV0h": {
-    "translation": "",
     "message": "Connections",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/layout.tsx",
-        13
+        14
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Bhgd0l": {
-    "translation": "",
     "message": "Contact us",
     "placeholders": {},
     "comments": [],
@@ -409,10 +432,10 @@
         "app/pricing/page.tsx",
         193
       ]
-    ]
+    ],
+    "translation": ""
   },
   "3gCD+B": {
-    "translation": "",
     "message": "Continue with email",
     "placeholders": {},
     "comments": [],
@@ -421,46 +444,46 @@
         "components/auth/AuthForm.tsx",
         155
       ]
-    ]
+    ],
+    "translation": ""
   },
   "E5U3o7": {
-    "translation": "",
     "message": "Control who can see your public profile.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        481
+        462
       ]
-    ]
+    ],
+    "translation": ""
   },
   "w0NjGg": {
-    "translation": "",
     "message": "Could not change password.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        285
+        283
       ]
-    ]
+    ],
+    "translation": ""
   },
   "hyHegz": {
-    "translation": "",
     "message": "Could not delete account.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        306
+        304
       ]
-    ]
+    ],
+    "translation": ""
   },
   "+REUaD": {
-    "translation": "",
     "message": "Could not open billing portal. Please try again.",
     "placeholders": {},
     "comments": [],
@@ -469,10 +492,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         57
       ]
-    ]
+    ],
+    "translation": ""
   },
   "EFUL0b": {
-    "translation": "",
     "message": "Could not start checkout. Please try again.",
     "placeholders": {},
     "comments": [],
@@ -481,10 +504,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         52
       ]
-    ]
+    ],
+    "translation": ""
   },
   "nDyywM": {
-    "translation": "",
     "message": "Could not update cap.",
     "placeholders": {},
     "comments": [],
@@ -493,22 +516,22 @@
         "app/(dashboard)/settings/billing/page.tsx",
         68
       ]
-    ]
+    ],
+    "translation": ""
   },
   "BGDt6y": {
-    "translation": "",
     "message": "Could not update profile.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        159
+        157
       ]
-    ]
+    ],
+    "translation": ""
   },
   "HSIqMX": {
-    "translation": "",
     "message": "Create a new project",
     "placeholders": {},
     "comments": [],
@@ -517,10 +540,10 @@
         "components/NewProjectWizard.tsx",
         204
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Q7h9s/": {
-    "translation": "",
     "message": "Create project",
     "placeholders": {},
     "comments": [],
@@ -529,10 +552,10 @@
         "components/NewProjectWizard.tsx",
         263
       ]
-    ]
+    ],
+    "translation": ""
   },
   "HM56Bx": {
-    "translation": "",
     "message": "Creating...",
     "placeholders": {},
     "comments": [],
@@ -541,22 +564,22 @@
         "components/NewProjectWizard.tsx",
         263
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Pn2B7/": {
-    "translation": "",
     "message": "Current password",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        524
+        505
       ]
-    ]
+    ],
+    "translation": ""
   },
   "A+zoTy": {
-    "translation": "",
     "message": "Current plan",
     "placeholders": {},
     "comments": [],
@@ -565,10 +588,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         91
       ]
-    ]
+    ],
+    "translation": ""
   },
   "xYsaNl": {
-    "translation": "",
     "message": "Current: {0} chars",
     "placeholders": {
       "0": [
@@ -581,10 +604,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         197
       ]
-    ]
+    ],
+    "translation": ""
   },
   "8Tg/JR": {
-    "translation": "",
     "message": "Custom",
     "placeholders": {},
     "comments": [],
@@ -593,10 +616,10 @@
         "app/pricing/page.tsx",
         181
       ]
-    ]
+    ],
+    "translation": ""
   },
   "D88QFA": {
-    "translation": "",
     "message": "Custom contracts",
     "placeholders": {},
     "comments": [],
@@ -605,10 +628,10 @@
         "app/pricing/page.tsx",
         48
       ]
-    ]
+    ],
+    "translation": ""
   },
   "hRbck8": {
-    "translation": "",
     "message": "Custom MT character limits",
     "placeholders": {},
     "comments": [],
@@ -617,34 +640,38 @@
         "app/pricing/page.tsx",
         43
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Zz6Cxn": {
-    "translation": "",
     "message": "Danger zone",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        563
+        544
       ]
-    ]
+    ],
+    "translation": ""
   },
   "pvnfJD": {
-    "translation": "",
     "message": "Dark",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        62
+      ],
+      [
         "components/UserMenu.tsx",
         39
       ]
-    ]
+    ],
+    "translation": ""
   },
   "7p5kLi": {
-    "translation": "",
     "message": "Dashboard",
     "placeholders": {},
     "comments": [],
@@ -653,10 +680,22 @@
         "components/AppSidebar.tsx",
         64
       ]
+    ],
+    "translation": ""
+  },
+  "As7Osr": {
+    "translation": "",
+    "message": "Date & time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        363
+      ]
     ]
   },
   "tUWfga": {
-    "translation": "",
     "message": "Dedicated support",
     "placeholders": {},
     "comments": [],
@@ -665,34 +704,34 @@
         "app/pricing/page.tsx",
         47
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ZDGm40": {
-    "translation": "",
     "message": "Delete account",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        575
+        556
       ]
-    ]
+    ],
+    "translation": ""
   },
   "EF2EU9": {
-    "translation": "",
     "message": "Deleting...",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        595
+        576
       ]
-    ]
+    ],
+    "translation": ""
   },
   "+K0AvT": {
-    "translation": "",
     "message": "Disconnect",
     "placeholders": {},
     "comments": [],
@@ -701,10 +740,10 @@
         "app/(dashboard)/settings/connections/page.tsx",
         70
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ln9/n9": {
-    "translation": "",
     "message": "Don't have an account?",
     "placeholders": {},
     "comments": [],
@@ -713,22 +752,22 @@
         "components/auth/AuthForm.tsx",
         161
       ]
-    ]
+    ],
+    "translation": ""
   },
   "O3oNi5": {
-    "translation": "",
     "message": "Email",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        356
+        354
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ATGYL1": {
-    "translation": "",
     "message": "Email address",
     "placeholders": {},
     "comments": [],
@@ -737,10 +776,10 @@
         "components/NewProjectWizard.tsx",
         134
       ]
-    ]
+    ],
+    "translation": ""
   },
   "jvneza": {
-    "translation": "",
     "message": "Email support",
     "placeholders": {},
     "comments": [],
@@ -749,10 +788,10 @@
         "app/pricing/page.tsx",
         38
       ]
-    ]
+    ],
+    "translation": ""
   },
   "xRPn3U": {
-    "translation": "",
     "message": "Enter your email address",
     "placeholders": {},
     "comments": [],
@@ -761,10 +800,10 @@
         "components/auth/AuthForm.tsx",
         130
       ]
-    ]
+    ],
+    "translation": ""
   },
   "n9V+ps": {
-    "translation": "",
     "message": "Enter your name",
     "placeholders": {},
     "comments": [],
@@ -773,38 +812,38 @@
         "components/auth/AuthForm.tsx",
         105
       ]
-    ]
+    ],
+    "translation": ""
   },
   "NgaR6B": {
-    "translation": "",
     "message": "Enter your password",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        585
+        566
       ],
       [
         "components/auth/AuthForm.tsx",
         141
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Ug8zcH": {
-    "translation": "",
     "message": "Enter your password to confirm deletion.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        297
+        295
       ]
-    ]
+    ],
+    "translation": ""
   },
   "GpB8YV": {
-    "translation": "",
     "message": "Enterprise",
     "placeholders": {},
     "comments": [],
@@ -813,10 +852,10 @@
         "app/pricing/page.tsx",
         174
       ]
-    ]
+    ],
+    "translation": ""
   },
   "kz/8m8": {
-    "translation": "",
     "message": "Everything in Pro",
     "placeholders": {},
     "comments": [],
@@ -825,10 +864,10 @@
         "app/pricing/page.tsx",
         42
       ]
-    ]
+    ],
+    "translation": ""
   },
   "tugdy6": {
-    "translation": "",
     "message": "Expand sidebar",
     "placeholders": {},
     "comments": [],
@@ -837,10 +876,10 @@
         "components/AppSidebar.tsx",
         114
       ]
-    ]
+    ],
+    "translation": ""
   },
   "BP9PkD": {
-    "translation": "",
     "message": "Failed to create project. Please try again.",
     "placeholders": {},
     "comments": [],
@@ -849,10 +888,10 @@
         "components/NewProjectWizard.tsx",
         83
       ]
-    ]
+    ],
+    "translation": ""
   },
   "TaxG+H": {
-    "translation": "",
     "message": "Failed to disconnect",
     "placeholders": {},
     "comments": [],
@@ -861,10 +900,10 @@
         "app/(dashboard)/settings/connections/page.tsx",
         26
       ]
-    ]
+    ],
+    "translation": ""
   },
   "o8vBGn": {
-    "translation": "",
     "message": "Failed to invite member. Please try again.",
     "placeholders": {},
     "comments": [],
@@ -873,10 +912,10 @@
         "components/NewProjectWizard.tsx",
         108
       ]
-    ]
+    ],
+    "translation": ""
   },
   "e3Q8DH": {
-    "translation": "",
     "message": "For growing teams shipping software in multiple languages.",
     "placeholders": {},
     "comments": [],
@@ -885,10 +924,10 @@
         "app/pricing/page.tsx",
         151
       ]
-    ]
+    ],
+    "translation": ""
   },
   "061d4F": {
-    "translation": "",
     "message": "For individuals and small open source projects.",
     "placeholders": {},
     "comments": [],
@@ -897,10 +936,10 @@
         "app/pricing/page.tsx",
         109
       ]
-    ]
+    ],
+    "translation": ""
   },
   "JXVQi+": {
-    "translation": "",
     "message": "For large teams that need custom limits, SSO, and SLAs.",
     "placeholders": {},
     "comments": [],
@@ -909,10 +948,10 @@
         "app/pricing/page.tsx",
         184
       ]
-    ]
+    ],
+    "translation": ""
   },
   "W4rVqn": {
-    "translation": "",
     "message": "for unlimited members.",
     "placeholders": {},
     "comments": [],
@@ -921,10 +960,10 @@
         "components/NewProjectWizard.tsx",
         152
       ]
-    ]
+    ],
+    "translation": ""
   },
   "2POOFK": {
-    "translation": "",
     "message": "Free",
     "placeholders": {},
     "comments": [],
@@ -933,10 +972,10 @@
         "app/pricing/page.tsx",
         102
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ZDIydz": {
-    "translation": "",
     "message": "Get started",
     "placeholders": {},
     "comments": [],
@@ -945,10 +984,10 @@
         "app/(auth)/signup/page.tsx",
         17
       ]
-    ]
+    ],
+    "translation": ""
   },
   "h2b6Pp": {
-    "translation": "",
     "message": "Get started free",
     "placeholders": {},
     "comments": [],
@@ -957,10 +996,10 @@
         "app/pricing/page.tsx",
         117
       ]
-    ]
+    ],
+    "translation": ""
   },
   "/bBVaD": {
-    "translation": "",
     "message": "GitHub disconnected",
     "placeholders": {},
     "comments": [],
@@ -969,10 +1008,10 @@
         "app/(dashboard)/settings/connections/page.tsx",
         22
       ]
-    ]
+    ],
+    "translation": ""
   },
   "xziKPE": {
-    "translation": "",
     "message": "Glossary",
     "placeholders": {},
     "comments": [],
@@ -981,10 +1020,10 @@
         "app/pricing/page.tsx",
         36
       ]
-    ]
+    ],
+    "translation": ""
   },
   "koCHSy": {
-    "translation": "",
     "message": "Go to project",
     "placeholders": {},
     "comments": [],
@@ -993,10 +1032,10 @@
         "components/NewProjectWizard.tsx",
         187
       ]
-    ]
+    ],
+    "translation": ""
   },
   "jLOe+a": {
-    "translation": "",
     "message": "installation",
     "placeholders": {},
     "comments": [],
@@ -1005,10 +1044,10 @@
         "app/(dashboard)/settings/connections/page.tsx",
         88
       ]
-    ]
+    ],
+    "translation": ""
   },
   "nbfdhU": {
-    "translation": "",
     "message": "Integrations",
     "placeholders": {},
     "comments": [],
@@ -1017,10 +1056,22 @@
         "components/AppSidebar.tsx",
         69
       ]
+    ],
+    "translation": ""
+  },
+  "3dioPi": {
+    "translation": "",
+    "message": "Interface language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        68
+      ]
     ]
   },
   "kO3I6g": {
-    "translation": "",
     "message": "Invalid email or password.",
     "placeholders": {},
     "comments": [],
@@ -1029,10 +1080,10 @@
         "components/auth/AuthForm.tsx",
         82
       ]
-    ]
+    ],
+    "translation": ""
   },
   "MFKlMB": {
-    "translation": "",
     "message": "Invite",
     "placeholders": {},
     "comments": [],
@@ -1041,10 +1092,10 @@
         "components/NewProjectWizard.tsx",
         142
       ]
-    ]
+    ],
+    "translation": ""
   },
   "qSfH/A": {
-    "translation": "",
     "message": "Invite team members",
     "placeholders": {},
     "comments": [],
@@ -1053,10 +1104,10 @@
         "components/NewProjectWizard.tsx",
         123
       ]
-    ]
+    ],
+    "translation": ""
   },
   "LNgO3H": {
-    "translation": "",
     "message": "Inviting...",
     "placeholders": {},
     "comments": [],
@@ -1065,34 +1116,50 @@
         "components/NewProjectWizard.tsx",
         142
       ]
+    ],
+    "translation": ""
+  },
+  "vXIe7J": {
+    "translation": "",
+    "message": "Language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        71
+      ]
     ]
   },
   "XObUV6": {
-    "translation": "",
     "message": "Languages you speak",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        417
+        398
       ]
-    ]
+    ],
+    "translation": ""
   },
   "1njn7W": {
-    "translation": "",
     "message": "Light",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        61
+      ],
+      [
         "components/UserMenu.tsx",
         40
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Z3FXyt": {
-    "translation": "",
     "message": "Loading...",
     "placeholders": {},
     "comments": [],
@@ -1111,12 +1178,12 @@
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        314
+        312
       ]
-    ]
+    ],
+    "translation": ""
   },
   "sQia9P": {
-    "translation": "",
     "message": "Log in",
     "placeholders": {},
     "comments": [],
@@ -1125,10 +1192,10 @@
         "components/auth/AuthForm.tsx",
         170
       ]
-    ]
+    ],
+    "translation": ""
   },
   "FgAxTj": {
-    "translation": "",
     "message": "Log out",
     "placeholders": {},
     "comments": [],
@@ -1137,22 +1204,22 @@
         "components/UserMenu.tsx",
         109
       ]
-    ]
+    ],
+    "translation": ""
   },
   "v05zbI": {
-    "translation": "",
     "message": "Lowercase letters, numbers, and underscores only.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        344
+        342
       ]
-    ]
+    ],
+    "translation": ""
   },
   "+nqVyF": {
-    "translation": "",
     "message": "Manage billing",
     "placeholders": {},
     "comments": [],
@@ -1161,22 +1228,22 @@
         "app/(dashboard)/settings/billing/page.tsx",
         117
       ]
-    ]
+    ],
+    "translation": ""
   },
   "5CpcDv": {
-    "translation": "",
     "message": "Manage your account and organisation settings.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/layout.tsx",
-        21
+        22
       ]
-    ]
+    ],
+    "translation": ""
   },
   "wlQNTg": {
-    "translation": "",
     "message": "Members",
     "placeholders": {},
     "comments": [],
@@ -1185,10 +1252,10 @@
         "components/AppSidebar.tsx",
         71
       ]
-    ]
+    ],
+    "translation": ""
   },
   "+8Nek/": {
-    "translation": "",
     "message": "Monthly",
     "placeholders": {},
     "comments": [],
@@ -1205,10 +1272,10 @@
         "app/pricing/page.tsx",
         77
       ]
-    ]
+    ],
+    "translation": ""
   },
   "KZ7S8D": {
-    "translation": "",
     "message": "Monthly overage cap",
     "placeholders": {},
     "comments": [],
@@ -1217,7 +1284,8 @@
         "app/pricing/page.tsx",
         34
       ]
-    ]
+    ],
+    "translation": ""
   },
   "CZvyiO": {
     "translation": "",
@@ -1229,10 +1297,10 @@
         "app/(dashboard)/settings/page.tsx",
         368
       ]
-    ]
+    ],
+    "obsolete": true
   },
   "wQtWQO": {
-    "translation": "",
     "message": "MT characters this month",
     "placeholders": {},
     "comments": [],
@@ -1241,10 +1309,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         176
       ]
-    ]
+    ],
+    "translation": ""
   },
   "IFmA9L": {
-    "translation": "",
     "message": "MT overage at $2 / 100k chars",
     "placeholders": {},
     "comments": [],
@@ -1253,10 +1321,10 @@
         "app/pricing/page.tsx",
         33
       ]
-    ]
+    ],
+    "translation": ""
   },
   "PKpBnN": {
-    "translation": "",
     "message": "MT overage cap",
     "placeholders": {},
     "comments": [],
@@ -1265,10 +1333,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         187
       ]
-    ]
+    ],
+    "translation": ""
   },
   "cG2RTR": {
-    "translation": "",
     "message": "My project",
     "placeholders": {},
     "comments": [],
@@ -1277,58 +1345,58 @@
         "components/NewProjectWizard.tsx",
         220
       ]
-    ]
+    ],
+    "translation": ""
   },
   "6YtxFj": {
-    "translation": "",
     "message": "Name",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        329
+        327
       ]
-    ]
+    ],
+    "translation": ""
   },
   "VVSh3E": {
-    "translation": "",
     "message": "Name cannot be empty.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        195
+        193
       ]
-    ]
+    ],
+    "translation": ""
   },
   "/nT6AE": {
-    "translation": "",
     "message": "New password",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        532
+        513
       ]
-    ]
+    ],
+    "translation": ""
   },
   "6Ylhna": {
-    "translation": "",
     "message": "New passwords do not match.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        268
+        266
       ]
-    ]
+    ],
+    "translation": ""
   },
   "gKi+a/": {
-    "translation": "",
     "message": "New project",
     "placeholders": {},
     "comments": [],
@@ -1337,10 +1405,10 @@
         "components/ProjectSwitcher.tsx",
         163
       ]
-    ]
+    ],
+    "translation": ""
   },
   "FWCQ7h": {
-    "translation": "",
     "message": "No account found with that email address.",
     "placeholders": {},
     "comments": [],
@@ -1349,22 +1417,22 @@
         "components/NewProjectWizard.tsx",
         102
       ]
-    ]
+    ],
+    "translation": ""
   },
   "oyUtf0": {
-    "translation": "",
     "message": "No languages added yet.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        423
+        404
       ]
-    ]
+    ],
+    "translation": ""
   },
   "KPV8GA": {
-    "translation": "",
     "message": "No limit (billed per use)",
     "placeholders": {},
     "comments": [],
@@ -1373,10 +1441,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         198
       ]
-    ]
+    ],
+    "translation": ""
   },
   "hoP6Ow": {
-    "translation": "",
     "message": "No projects found.",
     "placeholders": {},
     "comments": [],
@@ -1385,22 +1453,22 @@
         "components/ProjectCommandMenu.tsx",
         38
       ]
-    ]
+    ],
+    "translation": ""
   },
   "pMLouv": {
-    "translation": "",
     "message": "Only you can view your profile.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        497
+        478
       ]
-    ]
+    ],
+    "translation": ""
   },
   "PKLY+1": {
-    "translation": "",
     "message": "Opening...",
     "placeholders": {},
     "comments": [],
@@ -1409,10 +1477,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         117
       ]
-    ]
+    ],
+    "translation": ""
   },
   "/NLOmU": {
-    "translation": "",
     "message": "Overage cap updated.",
     "placeholders": {},
     "comments": [],
@@ -1421,10 +1489,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         65
       ]
-    ]
+    ],
+    "translation": ""
   },
   "LtI9AS": {
-    "translation": "",
     "message": "Owner",
     "placeholders": {},
     "comments": [],
@@ -1433,58 +1501,58 @@
         "components/NewProjectWizard.tsx",
         178
       ]
-    ]
+    ],
+    "translation": ""
   },
   "8ZsakT": {
-    "translation": "",
     "message": "Password",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        523
+        504
       ]
-    ]
+    ],
+    "translation": ""
   },
   "8hWLoE": {
-    "translation": "",
     "message": "Password must be at least 8 characters.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        272
+        270
       ]
-    ]
+    ],
+    "translation": ""
   },
   "mroTI9": {
-    "translation": "",
     "message": "Password updated.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        292
+        290
       ]
-    ]
+    ],
+    "translation": ""
   },
   "keefR0": {
-    "translation": "",
     "message": "Permanently delete your account and all associated data. This action cannot be undone.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        565
+        546
       ]
-    ]
+    ],
+    "translation": ""
   },
   "rYG2u6": {
-    "translation": "",
     "message": "Please wait...",
     "placeholders": {},
     "comments": [],
@@ -1493,10 +1561,10 @@
         "components/auth/AuthForm.tsx",
         152
       ]
-    ]
+    ],
+    "translation": ""
   },
   "gL/sdV": {
-    "translation": "",
     "message": "Popular",
     "placeholders": {},
     "comments": [],
@@ -1505,34 +1573,34 @@
         "app/pricing/page.tsx",
         131
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Q6hhn8": {
-    "translation": "",
     "message": "Preferences",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
-        "app/(dashboard)/settings/page.tsx",
-        365
+        "app/(dashboard)/settings/layout.tsx",
+        12
       ]
-    ]
+    ],
+    "translation": ""
   },
   "zwBp5t": {
-    "translation": "",
     "message": "Private",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        495
+        476
       ]
-    ]
+    ],
+    "translation": ""
   },
   "3fPjUY": {
-    "translation": "",
     "message": "Pro",
     "placeholders": {},
     "comments": [],
@@ -1541,10 +1609,10 @@
         "app/pricing/page.tsx",
         137
       ]
-    ]
+    ],
+    "translation": ""
   },
   "dTCh4j": {
-    "translation": "",
     "message": "Pro includes 50,000 MT characters per month. Additional characters are billed at $2 per 100,000 chars. Set a monthly cap in billing settings to control spend.",
     "placeholders": {},
     "comments": [],
@@ -1553,10 +1621,10 @@
         "app/pricing/page.tsx",
         206
       ]
-    ]
+    ],
+    "translation": ""
   },
   "vERlcd": {
-    "translation": "",
     "message": "Profile",
     "placeholders": {},
     "comments": [],
@@ -1565,22 +1633,22 @@
         "app/(dashboard)/settings/layout.tsx",
         11
       ]
-    ]
+    ],
+    "translation": ""
   },
   "4Pj7ow": {
-    "translation": "",
     "message": "Profile privacy",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        480
+        461
       ]
-    ]
+    ],
+    "translation": ""
   },
   "OyIC0Q": {
-    "translation": "",
     "message": "Project name",
     "placeholders": {},
     "comments": [],
@@ -1589,10 +1657,10 @@
         "components/NewProjectWizard.tsx",
         213
       ]
-    ]
+    ],
+    "translation": ""
   },
   "+0B+ue": {
-    "translation": "",
     "message": "Projects",
     "placeholders": {},
     "comments": [],
@@ -1601,22 +1669,22 @@
         "app/(dashboard)/settings/billing/page.tsx",
         160
       ]
-    ]
+    ],
+    "translation": ""
   },
   "7d1a0d": {
-    "translation": "",
     "message": "Public",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        512
+        493
       ]
-    ]
+    ],
+    "translation": ""
   },
   "iW9XkE": {
-    "translation": "",
     "message": "Public & private projects",
     "placeholders": {},
     "comments": [],
@@ -1625,10 +1693,10 @@
         "app/pricing/page.tsx",
         24
       ]
-    ]
+    ],
+    "translation": ""
   },
   "QDcqps": {
-    "translation": "",
     "message": "Redirecting...",
     "placeholders": {},
     "comments": [],
@@ -1637,10 +1705,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         145
       ]
-    ]
+    ],
+    "translation": ""
   },
   "kE8al3": {
-    "translation": "",
     "message": "Remove cap",
     "placeholders": {},
     "comments": [],
@@ -1649,22 +1717,22 @@
         "app/(dashboard)/settings/billing/page.tsx",
         218
       ]
-    ]
+    ],
+    "translation": ""
   },
   "842eib": {
-    "translation": "",
     "message": "Remove language",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        461
+        442
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ZRYAMN": {
-    "translation": "",
     "message": "Renews",
     "placeholders": {},
     "comments": [],
@@ -1673,10 +1741,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         105
       ]
-    ]
+    ],
+    "translation": ""
   },
   "tfDRzk": {
-    "translation": "",
     "message": "Save",
     "placeholders": {},
     "comments": [],
@@ -1685,10 +1753,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         210
       ]
-    ]
+    ],
+    "translation": ""
   },
   "XvjC4F": {
-    "translation": "",
     "message": "Saving...",
     "placeholders": {},
     "comments": [],
@@ -1697,10 +1765,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         210
       ]
-    ]
+    ],
+    "translation": ""
   },
   "blFttG": {
-    "translation": "",
     "message": "Search projects",
     "placeholders": {},
     "comments": [],
@@ -1709,10 +1777,10 @@
         "components/ProjectCommandMenu.tsx",
         26
       ]
-    ]
+    ],
+    "translation": ""
   },
   "6rVzU9": {
-    "translation": "",
     "message": "Search projects (⌘K)",
     "placeholders": {},
     "comments": [],
@@ -1721,10 +1789,10 @@
         "components/AppSidebar.tsx",
         137
       ]
-    ]
+    ],
+    "translation": ""
   },
   "RVZJWQ": {
-    "translation": "",
     "message": "Search projects...",
     "placeholders": {},
     "comments": [],
@@ -1737,17 +1805,17 @@
         "components/ProjectSwitcher.tsx",
         111
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Tz0i8g": {
-    "translation": "",
     "message": "Settings",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/layout.tsx",
-        19
+        20
       ],
       [
         "components/AppSidebar.tsx",
@@ -1757,10 +1825,10 @@
         "components/UserMenu.tsx",
         80
       ]
-    ]
+    ],
+    "translation": ""
   },
   "e+RpCP": {
-    "translation": "",
     "message": "Sign up",
     "placeholders": {},
     "comments": [],
@@ -1769,10 +1837,10 @@
         "components/auth/AuthForm.tsx",
         163
       ]
-    ]
+    ],
+    "translation": ""
   },
   "YEWle9": {
-    "translation": "",
     "message": "Sign up failed",
     "placeholders": {},
     "comments": [],
@@ -1781,10 +1849,10 @@
         "components/auth/AuthForm.tsx",
         72
       ]
-    ]
+    ],
+    "translation": ""
   },
   "yrlCvg": {
-    "translation": "",
     "message": "Sign up with email",
     "placeholders": {},
     "comments": [],
@@ -1793,10 +1861,10 @@
         "components/auth/AuthForm.tsx",
         154
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Ejjrq6": {
-    "translation": "",
     "message": "Simple, transparent pricing",
     "placeholders": {},
     "comments": [],
@@ -1805,7 +1873,8 @@
         "app/pricing/page.tsx",
         60
       ]
-    ]
+    ],
+    "translation": ""
   },
   "cVvidz": {
     "translation": "",
@@ -1817,10 +1886,10 @@
         "app/(dashboard)/settings/page.tsx",
         367
       ]
-    ]
+    ],
+    "obsolete": true
   },
   "hnlGzG": {
-    "translation": "",
     "message": "Skip for now",
     "placeholders": {},
     "comments": [],
@@ -1829,10 +1898,10 @@
         "components/NewProjectWizard.tsx",
         194
       ]
-    ]
+    ],
+    "translation": ""
   },
   "zEcnBA": {
-    "translation": "",
     "message": "SLA",
     "placeholders": {},
     "comments": [],
@@ -1841,10 +1910,10 @@
         "app/pricing/page.tsx",
         46
       ]
-    ]
+    ],
+    "translation": ""
   },
   "GJd/q+": {
-    "translation": "",
     "message": "Slug:",
     "placeholders": {},
     "comments": [],
@@ -1853,10 +1922,10 @@
         "components/NewProjectWizard.tsx",
         227
       ]
-    ]
+    ],
+    "translation": ""
   },
   "fWsBTs": {
-    "translation": "",
     "message": "Something went wrong. Please try again.",
     "placeholders": {},
     "comments": [],
@@ -1865,10 +1934,10 @@
         "components/auth/AuthForm.tsx",
         91
       ]
-    ]
+    ],
+    "translation": ""
   },
   "pX7IvN": {
-    "translation": "",
     "message": "Source language",
     "placeholders": {},
     "comments": [],
@@ -1877,10 +1946,10 @@
         "components/NewProjectWizard.tsx",
         234
       ]
-    ]
+    ],
+    "translation": ""
   },
   "sBJ5MF": {
-    "translation": "",
     "message": "Sources",
     "placeholders": {},
     "comments": [],
@@ -1889,10 +1958,10 @@
         "components/AppSidebar.tsx",
         66
       ]
-    ]
+    ],
+    "translation": ""
   },
   "j83mxq": {
-    "translation": "",
     "message": "SSO / SAML",
     "placeholders": {},
     "comments": [],
@@ -1901,10 +1970,10 @@
         "app/pricing/page.tsx",
         44
       ]
-    ]
+    ],
+    "translation": ""
   },
   "LG9V8Q": {
-    "translation": "",
     "message": "Start free. Upgrade when your team grows.",
     "placeholders": {},
     "comments": [],
@@ -1913,10 +1982,10 @@
         "app/pricing/page.tsx",
         63
       ]
-    ]
+    ],
+    "translation": ""
   },
   "2wW0OO": {
-    "translation": "",
     "message": "Stop machine translation once your monthly usage reaches this limit. This cap applies across all your projects. Leave blank for no cap (you will be billed per character above the 50k included).",
     "placeholders": {},
     "comments": [],
@@ -1925,10 +1994,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         189
       ]
-    ]
+    ],
+    "translation": ""
   },
   "UN1oif": {
-    "translation": "",
     "message": "Strings",
     "placeholders": {},
     "comments": [],
@@ -1937,22 +2006,26 @@
         "components/AppSidebar.tsx",
         65
       ]
-    ]
+    ],
+    "translation": ""
   },
   "D+NlUC": {
-    "translation": "",
     "message": "System",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        60
+      ],
+      [
         "components/UserMenu.tsx",
         38
       ]
-    ]
+    ],
+    "translation": ""
   },
   "GtycJ/": {
-    "translation": "",
     "message": "Tasks",
     "placeholders": {},
     "comments": [],
@@ -1961,10 +2034,10 @@
         "components/AppSidebar.tsx",
         68
       ]
-    ]
+    ],
+    "translation": ""
   },
   "T0u3ig": {
-    "translation": "",
     "message": "Team members",
     "placeholders": {},
     "comments": [],
@@ -1973,10 +2046,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         165
       ]
-    ]
+    ],
+    "translation": ""
   },
   "F/0wIT": {
-    "translation": "",
     "message": "That person is already a member.",
     "placeholders": {},
     "comments": [],
@@ -1985,22 +2058,26 @@
         "components/NewProjectWizard.tsx",
         104
       ]
-    ]
+    ],
+    "translation": ""
   },
   "FEr96N": {
-    "translation": "",
     "message": "Theme",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        87
+      ],
+      [
         "components/UserMenu.tsx",
         85
       ]
-    ]
+    ],
+    "translation": ""
   },
   "iONOLk": {
-    "translation": "",
     "message": "This username is already taken.",
     "placeholders": {},
     "comments": [],
@@ -2009,34 +2086,34 @@
         "components/auth/AuthForm.tsx",
         60
       ]
-    ]
+    ],
+    "translation": ""
   },
   "n9nSNJ": {
-    "translation": "",
     "message": "Time format",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        398
+        379
       ]
-    ]
+    ],
+    "translation": ""
   },
   "40Gx0U": {
-    "translation": "",
     "message": "Timezone",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        383
+        364
       ]
-    ]
+    ],
+    "translation": ""
   },
   "15E3l8": {
-    "translation": "",
     "message": "to create unlimited projects.",
     "placeholders": {},
     "comments": [],
@@ -2045,10 +2122,10 @@
         "components/NewProjectWizard.tsx",
         256
       ]
-    ]
+    ],
+    "translation": ""
   },
   "HUFkzc": {
-    "translation": "",
     "message": "Translation keys",
     "placeholders": {},
     "comments": [],
@@ -2057,10 +2134,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         170
       ]
-    ]
+    ],
+    "translation": ""
   },
   "iyUSAT": {
-    "translation": "",
     "message": "Translation memory",
     "placeholders": {},
     "comments": [],
@@ -2069,10 +2146,10 @@
         "app/pricing/page.tsx",
         37
       ]
-    ]
+    ],
+    "translation": ""
   },
   "kAy5R9": {
-    "translation": "",
     "message": "Translations",
     "placeholders": {},
     "comments": [],
@@ -2081,10 +2158,10 @@
         "components/AppSidebar.tsx",
         67
       ]
-    ]
+    ],
+    "translation": ""
   },
   "DYqTfJ": {
-    "translation": "",
     "message": "Unlimited projects",
     "placeholders": {},
     "comments": [],
@@ -2093,10 +2170,10 @@
         "app/pricing/page.tsx",
         29
       ]
-    ]
+    ],
+    "translation": ""
   },
   "aiDeB9": {
-    "translation": "",
     "message": "Unlimited team members",
     "placeholders": {},
     "comments": [],
@@ -2105,10 +2182,10 @@
         "app/pricing/page.tsx",
         30
       ]
-    ]
+    ],
+    "translation": ""
   },
   "9bQpOB": {
-    "translation": "",
     "message": "Unlimited translation keys",
     "placeholders": {},
     "comments": [],
@@ -2117,62 +2194,62 @@
         "app/pricing/page.tsx",
         31
       ]
-    ]
+    ],
+    "translation": ""
   },
   "EkH9pt": {
-    "translation": "",
     "message": "Update",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        110
+        108
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Q3MPWA": {
-    "translation": "",
     "message": "Update password",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        556
+        537
       ]
-    ]
+    ],
+    "translation": ""
   },
   "B44Dtg": {
-    "translation": "",
     "message": "Updated.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        182
+        180
       ]
-    ]
+    ],
+    "translation": ""
   },
   "RXbEvi": {
-    "translation": "",
     "message": "Updating...",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        110
+        108
       ],
       [
         "app/(dashboard)/settings/page.tsx",
-        556
+        537
       ]
-    ]
+    ],
+    "translation": ""
   },
   "c5AXEX": {
-    "translation": "",
     "message": "Upgrade - $26/mo billed annually",
     "placeholders": {},
     "comments": [],
@@ -2181,10 +2258,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         147
       ]
-    ]
+    ],
+    "translation": ""
   },
   "1oY18c": {
-    "translation": "",
     "message": "Upgrade - $29/mo",
     "placeholders": {},
     "comments": [],
@@ -2193,10 +2270,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         148
       ]
-    ]
+    ],
+    "translation": ""
   },
   "IelE1h": {
-    "translation": "",
     "message": "Upgrade to Pro",
     "placeholders": {},
     "comments": [],
@@ -2213,10 +2290,10 @@
         "components/NewProjectWizard.tsx",
         254
       ]
-    ]
+    ],
+    "translation": ""
   },
   "RCGq1r": {
-    "translation": "",
     "message": "Upgrade to Pro for more projects",
     "placeholders": {},
     "comments": [],
@@ -2225,10 +2302,10 @@
         "components/ProjectSwitcher.tsx",
         154
       ]
-    ]
+    ],
+    "translation": ""
   },
   "D5hokV": {
-    "translation": "",
     "message": "Usage this period",
     "placeholders": {},
     "comments": [],
@@ -2237,22 +2314,22 @@
         "app/(dashboard)/settings/billing/page.tsx",
         157
       ]
-    ]
+    ],
+    "translation": ""
   },
   "7sNhEz": {
-    "translation": "",
     "message": "Username",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        343
+        341
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Tv+LWr": {
-    "translation": "",
     "message": "Username can only contain lowercase letters, numbers, and underscores.",
     "placeholders": {},
     "comments": [],
@@ -2261,22 +2338,22 @@
         "components/auth/AuthForm.tsx",
         50
       ]
-    ]
+    ],
+    "translation": ""
   },
   "AX8SoU": {
-    "translation": "",
     "message": "Username must be 3-30 characters and use only lowercase letters, numbers, and underscores.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        205
+        203
       ]
-    ]
+    ],
+    "translation": ""
   },
   "KxuDVb": {
-    "translation": "",
     "message": "Username must be at least 3 characters.",
     "placeholders": {},
     "comments": [],
@@ -2285,10 +2362,10 @@
         "components/auth/AuthForm.tsx",
         44
       ]
-    ]
+    ],
+    "translation": ""
   },
   "OHNnYf": {
-    "translation": "",
     "message": "View full pricing details",
     "placeholders": {},
     "comments": [],
@@ -2297,10 +2374,10 @@
         "app/(dashboard)/settings/billing/page.tsx",
         227
       ]
-    ]
+    ],
+    "translation": ""
   },
   "v1kQyJ": {
-    "translation": "",
     "message": "Webhooks",
     "placeholders": {},
     "comments": [],
@@ -2309,10 +2386,10 @@
         "app/pricing/page.tsx",
         35
       ]
-    ]
+    ],
+    "translation": ""
   },
   "9eF5oV": {
-    "translation": "",
     "message": "Welcome back",
     "placeholders": {},
     "comments": [],
@@ -2321,10 +2398,10 @@
         "app/(auth)/login/page.tsx",
         17
       ]
-    ]
+    ],
+    "translation": ""
   },
   "kWJmRL": {
-    "translation": "",
     "message": "You",
     "placeholders": {},
     "comments": [],
@@ -2333,10 +2410,10 @@
         "components/NewProjectWizard.tsx",
         76
       ]
-    ]
+    ],
+    "translation": ""
   },
   "0bqfgW": {
-    "translation": "",
     "message": "You have reached the member limit on the free plan.",
     "placeholders": {},
     "comments": [],
@@ -2345,10 +2422,10 @@
         "components/NewProjectWizard.tsx",
         148
       ]
-    ]
+    ],
+    "translation": ""
   },
   "Q0jFzZ": {
-    "translation": "",
     "message": "You have reached the project limit on the free plan.",
     "placeholders": {},
     "comments": [],
@@ -2357,42 +2434,43 @@
         "components/NewProjectWizard.tsx",
         252
       ]
-    ]
+    ],
+    "translation": ""
   },
   "d9hAC8": {
-    "translation": "",
     "message": "Your display name shown across Fable.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        330
+        328
       ]
-    ]
+    ],
+    "translation": ""
   },
   "q8yluz": {
-    "translation": "",
     "message": "Your name",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        337
+        335
       ]
-    ]
+    ],
+    "translation": ""
   },
   "THGKf0": {
-    "translation": "",
     "message": "Your public identity on Fable.",
     "placeholders": {},
     "comments": [],
     "origin": [
       [
         "app/(dashboard)/settings/page.tsx",
-        326
+        324
       ]
-    ]
+    ],
+    "translation": ""
   }
 }

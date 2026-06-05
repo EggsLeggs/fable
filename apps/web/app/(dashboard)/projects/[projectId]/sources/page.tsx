@@ -1,6 +1,7 @@
 "use client";
 
-import { use, useEffect, useRef, useState, useCallback } from "react";
+import { use, useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import {
   Upload,
   RefreshCw,
@@ -12,6 +13,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useDropzone } from "react-dropzone";
 import { trpc } from "@/lib/trpc/client";
 import { detectFormat, FORMAT_LABELS } from "@fable/formats";
 import type { FileFormat } from "@fable/formats";
@@ -63,18 +65,30 @@ function UploadModal({
   onClose: () => void;
   onUploaded: () => void;
 }) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [detectedFormat, setDetectedFormat] = useState<FileFormat | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  async function selectFile(file: File) {
     setSelectedFile(file);
     const content = await file.text();
     setDetectedFormat(detectFormat(file.name, content));
   }
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (accepted) => {
+      const file = accepted[0];
+      if (file) selectFile(file);
+    },
+    accept: {
+      "application/json": [".json"],
+      "text/x-gettext-translation": [".po", ".pot"],
+      "text/yaml": [".yaml", ".yml"],
+    },
+    maxFiles: 1,
+    maxSize: 10 * 1024 * 1024,
+    disabled: uploading,
+  });
 
   async function handleUpload() {
     if (!selectedFile) return;
@@ -110,9 +124,14 @@ function UploadModal({
         <h2 className="mb-4 text-base font-semibold">Upload source file</h2>
 
         <div
-          className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-border p-8 transition-colors hover:border-ring"
-          onClick={() => fileInputRef.current?.click()}
+          {...getRootProps()}
+          className={`flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 transition-colors ${
+            isDragActive
+              ? "border-ring bg-muted/50"
+              : "border-border hover:border-ring"
+          }`}
         >
+          <input {...getInputProps()} />
           <FileText className="h-8 w-8 text-muted-foreground" />
           {selectedFile ? (
             <div className="text-center">
@@ -127,19 +146,14 @@ function UploadModal({
             </div>
           ) : (
             <div className="text-center">
-              <p className="text-sm font-medium">Click to select file</p>
+              <p className="text-sm font-medium">
+                {isDragActive ? "Drop file here" : "Click or drag a file here"}
+              </p>
               <p className="text-xs text-muted-foreground">
                 .json, .po, .yaml supported, max 10MB
               </p>
             </div>
           )}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json,.po,.pot,.yaml,.yml"
-            className="hidden"
-            onChange={handleFileChange}
-          />
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
@@ -200,6 +214,7 @@ function SourceFileRow({
   onArchived: () => void;
 }) {
   const utils = trpc.useUtils();
+  const [resyncing, setResyncing] = useState(false);
   const archive = trpc.sourceFile.archive.useMutation({
     onSuccess: () => {
       toast.success(`${file.name} archived`);
@@ -207,6 +222,26 @@ function SourceFileRow({
     },
     onError: () => toast.error("Failed to archive file"),
   });
+
+  async function handleResync() {
+    setResyncing(true);
+    try {
+      const res = await fetch(
+        `/api/projects/${projectId}/files/${file.id}/resync`,
+        { method: "POST" }
+      );
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error ?? `Resync failed (${res.status})`);
+      }
+      toast.success(`${file.name} re-sync queued`);
+      utils.sourceFile.list.invalidate({ projectId });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Resync failed");
+    } finally {
+      setResyncing(false);
+    }
+  }
 
   const isProcessing =
     file.latestIngestJob?.status === "queued" ||
@@ -233,7 +268,12 @@ function SourceFileRow({
         <div className="flex items-center gap-2">
           <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
           <div>
-            <p className="text-sm font-medium">{file.name}</p>
+            <Link
+              href={`/projects/${projectId}/sources/${file.id}`}
+              className="text-sm font-medium hover:underline"
+            >
+              {file.name}
+            </Link>
             {file.path !== file.name && (
               <p className="text-xs text-muted-foreground">{file.path}</p>
             )}
@@ -278,19 +318,36 @@ function SourceFileRow({
         )}
       </td>
       <td className="py-3 pr-4 text-right">
-        <button
-          type="button"
-          onClick={() => archive.mutate({ sourceFileId: file.id })}
-          disabled={archive.isPending}
-          className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-          title="Archive file"
-        >
-          {archive.isPending ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <Trash2 className="h-3.5 w-3.5" />
+        <div className="flex items-center justify-end gap-1">
+          {file.sourceType !== "upload" && (
+            <button
+              type="button"
+              onClick={handleResync}
+              disabled={resyncing || isProcessing}
+              className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
+              title="Re-sync from source"
+            >
+              {resyncing ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <RefreshCw className="h-3.5 w-3.5" />
+              )}
+            </button>
           )}
-        </button>
+          <button
+            type="button"
+            onClick={() => archive.mutate({ sourceFileId: file.id })}
+            disabled={archive.isPending}
+            className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+            title="Archive file"
+          >
+            {archive.isPending ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Trash2 className="h-3.5 w-3.5" />
+            )}
+          </button>
+        </div>
       </td>
     </tr>
   );
