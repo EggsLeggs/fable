@@ -56,11 +56,17 @@ export const translationStateEnum = pgEnum("translation_state", [
   "rejected",
 ]);
 
-export const orgRoleEnum = pgEnum("org_role", ["owner", "admin", "member"]);
+export const orgRoleEnum = pgEnum("org_role", ["owner", "admin", "member", "translator"]);
 
 export const projectVisibilityEnum = pgEnum("project_visibility", [
   "public",
   "private",
+]);
+
+export const glossaryAccessEnum = pgEnum("glossary_access", [
+  "readonly",
+  "suggest",
+  "full",
 ]);
 
 export const planEnum = pgEnum("plan", ["free", "pro", "enterprise"]);
@@ -80,6 +86,8 @@ export const profileVisibilityEnum = pgEnum("profile_visibility", [
   "public",
   "private",
 ]);
+
+export type CustomLocale = { name: string; code: string };
 
 export type SpokenLanguageLevel =
   | "elementary"
@@ -203,6 +211,9 @@ export const projects = pgTable(
     visibility: projectVisibilityEnum("visibility").notNull().default("private"),
     allowContributions: boolean("allowContributions").notNull().default(false),
     sourceLocale: text("sourceLocale").notNull().default("en"),
+    glossaryAccess: glossaryAccessEnum("glossary_access").notNull().default("readonly"),
+    notifyTranslatorsOnNewStrings: boolean("notify_translators_on_new_strings").notNull().default(false),
+    customLocales: jsonb("custom_locales").$type<CustomLocale[]>().notNull().default([]),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },
@@ -423,3 +434,4 @@ export type IngestJobStatus = (typeof ingestJobStatusEnum.enumValues)[number];
 export type IngestTrigger = (typeof ingestTriggerEnum.enumValues)[number];
 export type TranslationKeyStatus =
   (typeof translationKeyStatusEnum.enumValues)[number];
+export type GlossaryAccess = (typeof glossaryAccessEnum.enumValues)[number];

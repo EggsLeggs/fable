@@ -1,10 +1,12 @@
 import { z } from "zod";
-import { eq, and, count } from "drizzle-orm";
+import { eq, and, count, ne } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
-import { projects, projectLocales, orgMembers, type Db } from "@fable/db";
+import { projects, projectLocales, orgMembers, translationKeys, translations, type Db } from "@fable/db";
 import { TRPCError } from "@trpc/server";
 import { PLAN_LIMITS } from "@fable/stripe";
+
+const customLocaleSchema = z.object({ name: z.string().min(1), code: z.string().min(1) });
 
 async function assertOrgAccess(
   db: Db,
@@ -148,10 +150,18 @@ export const projectRouter = router({
         description: z.string().max(500).optional(),
         visibility: z.enum(["public", "private"]).optional(),
         allowContributions: z.boolean().optional(),
+        glossaryAccess: z.enum(["readonly", "suggest", "full"]).optional(),
+        notifyTranslatorsOnNewStrings: z.boolean().optional(),
+        customLocales: z.array(customLocaleSchema).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, id),
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertOrgAccess(ctx.db, ctx.session.user.id, project.orgId);
       const [updated] = await ctx.db
         .update(projects)
         .set({ ...data, updatedAt: new Date() })
@@ -160,13 +170,114 @@ export const projectRouter = router({
       return updated!;
     }),
 
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.id),
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+      const member = await assertOrgAccess(ctx.db, ctx.session.user.id, project.orgId);
+      if (member.role !== "owner" && member.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      await ctx.db.delete(projects).where(eq(projects.id, input.id));
+    }),
+
   addLocale: protectedProcedure
     .input(z.object({ projectId: z.string(), locale: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertOrgAccess(ctx.db, ctx.session.user.id, project.orgId);
       const [locale] = await ctx.db
         .insert(projectLocales)
         .values({ id: uuid(), ...input, isSource: false })
         .returning();
       return locale!;
+    }),
+
+  removeLocale: protectedProcedure
+    .input(z.object({ projectId: z.string(), localeId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertOrgAccess(ctx.db, ctx.session.user.id, project.orgId);
+      const locale = await ctx.db.query.projectLocales.findFirst({
+        where: eq(projectLocales.id, input.localeId),
+      });
+      if (!locale) throw new TRPCError({ code: "NOT_FOUND" });
+      if (locale.isSource) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot remove the source locale." });
+      }
+      await ctx.db.delete(projectLocales).where(eq(projectLocales.id, input.localeId));
+    }),
+
+  updateSourceLocale: protectedProcedure
+    .input(z.object({ id: z.string(), sourceLocale: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.id),
+        with: { locales: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertOrgAccess(ctx.db, ctx.session.user.id, project.orgId);
+
+      await ctx.db.update(projects).set({ sourceLocale: input.sourceLocale, updatedAt: new Date() }).where(eq(projects.id, input.id));
+
+      const oldSource = project.locales.find((l) => l.isSource);
+      if (oldSource) {
+        await ctx.db.update(projectLocales).set({ isSource: false }).where(eq(projectLocales.id, oldSource.id));
+      }
+
+      const existing = project.locales.find((l) => l.locale === input.sourceLocale);
+      if (existing) {
+        await ctx.db.update(projectLocales).set({ isSource: true }).where(eq(projectLocales.id, existing.id));
+      } else {
+        await ctx.db.insert(projectLocales).values({ id: uuid(), projectId: input.id, locale: input.sourceLocale, isSource: true });
+      }
+    }),
+
+  badgeStats: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.id),
+      });
+      if (!project) return null;
+
+      const [keyRow] = await ctx.db
+        .select({ value: count() })
+        .from(translationKeys)
+        .where(and(eq(translationKeys.projectId, input.id), eq(translationKeys.status, "active")));
+
+      const keyCount = keyRow?.value ?? 0;
+
+      const targetLocales = await ctx.db.query.projectLocales.findMany({
+        where: and(eq(projectLocales.projectId, input.id), eq(projectLocales.isSource, false)),
+      });
+
+      const [approvedRow] = await ctx.db
+        .select({ value: count() })
+        .from(translations)
+        .innerJoin(translationKeys, eq(translations.keyId, translationKeys.id))
+        .where(
+          and(
+            eq(translationKeys.projectId, input.id),
+            eq(translationKeys.status, "active"),
+            eq(translations.state, "approved"),
+            ne(translations.locale, project.sourceLocale)
+          )
+        );
+
+      const approvedCount = approvedRow?.value ?? 0;
+      const total = keyCount * targetLocales.length;
+      const pct = total === 0 ? 0 : Math.round((approvedCount / total) * 100);
+
+      return { pct, keyCount, targetLocaleCount: targetLocales.length };
     }),
 });
