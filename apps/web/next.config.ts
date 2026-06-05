@@ -1,0 +1,9 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  transpilePackages: ["@fable/api", "@fable/ui", "@fable/auth"],
+  output: "standalone",
+  serverExternalPackages: ["better-auth", "@better-auth/kysely-adapter", "kysely"],
+};
+
+export default nextConfig;
