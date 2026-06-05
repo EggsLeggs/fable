@@ -15,6 +15,7 @@ import {
   vcsIntegrations,
   sourceFiles,
   ingestJobs,
+  tasks,
 } from "./schema";
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -22,6 +23,8 @@ export const usersRelations = relations(users, ({ many }) => ({
   translationsAuthored: many(translations, { relationName: "translator" }),
   translationsReviewed: many(translations, { relationName: "reviewer" }),
   githubInstallations: many(githubInstallations),
+  tasksAssigned: many(tasks, { relationName: "task_assignee" }),
+  tasksCreated: many(tasks, { relationName: "task_creator" }),
 }));
 
 export const githubInstallationsRelations = relations(
@@ -59,6 +62,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   keys: many(translationKeys),
   sourceFiles: many(sourceFiles),
   vcsIntegrations: many(vcsIntegrations),
+  tasks: many(tasks),
 }));
 
 export const projectLocalesRelations = relations(projectLocales, ({ one }) => ({
@@ -107,6 +111,7 @@ export const sourceFilesRelations = relations(
     }),
     ingestJobs: many(ingestJobs),
     keys: many(translationKeys),
+    tasks: many(tasks),
   })
 );
 
@@ -169,5 +174,26 @@ export const webhookConfigsRelations = relations(webhookConfigs, ({ one }) => ({
   org: one(organizations, {
     fields: [webhookConfigs.orgId],
     references: [organizations.id],
+  }),
+}));
+
+export const tasksRelations = relations(tasks, ({ one }) => ({
+  project: one(projects, {
+    fields: [tasks.projectId],
+    references: [projects.id],
+  }),
+  sourceFile: one(sourceFiles, {
+    fields: [tasks.sourceFileId],
+    references: [sourceFiles.id],
+  }),
+  assignedToUser: one(users, {
+    fields: [tasks.assignedTo],
+    references: [users.id],
+    relationName: "task_assignee",
+  }),
+  createdByUser: one(users, {
+    fields: [tasks.createdBy],
+    references: [users.id],
+    relationName: "task_creator",
   }),
 }));
