@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@fable/tsconfig": "*",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
     "@types/uuid": "^10.0.0",
     "typescript": "^5.8.3"
