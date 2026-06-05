@@ -10,8 +10,9 @@ import {
   translations,
   vcsIntegrations,
   projects,
+  projectLocales,
 } from "@fable/db";
-import { getAdapter, detectFormat, parseLinguiJsonDetailed } from "@fable/formats";
+import { getAdapter, detectFormat, parseLinguiJsonDetailed, inferTranslationPath } from "@fable/formats";
 import type { ParsedString } from "@fable/formats";
 
 export interface IngestJobPayload {
@@ -303,6 +304,7 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
     console.log(
       `[ingest] job ${ingestJobId} done: +${stringsAdded} ~${stringsUpdated} -${stringsRemoved}`
     );
+
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`[ingest] job ${ingestJobId} failed:`, message);
@@ -313,5 +315,87 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
       .where(eq(ingestJobs.id, ingestJobId));
 
     throw err;
+  }
+
+  // After a successful ingest, attempt to detect and import existing locale translations.
+  // Runs outside the main try/catch so failures here don't mark the ingest job as failed.
+  if (sourceFile.sourceType === "vcs" && sourceFile.vcsIntegrationId && sourceFile.vcsPath) {
+    try {
+      const integration = await db.query.vcsIntegrations.findFirst({
+        where: eq(vcsIntegrations.id, sourceFile.vcsIntegrationId),
+      });
+      if (!integration) return;
+
+      const token = await getInstallationToken(integration.installationId);
+      const targetLocales = await db.query.projectLocales.findMany({
+        where: and(
+          eq(projectLocales.projectId, sourceFile.projectId),
+          eq(projectLocales.isSource, false)
+        ),
+      });
+
+      for (const { locale: targetLocale } of targetLocales) {
+        const translationPath = inferTranslationPath(
+          sourceFile.vcsPath,
+          project.sourceLocale,
+          targetLocale
+        );
+        if (!translationPath || translationPath === sourceFile.vcsPath) continue;
+
+        let localeContent: string;
+        try {
+          localeContent = await fetchGitHubFileContent(
+            token,
+            integration.repoOwner,
+            integration.repoName,
+            translationPath,
+            sourceFile.vcsBranch ?? integration.defaultBranch
+          );
+        } catch {
+          continue;
+        }
+
+        let parsedLocale: Record<string, string>;
+        try {
+          parsedLocale = getAdapter(sourceFile.format).parse(localeContent);
+        } catch {
+          continue;
+        }
+
+        const currentKeys = await db.query.translationKeys.findMany({
+          where: and(
+            eq(translationKeys.projectId, sourceFile.projectId),
+            eq(translationKeys.sourceFileId, sourceFileId)
+          ),
+          with: {
+            translations: {
+              where: eq(translations.locale, targetLocale),
+            },
+          },
+        });
+
+        const keyByKey = new Map(currentKeys.map((k) => [k.key, k]));
+
+        await db.transaction(async (tx) => {
+          for (const [key, value] of Object.entries(parsedLocale)) {
+            const keyRecord = keyByKey.get(key);
+            if (!keyRecord) continue;
+            if (keyRecord.translations.length === 0) {
+              await tx.insert(translations).values({
+                id: uuid(),
+                keyId: keyRecord.id,
+                locale: targetLocale,
+                value,
+                state: "needs_review",
+              });
+            }
+          }
+        });
+
+        console.log(`[ingest] imported existing translations for ${targetLocale} from ${translationPath}`);
+      }
+    } catch (err) {
+      console.error(`[ingest] locale detection failed for job ${ingestJobId}:`, err instanceof Error ? err.message : String(err));
+    }
   }
 }

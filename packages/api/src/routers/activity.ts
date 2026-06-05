@@ -26,6 +26,7 @@ const ACTIVITY_TYPE_VALUES = [
   "translation_suggested",
   "translation_approved",
   "translation_rejected",
+  "translations_pushed",
   "comment_added",
 ] as const;
 

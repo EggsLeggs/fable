@@ -24,4 +24,5 @@ export const queues = {
   mtTranslate: new Queue("mt-translate", { connection }),
   qaCheck: new Queue("qa-check", { connection }),
   webhookDelivery: new Queue("webhook-delivery", { connection }),
+  pushTranslations: new Queue("push-translations", { connection }),
 };

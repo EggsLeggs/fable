@@ -8,9 +8,22 @@ export type IngestQueue = {
   add: (name: string, data: unknown, opts?: { jobId?: string }) => Promise<unknown>;
 };
 
-export async function createTRPCContext(req: Request, ingestQueue?: IngestQueue) {
+export type PushTranslationsQueue = {
+  add: (name: string, data: unknown, opts?: { jobId?: string }) => Promise<unknown>;
+};
+
+export async function createTRPCContext(
+  req: Request,
+  ingestQueue?: IngestQueue,
+  pushTranslationsQueue?: PushTranslationsQueue
+) {
   const session = await auth.api.getSession({ headers: req.headers });
-  return { db, session, ingestQueue: ingestQueue ?? null };
+  return {
+    db,
+    session,
+    ingestQueue: ingestQueue ?? null,
+    pushTranslationsQueue: pushTranslationsQueue ?? null,
+  };
 }
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
