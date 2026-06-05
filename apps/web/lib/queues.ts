@@ -33,3 +33,12 @@ export function getIngestQueue(): Queue {
   }
   return ingestQueue;
 }
+
+let pushTranslationsQueue: Queue | null = null;
+
+export function getPushTranslationsQueue(): Queue {
+  if (!pushTranslationsQueue) {
+    pushTranslationsQueue = new Queue("push-translations", { connection });
+  }
+  return pushTranslationsQueue;
+}

@@ -6,6 +6,7 @@ import { handleMtTranslate } from "./jobs/mt-translate";
 import { handleQaCheck } from "./jobs/qa-check";
 import { handleVcsSync } from "./jobs/vcs-sync";
 import { handleWebhookDelivery } from "./jobs/webhook";
+import { handlePushTranslations } from "./jobs/push-translations";
 
 const workers = [
   new Worker("ingest", handleIngest, { connection }),
@@ -13,6 +14,7 @@ const workers = [
   new Worker("qa-check", handleQaCheck, { connection }),
   new Worker("vcs-sync", handleVcsSync, { connection }),
   new Worker("webhook-delivery", handleWebhookDelivery, { connection }),
+  new Worker("push-translations", handlePushTranslations, { connection }),
 ];
 
 for (const worker of workers) {

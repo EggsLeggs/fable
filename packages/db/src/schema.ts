@@ -52,6 +52,13 @@ export const vcsPushModeEnum = pgEnum("vcs_push_mode", [
   "disabled",
 ]);
 
+export const pushJobStatusEnum = pgEnum("push_job_status", [
+  "queued",
+  "processing",
+  "done",
+  "failed",
+]);
+
 export const translationKeyStatusEnum = pgEnum("translation_key_status", [
   "active",
   "archived",
@@ -312,12 +319,30 @@ export const sourceFiles = pgTable(
     lastSyncedAt: timestamp("last_synced_at", { mode: "date" }),
     lastPushedAt: timestamp("last_pushed_at", { mode: "date" }),
     pushEnabled: boolean("push_enabled").notNull().default(true),
+    translationPattern: text("translation_pattern"),
     status: sourceFileStatusEnum("status").notNull().default("active"),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },
   (t) => [unique().on(t.projectId, t.path)]
 );
+
+export const pushJobs = pgTable("push_job", {
+  id: text("id").primaryKey(),
+  projectId: text("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  vcsIntegrationId: text("vcs_integration_id")
+    .notNull()
+    .references(() => vcsIntegrations.id, { onDelete: "cascade" }),
+  locales: jsonb("locales").$type<string[]>().notNull().default([]),
+  status: pushJobStatusEnum("status").notNull().default("queued"),
+  prUrl: text("pr_url"),
+  error: text("error"),
+  startedAt: timestamp("started_at", { mode: "date" }),
+  completedAt: timestamp("completed_at", { mode: "date" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+});
 
 export const ingestJobs = pgTable("ingest_job", {
   id: text("id").primaryKey(),
@@ -480,6 +505,7 @@ export const activityTypeEnum = pgEnum("activity_type", [
   "translation_suggested",
   "translation_approved",
   "translation_rejected",
+  "translations_pushed",
   "comment_added",
 ]);
 
@@ -505,6 +531,7 @@ export type ActivityMetadata = {
   translationValue?: string;
   commentId?: string;
   commentBody?: string;
+  locales?: string[];
 };
 
 export const activityLog = pgTable("activity_log", {
@@ -613,6 +640,8 @@ export type DbActivityLog = typeof activityLog.$inferSelect;
 export type ActivityType = (typeof activityTypeEnum.enumValues)[number];
 export type DbTranslationVote = typeof translationVotes.$inferSelect;
 export type VoteValue = (typeof voteValueEnum.enumValues)[number];
+export type DbPushJob = typeof pushJobs.$inferSelect;
+export type PushJobStatus = (typeof pushJobStatusEnum.enumValues)[number];
 export type DbComment = typeof comments.$inferSelect;
 export type DbCommentMention = typeof commentMentions.$inferSelect;
 export type DbReferral = typeof referrals.$inferSelect;
