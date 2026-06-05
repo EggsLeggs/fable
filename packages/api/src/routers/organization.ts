@@ -194,7 +194,6 @@ export const organizationRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
-      // Limit based on the org owner's plan
       const owner = await ctx.db.query.orgMembers.findFirst({
         where: and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.role, "owner")),
         with: { user: { columns: { plan: true } } },
@@ -224,5 +223,67 @@ export const organizationRouter = router({
         .returning();
 
       return member!;
+    }),
+
+  inviteTranslatorByEmail: protectedProcedure
+    .input(z.object({ orgId: z.string(), email: z.string().email() }))
+    .mutation(async ({ ctx, input }) => {
+      const callerMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, input.orgId)
+        ),
+      });
+      if (!callerMember || callerMember.role === "translator") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      const targetUser = await ctx.db.query.users.findFirst({
+        where: eq(users.email, input.email),
+      });
+      if (!targetUser) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "USER_NOT_FOUND" });
+      }
+      const existingMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.orgId, input.orgId),
+          eq(orgMembers.userId, targetUser.id)
+        ),
+      });
+      if (existingMember) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "ALREADY_MEMBER" });
+      }
+      const [member] = await ctx.db
+        .insert(orgMembers)
+        .values({ id: uuid(), orgId: input.orgId, userId: targetUser.id, role: "translator" })
+        .returning();
+      return member!;
+    }),
+
+  removeTranslator: protectedProcedure
+    .input(z.object({ orgId: z.string(), userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const callerMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, input.orgId)
+        ),
+      });
+      if (!callerMember || callerMember.role === "translator") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      const target = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.orgId, input.orgId),
+          eq(orgMembers.userId, input.userId)
+        ),
+      });
+      if (!target || target.role !== "translator") {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      await ctx.db
+        .delete(orgMembers)
+        .where(
+          and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.userId, input.userId))
+        );
     }),
 });

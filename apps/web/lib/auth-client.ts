@@ -1,13 +1,10 @@
-// Client-side auth lives in apps/web/lib/auth-client.ts so React hooks resolve
-// against the app's React instance. Do not import this module from the web app.
 import { createAuthClient } from "better-auth/react";
 
 const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
 });
 
-export const { signIn, signUp, signOut, useSession, getSession, changePassword, deleteUser } =
-  authClient;
+export const { signIn, signUp, signOut, getSession, changePassword, deleteUser } = authClient;
 
 export type SignUpEmailInput = {
   name: string;

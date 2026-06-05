@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@wrksz/themes/client";
 import { useRouter } from "next/navigation";
 import { LogOut, Settings } from "lucide-react";
 import { t } from "@lingui/core/macro";
-import { signOut } from "@fable/auth/client";
+import { signOut } from "@/lib/auth-client";
 import { UserAvatar } from "@/components/UserAvatar";
 
 type Props = {

@@ -112,7 +112,7 @@ export function NewProjectWizard() {
 
   function goToProject() {
     if (createdProject) {
-      router.push(`/projects/${createdProject.id}/members`);
+      router.push(`/projects/${createdProject.id}/collaborators`);
     }
   }
 

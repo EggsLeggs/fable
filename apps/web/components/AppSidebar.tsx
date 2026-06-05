@@ -68,7 +68,7 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
     { href: "tasks" as const, label: t`Tasks`, Icon: ListChecks },
     { href: "integrations" as const, label: t`Integrations`, Icon: Plug },
     { href: "activity" as const, label: t`Activity`, Icon: Activity },
-    { href: "members" as const, label: t`Members`, Icon: Users },
+    { href: "collaborators" as const, label: t`Collaborators`, Icon: Users },
     { href: "settings" as const, label: t`Settings`, Icon: Settings },
   ];
 
