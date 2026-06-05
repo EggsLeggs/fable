@@ -436,6 +436,54 @@ export const tasks = pgTable("task", {
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
 });
 
+export const activityTypeEnum = pgEnum("activity_type", [
+  "project_created",
+  "project_updated",
+  "locale_added",
+  "locale_removed",
+  "source_created",
+  "source_updated",
+  "source_deleted",
+  "member_joined",
+  "member_left",
+  "task_created",
+  "task_updated",
+  "task_deleted",
+  "integration_created",
+  "integration_updated",
+  "integration_deleted",
+]);
+
+export type ActivityMetadata = {
+  name?: string;
+  changes?: Record<string, { from: unknown; to: unknown }>;
+  locale?: string;
+  sourceId?: string;
+  sourcePath?: string;
+  memberUserId?: string;
+  memberName?: string;
+  role?: string;
+  taskId?: string;
+  taskTitle?: string;
+  taskLocale?: string | null;
+  taskStatus?: string;
+  provider?: string;
+  repoOwner?: string;
+  repoName?: string;
+};
+
+export const activityLog = pgTable("activity_log", {
+  id: text("id").primaryKey(),
+  projectId: text("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
+  type: activityTypeEnum("type").notNull(),
+  locale: text("locale"),
+  metadata: jsonb("metadata").$type<ActivityMetadata>().notNull().default({}),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+});
+
 // Inferred types
 export type DbUser = typeof users.$inferSelect;
 export type DbOrganization = typeof organizations.$inferSelect;
@@ -467,3 +515,5 @@ export type TranslationKeyStatus =
 export type GlossaryAccess = (typeof glossaryAccessEnum.enumValues)[number];
 export type DbTask = typeof tasks.$inferSelect;
 export type TaskStatus = (typeof taskStatusEnum.enumValues)[number];
+export type DbActivityLog = typeof activityLog.$inferSelect;
+export type ActivityType = (typeof activityTypeEnum.enumValues)[number];

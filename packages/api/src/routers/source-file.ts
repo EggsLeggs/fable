@@ -13,6 +13,7 @@ import {
   githubInstallations,
   type Db,
 } from "@fable/db";
+import { logActivity } from "../log-activity";
 
 async function assertProjectAccess(db: Db, userId: string, projectId: string) {
   const project = await db.query.projects.findFirst({
@@ -142,6 +143,13 @@ export const sourceFileRouter = router({
           .where(eq(translationKeys.sourceFileId, input.sourceFileId));
       });
 
+      await logActivity(ctx.db, {
+        projectId: file.projectId,
+        userId: ctx.session.user.id,
+        type: "source_deleted",
+        metadata: { sourceId: file.id, name: file.name, sourcePath: file.path },
+      });
+
       return { success: true };
     }),
 
@@ -186,6 +194,17 @@ export const sourceFileRouter = router({
         })
         .returning();
 
+      await logActivity(ctx.db, {
+        projectId: input.projectId,
+        userId: ctx.session.user.id,
+        type: "integration_created",
+        metadata: {
+          provider: "github",
+          repoOwner: input.repoOwner,
+          repoName: input.repoName,
+        },
+      });
+
       return integration!;
     }),
 
@@ -213,6 +232,17 @@ export const sourceFileRouter = router({
         })
         .where(eq(vcsIntegrations.id, input.integrationId))
         .returning();
+
+      await logActivity(ctx.db, {
+        projectId: integration.projectId,
+        userId: ctx.session.user.id,
+        type: "integration_updated",
+        metadata: {
+          provider: integration.provider,
+          repoOwner: integration.repoOwner,
+          repoName: integration.repoName,
+        },
+      });
 
       return updated!;
     }),
