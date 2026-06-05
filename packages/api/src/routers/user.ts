@@ -3,16 +3,16 @@ import { and, eq, ne } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { users, githubInstallations, type SpokenLanguageLevel } from "@fable/db";
+import {
+  assertGitHubAppConfigured,
+  getIntegrationAvailability,
+  isGitHubAppConfigured,
+} from "../integration-config";
 
 async function getInstallationToken(installationId: string): Promise<string> {
-  const appId = process.env.GITHUB_APP_ID;
-  const privateKey = process.env.GITHUB_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  if (!appId || !privateKey) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "GitHub App is not configured",
-    });
-  }
+  assertGitHubAppConfigured();
+  const appId = process.env.GITHUB_APP_ID!;
+  const privateKey = process.env.GITHUB_PRIVATE_KEY!.replace(/\\n/g, "\n");
   const jwt = await import("jsonwebtoken");
   const appToken = jwt.default.sign({ iss: appId }, privateKey, {
     algorithm: "RS256",
@@ -62,6 +62,8 @@ const usernameSchema = z
   );
 
 export const userRouter = router({
+  getIntegrationAvailability: publicProcedure.query(() => getIntegrationAvailability()),
+
   checkUsernameAvailable: publicProcedure
     .input(z.object({ username: usernameSchema }))
     .query(async ({ ctx, input }) => {
@@ -146,6 +148,8 @@ export const userRouter = router({
   }),
 
   listGitHubRepos: protectedProcedure.query(async ({ ctx }) => {
+    if (!isGitHubAppConfigured()) return [];
+
     const installation = await ctx.db.query.githubInstallations.findFirst({
       where: eq(githubInstallations.userId, ctx.session.user.id),
     });

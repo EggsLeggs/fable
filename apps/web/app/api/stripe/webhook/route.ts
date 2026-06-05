@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { stripe } from "@fable/stripe";
-import { db, users } from "@fable/db";
-import { eq } from "drizzle-orm";
+import { db, users, referrals } from "@fable/db";
+import { eq, and, count } from "drizzle-orm";
+import { v4 as uuid } from "uuid";
+import { getMilestone, fulfillReferralReward } from "@fable/api/referral-rewards";
 
 export const dynamic = "force-dynamic";
 
@@ -63,6 +65,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           .where(eq(users.id, userId));
 
         console.log(`[webhook] user ${userId} upgraded to pro`);
+
+        // Create a pending referral record if this user was referred
+        const referee = await db.query.users.findFirst({
+          where: eq(users.id, userId),
+          columns: { referredBy: true },
+        });
+
+        if (referee?.referredBy) {
+          const existing = await db.query.referrals.findFirst({
+            where: eq(referrals.refereeId, userId),
+            columns: { id: true },
+          });
+
+          if (!existing) {
+            await db.insert(referrals).values({
+              id: uuid(),
+              referrerId: referee.referredBy,
+              refereeId: userId,
+              status: "pending",
+            });
+            console.log(`[referral] pending referral created referrer=${referee.referredBy} referee=${userId}`);
+          }
+        }
         break;
       }
 
@@ -103,6 +128,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const userId = subscription.metadata?.userId;
         if (!userId) break;
 
+        // Preserve plan for lifetime Pro users
+        const user = await db.query.users.findFirst({
+          where: eq(users.id, userId),
+          columns: { lifetimePro: true },
+        });
+
+        if (user?.lifetimePro) {
+          console.log(`[webhook] user ${userId} subscription ended but lifetimePro=true — keeping pro plan`);
+          await db
+            .update(users)
+            .set({ stripeSubscriptionId: null, planCurrentPeriodEnd: null })
+            .where(eq(users.id, userId));
+          break;
+        }
+
         await db
           .update(users)
           .set({
@@ -138,6 +178,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             .where(eq(users.id, userId));
           console.log(`[webhook] user ${userId} MT usage reset`);
         }
+
+        // Qualify referral on first real payment (amount_paid > 0 excludes $0 trial invoices)
+        if (invoice.amount_paid > 0) {
+          await qualifyReferral(userId);
+        }
         break;
       }
 
@@ -150,4 +195,63 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   return NextResponse.json({ received: true });
+}
+
+async function qualifyReferral(refereeUserId: string): Promise<void> {
+  const pending = await db.query.referrals.findFirst({
+    where: and(
+      eq(referrals.refereeId, refereeUserId),
+      eq(referrals.status, "pending")
+    ),
+    columns: { id: true, referrerId: true },
+  });
+
+  if (!pending) return;
+
+  await db
+    .update(referrals)
+    .set({ status: "qualified", qualifiedAt: new Date() })
+    .where(eq(referrals.id, pending.id));
+
+  console.log(`[referral] qualified referral id=${pending.id} referrer=${pending.referrerId}`);
+
+  // Count total qualified referrals for the referrer (including this one)
+  const [row] = await db
+    .select({ value: count() })
+    .from(referrals)
+    .where(
+      and(
+        eq(referrals.referrerId, pending.referrerId),
+        // qualified or already rewarded both count toward the total
+        eq(referrals.status, "qualified")
+      )
+    );
+
+  // Also count already-rewarded ones
+  const [rewardedRow] = await db
+    .select({ value: count() })
+    .from(referrals)
+    .where(
+      and(
+        eq(referrals.referrerId, pending.referrerId),
+        eq(referrals.status, "rewarded")
+      )
+    );
+
+  const qualifiedCount = (row?.value ?? 0) + (rewardedRow?.value ?? 0);
+
+  const milestone = getMilestone(qualifiedCount);
+  if (!milestone) {
+    console.log(`[referral] no milestone at count=${qualifiedCount} for referrer=${pending.referrerId}`);
+    return;
+  }
+
+  await fulfillReferralReward(pending.referrerId, milestone);
+
+  await db
+    .update(referrals)
+    .set({ status: "rewarded", rewardedAt: new Date(), rewardMilestone: qualifiedCount })
+    .where(eq(referrals.id, pending.id));
+
+  console.log(`[referral] rewarded referral id=${pending.id} milestone=${qualifiedCount} label="${milestone.label}"`);
 }

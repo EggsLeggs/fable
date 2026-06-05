@@ -46,6 +46,7 @@ export default function BillingPage() {
   const usageQuery = trpc.billing.getUsage.useQuery();
   const usage = usageQuery.data;
   const isPro = usage?.plan === "pro";
+  const billingAvailable = usage?.billingAvailable ?? false;
 
   const checkoutMutation = trpc.billing.checkout.useMutation({
     onSuccess: ({ url }) => { window.location.href = url; },
@@ -107,7 +108,7 @@ export default function BillingPage() {
               )}
             </div>
 
-            {isPro ? (
+            {isPro && billingAvailable ? (
               <button
                 type="button"
                 className="btn-secondary text-sm"
@@ -116,7 +117,7 @@ export default function BillingPage() {
               >
                 {portalMutation.isPending ? t`Opening...` : t`Manage billing`}
               </button>
-            ) : (
+            ) : !isPro && billingAvailable ? (
               <div className="flex flex-col items-end gap-2">
                 <div className="flex items-center gap-1 rounded-lg border border-border bg-muted p-0.5 text-xs">
                   <button
@@ -148,8 +149,14 @@ export default function BillingPage() {
                     : t`Upgrade - $29/mo`}
                 </button>
               </div>
-            )}
+            ) : null}
           </div>
+
+          {!billingAvailable && (
+            <p className="mt-4 border-t border-border pt-4 text-xs text-muted-foreground">
+              {t`Billing is not configured on this server. Upgrades are unavailable and all accounts use the free tier.`}
+            </p>
+          )}
         </section>
 
         {/* Usage */}
@@ -171,7 +178,7 @@ export default function BillingPage() {
               used={usage?.usage.translationKeys ?? 0}
               limit={usage?.limits.translationKeys ?? 1000}
             />
-            {isPro && (
+            {isPro && billingAvailable && (
               <UsageMeter
                 label={t`MT characters this month`}
                 used={usage?.mtCharsUsed ?? 0}
@@ -182,7 +189,7 @@ export default function BillingPage() {
         </section>
 
         {/* MT overage cap */}
-        {isPro && (
+        {isPro && billingAvailable && (
           <section>
             <h2 className="mb-1 text-sm font-semibold">{t`MT overage cap`}</h2>
             <p className="mb-4 text-xs text-muted-foreground">

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Loader2, Unlink } from "lucide-react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
@@ -14,7 +16,9 @@ function GitHubIcon({ className }: { className?: string }) {
 }
 
 export default function ConnectionsPage() {
+  const searchParams = useSearchParams();
   const utils = trpc.useUtils();
+  const availabilityQuery = trpc.user.getIntegrationAvailability.useQuery();
   const installationQuery = trpc.user.getGitHubInstallation.useQuery();
 
   const disconnect = trpc.user.disconnectGitHub.useMutation({
@@ -26,12 +30,21 @@ export default function ConnectionsPage() {
     onError: () => toast.error(t`Failed to disconnect`),
   });
 
-  const appSlug = process.env.NEXT_PUBLIC_GITHUB_APP_SLUG;
-  const connectUrl = appSlug
-    ? `https://github.com/apps/${appSlug}/installations/new`
-    : null;
+  useEffect(() => {
+    if (searchParams.get("error") === "github_not_configured") {
+      toast.error(t`GitHub integration is not configured on this server.`);
+    }
+  }, [searchParams]);
+
+  const githubAvailable = availabilityQuery.data?.github.available ?? false;
+  const appSlug = availabilityQuery.data?.github.appSlug;
+  const connectUrl =
+    githubAvailable && appSlug
+      ? `https://github.com/apps/${appSlug}/installations/new`
+      : null;
 
   const installation = installationQuery.data;
+  const isLoading = availabilityQuery.isPending || installationQuery.isPending;
 
   return (
     <div className="flex flex-col gap-6">
@@ -53,7 +66,7 @@ export default function ConnectionsPage() {
             </div>
 
             <div className="shrink-0">
-              {installationQuery.isPending ? (
+              {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               ) : installation ? (
                 <button
@@ -74,12 +87,18 @@ export default function ConnectionsPage() {
                   {t`Connect`}
                 </a>
               ) : (
-                <p className="text-xs text-destructive">
-                  NEXT_PUBLIC_GITHUB_APP_SLUG not set
+                <p className="max-w-[220px] text-right text-xs text-muted-foreground">
+                  {t`Not available on this server.`}
                 </p>
               )}
             </div>
           </div>
+
+          {!isLoading && !githubAvailable && (
+            <p className="mt-3 border-t border-border pt-3 text-xs text-muted-foreground">
+              {t`GitHub integration requires server configuration. Set GITHUB_APP_ID, GITHUB_PRIVATE_KEY, GITHUB_WEBHOOK_SECRET, and NEXT_PUBLIC_GITHUB_APP_SLUG to enable it.`}
+            </p>
+          )}
 
           {installation && (
             <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">

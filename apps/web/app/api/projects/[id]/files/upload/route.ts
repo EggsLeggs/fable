@@ -74,13 +74,15 @@ export async function POST(
     );
   }
 
-  const validFormats = ["json_flat", "json_nested", "po", "yaml"] as const;
+  const validFormats = ["json_flat", "json_nested", "po", "yaml", "lingui_json"] as const;
   if (!validFormats.includes(format as (typeof validFormats)[number])) {
     return NextResponse.json(
       { error: `Unsupported format: ${format}` },
       { status: 422 }
     );
   }
+
+  const detectedFormat = format as (typeof validFormats)[number];
 
   const filePath = filename;
   const sourceFileId = uuid();
@@ -127,7 +129,7 @@ export async function POST(
     });
 
     return NextResponse.json(
-      { sourceFileId: existingFile.id, ingestJobId },
+      { sourceFileId: existingFile.id, ingestJobId, detectedFormat },
       { status: 202 }
     );
   }
@@ -164,5 +166,5 @@ export async function POST(
     metadata: { sourceId: sourceFileId, name: filename, sourcePath: filePath },
   });
 
-  return NextResponse.json({ sourceFileId, ingestJobId }, { status: 202 });
+  return NextResponse.json({ sourceFileId, ingestJobId, detectedFormat }, { status: 202 });
 }

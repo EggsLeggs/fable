@@ -11,6 +11,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
     { href: "/settings", label: t`Profile` },
     { href: "/settings/preferences", label: t`Preferences` },
     { href: "/settings/billing", label: t`Billing` },
+    { href: "/settings/referrals", label: t`Referrals` },
     { href: "/settings/connections", label: t`Connections` },
   ];
 

@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { v4 as uuid } from "uuid";
 import { eq } from "drizzle-orm";
 import { auth } from "@fable/auth";
+import { isGitHubAppConfigured } from "@fable/api/integration-config";
 import { db, githubInstallations } from "@fable/db";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   if (!installationId) {
     return NextResponse.redirect(new URL("/settings/connections", req.url));
+  }
+
+  if (!isGitHubAppConfigured()) {
+    return NextResponse.redirect(
+      new URL("/settings/connections?error=github_not_configured", req.url)
+    );
   }
 
   const session = await auth.api.getSession({ headers: req.headers });

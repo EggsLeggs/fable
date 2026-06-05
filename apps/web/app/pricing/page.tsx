@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { t } from "@lingui/core/macro";
+import { trpc } from "@/lib/trpc/client";
 
 function FeatureItem({ text }: { text: string }) {
   return (
@@ -16,6 +17,8 @@ function FeatureItem({ text }: { text: string }) {
 
 export default function PricingPage() {
   const [annual, setAnnual] = useState(false);
+  const availabilityQuery = trpc.user.getIntegrationAvailability.useQuery();
+  const billingAvailable = availabilityQuery.data?.stripe.available ?? false;
 
   const freeFeatures = [
     t`1 project`,
@@ -152,12 +155,18 @@ export default function PricingPage() {
               </p>
             </div>
 
-            <Link
-              href="/settings/billing"
-              className="mb-6 block rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              {t`Upgrade to Pro`}
-            </Link>
+            {billingAvailable ? (
+              <Link
+                href="/settings/billing"
+                className="mb-6 block rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                {t`Upgrade to Pro`}
+              </Link>
+            ) : (
+              <p className="mb-6 rounded-lg border border-border bg-muted px-4 py-2 text-center text-sm text-muted-foreground">
+                {t`Upgrades are not available on this server.`}
+              </p>
+            )}
 
             <ul className="space-y-3">
               {proFeatures.map((f) => (

@@ -1,4 +1,5 @@
 import { stripe } from "./client";
+import { isStripeConfigured } from "./config";
 import { db, users } from "@fable/db";
 import { eq } from "drizzle-orm";
 import type { DbUser } from "@fable/db";
@@ -7,7 +8,7 @@ export async function reportMtUsage(
   stripeCustomerId: string,
   chars: number
 ): Promise<void> {
-  if (chars === 0) return;
+  if (chars === 0 || !isStripeConfigured()) return;
 
   await stripe.billing.meterEvents.create({
     event_name: "mt_characters",

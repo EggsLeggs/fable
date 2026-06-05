@@ -3,8 +3,13 @@ import type { LLMAdapter, TranslateParams, TranslateResult } from "./adapter";
 import { buildTranslatePrompt } from "./prompt";
 
 export function createOpenAIAdapter(apiKey?: string): LLMAdapter {
+  const resolvedKey = apiKey ?? process.env.OPENAI_API_KEY?.trim();
+  if (!resolvedKey) {
+    throw new Error("OPENAI_API_KEY is not configured");
+  }
+
   const client = new OpenAI({
-    apiKey: apiKey ?? process.env.OPENAI_API_KEY,
+    apiKey: resolvedKey,
   });
 
   return {

@@ -11,7 +11,8 @@ import {
   vcsIntegrations,
   projects,
 } from "@fable/db";
-import { getAdapter, detectFormat } from "@fable/formats";
+import { getAdapter, detectFormat, parseLinguiJsonDetailed } from "@fable/formats";
+import type { ParsedString } from "@fable/formats";
 
 export interface IngestJobPayload {
   ingestJobId: string;
@@ -138,6 +139,18 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
     const adapter = getAdapter(resolvedFormat);
     const parsed = adapter.parse(content);
 
+    // For Lingui files, also collect existing translations embedded in the catalog.
+    const linguiTranslations: Map<string, string> =
+      resolvedFormat === "lingui_json"
+        ? new Map(
+            parseLinguiJsonDetailed(content)
+              .filter((ps): ps is ParsedString & { existingTranslation: string } =>
+                ps.existingTranslation !== undefined
+              )
+              .map((ps) => [ps.key, ps.existingTranslation])
+          )
+        : new Map();
+
     // Look up all keys in the project (active and archived) — keys are unique
     // per project, not per source file. Fetching archived keys too prevents a
     // unique-constraint error when a previously-archived key reappears in a sync.
@@ -187,6 +200,19 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
             value,
             state: "approved",
           });
+
+          // Bootstrap a suggested translation from an existing Lingui translation
+          // if the catalog already has translated content for this key.
+          const existingTranslation = linguiTranslations.get(key);
+          if (existingTranslation) {
+            await tx.insert(translations).values({
+              id: uuid(),
+              keyId,
+              locale: project.sourceLocale,
+              value: existingTranslation,
+              state: "suggested",
+            });
+          }
 
           stringsAdded++;
         } else if (existing.status === "archived") {

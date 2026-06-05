@@ -6,7 +6,8 @@
     ".": "./src/index.ts",
     "./root": "./src/root.ts",
     "./trpc": "./src/trpc.ts",
-    "./log-activity": "./src/log-activity.ts"
+    "./log-activity": "./src/log-activity.ts",
+    "./integration-config": "./src/integration-config.ts"
   },
   "dependencies": {
     "@fable/auth": "*",

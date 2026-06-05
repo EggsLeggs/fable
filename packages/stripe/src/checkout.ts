@@ -7,11 +7,13 @@ export async function createCheckoutSession({
   billingCycle,
   stripeCustomerId,
   returnBaseUrl,
+  trialDays,
 }: {
   userId: string;
   billingCycle: BillingCycle;
   stripeCustomerId?: string | null;
   returnBaseUrl: string;
+  trialDays?: number;
 }): Promise<string> {
   const planPriceId =
     billingCycle === "annual" ? PRICE_IDS.proAnnual : PRICE_IDS.proMonthly;
@@ -26,6 +28,7 @@ export async function createCheckoutSession({
     metadata: { userId },
     subscription_data: {
       metadata: { userId },
+      ...(trialDays ? { trial_period_days: trialDays } : {}),
     },
     success_url: `${returnBaseUrl}/settings/billing?success=true`,
     cancel_url: `${returnBaseUrl}/settings/billing?canceled=true`,

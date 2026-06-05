@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { projects, projectLocales, orgMembers, translationKeys, translations, type Db } from "@fable/db";
 import { TRPCError } from "@trpc/server";
-import { PLAN_LIMITS } from "@fable/stripe";
+import { PLAN_LIMITS, getEffectivePlan } from "@fable/stripe";
 import { logActivity } from "../log-activity";
 
 const customLocaleSchema = z.object({ name: z.string().min(1), code: z.string().min(1) });
@@ -114,7 +114,7 @@ export const projectRouter = router({
         with: { user: { columns: { plan: true } } },
       });
 
-      if (owner?.user.plan === "free") {
+      if (getEffectivePlan(owner?.user.plan ?? "free") === "free") {
         const [{ value: projectCount }] = await ctx.db
           .select({ value: count() })
           .from(projects)
@@ -161,6 +161,8 @@ export const projectRouter = router({
         glossaryAccess: z.enum(["readonly", "suggest", "full"]).optional(),
         notifyTranslatorsOnNewStrings: z.boolean().optional(),
         customLocales: z.array(customLocaleSchema).optional(),
+        translatorApprovalRequired: z.boolean().optional(),
+        adminSelfReviewRequired: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {

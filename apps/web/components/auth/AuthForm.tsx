@@ -21,7 +21,9 @@ export function AuthForm({ mode }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
+  const refCode = mode === "signup" ? (searchParams.get("ref") ?? null) : null;
   const trpcUtils = trpc.useUtils();
+  const applyReferralMutation = trpc.referral.applyCode.useMutation();
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -71,6 +73,14 @@ export function AuthForm({ mode }: Props) {
           setError(result.error.message ?? t`Sign up failed`);
           setLoading(false);
           return;
+        }
+
+        if (refCode) {
+          try {
+            await applyReferralMutation.mutateAsync({ code: refCode });
+          } catch {
+            // Non-fatal: proceed even if referral code is invalid
+          }
         }
       } else {
         const result = await signIn.email({

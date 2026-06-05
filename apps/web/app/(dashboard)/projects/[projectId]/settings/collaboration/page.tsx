@@ -40,6 +40,8 @@ export default function CollaborationSettingsPage({ params }: Props) {
   const [visibility, setVisibility] = useState<"public" | "private">("private");
   const [glossaryAccess, setGlossaryAccess] = useState<GlossaryAccess>("readonly");
   const [notifyTranslators, setNotifyTranslators] = useState(false);
+  const [translatorApprovalRequired, setTranslatorApprovalRequired] = useState(true);
+  const [adminSelfReviewRequired, setAdminSelfReviewRequired] = useState(false);
   const [updatingField, setUpdatingField] = useState<string | null>(null);
 
   useEffect(() => {
@@ -48,6 +50,8 @@ export default function CollaborationSettingsPage({ params }: Props) {
     setVisibility(project.visibility);
     setGlossaryAccess(project.glossaryAccess);
     setNotifyTranslators(project.notifyTranslatorsOnNewStrings);
+    setTranslatorApprovalRequired(project.translatorApprovalRequired);
+    setAdminSelfReviewRequired(project.adminSelfReviewRequired);
   }, [project]);
 
   const updateMutation = trpc.project.update.useMutation({
@@ -81,6 +85,16 @@ export default function CollaborationSettingsPage({ params }: Props) {
   function handleNotifyTranslatorsChange(checked: boolean) {
     setNotifyTranslators(checked);
     save({ id: projectId, notifyTranslatorsOnNewStrings: checked }, "notifyTranslators");
+  }
+
+  function handleTranslatorApprovalChange(checked: boolean) {
+    setTranslatorApprovalRequired(checked);
+    save({ id: projectId, translatorApprovalRequired: checked }, "translatorApproval");
+  }
+
+  function handleAdminSelfReviewChange(checked: boolean) {
+    setAdminSelfReviewRequired(checked);
+    save({ id: projectId, adminSelfReviewRequired: checked }, "adminSelfReview");
   }
 
   if (projectQuery.isLoading || !project) {
@@ -127,6 +141,36 @@ export default function CollaborationSettingsPage({ params }: Props) {
       onChange: handleNotifyTranslatorsChange,
     },
   ];
+
+  const workflowOptions: { field: string; label: string; description: string; checked: boolean; onChange: (v: boolean) => void }[] = [
+    {
+      field: "translatorApproval",
+      label: t`Require approval for translator submissions`,
+      description: t`When on, translations from translators go into a review queue before being approved. When off, translator translations are approved immediately.`,
+      checked: translatorApprovalRequired,
+      onChange: handleTranslatorApprovalChange,
+    },
+    {
+      field: "adminSelfReview",
+      label: t`Require a second team member to approve team member translations`,
+      description: t`When on, admins cannot approve their own translations - another admin must review them.`,
+      checked: adminSelfReviewRequired,
+      onChange: handleAdminSelfReviewChange,
+    },
+  ];
+
+  function workflowSummary(): string {
+    if (!translatorApprovalRequired && !adminSelfReviewRequired) {
+      return t`All translations are approved immediately without review.`;
+    }
+    if (translatorApprovalRequired && !adminSelfReviewRequired) {
+      return t`Translators must have their translations approved by an admin. Admins can approve their own translations.`;
+    }
+    if (!translatorApprovalRequired && adminSelfReviewRequired) {
+      return t`Translator translations are approved immediately. Admins require another admin to approve their translations.`;
+    }
+    return t`All translations must be approved by another admin before they are published.`;
+  }
 
   return (
     <div className="max-w-xl space-y-6">
@@ -210,6 +254,35 @@ export default function CollaborationSettingsPage({ params }: Props) {
             </label>
           ))}
         </div>
+      </Section>
+
+      <Section
+        title={t`Translation workflow`}
+        description={t`Control how translations move from submission to approval.`}
+      >
+        <div className="space-y-3">
+          {workflowOptions.map(({ field, label, description, checked, onChange }) => (
+            <label
+              key={field}
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50"
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => onChange(e.target.checked)}
+                disabled={updatingField === field}
+                className="mt-0.5"
+              />
+              <span>
+                <span className="block text-sm font-medium">{label}</span>
+                <span className="block text-xs text-muted-foreground">{description}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+        <p className="mt-3 rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+          {workflowSummary()}
+        </p>
       </Section>
     </div>
   );

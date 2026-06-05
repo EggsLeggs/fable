@@ -3,7 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { db, translationKeys, translations, orgMembers, users } from "@fable/db";
 import { createOpenAIAdapter } from "@fable/ai";
-import { reportMtUsage, resetMtUsageIfDue } from "@fable/stripe";
+import { reportMtUsage, resetMtUsageIfDue, getEffectivePlan, isStripeConfigured } from "@fable/stripe";
 
 export interface MtTranslatePayload {
   keyId: string;
@@ -14,6 +14,10 @@ export interface MtTranslatePayload {
 export async function handleMtTranslate(
   job: Job<MtTranslatePayload>
 ): Promise<void> {
+  if (!process.env.OPENAI_API_KEY?.trim()) {
+    throw new Error("MT_NOT_CONFIGURED: OPENAI_API_KEY is not set");
+  }
+
   const ai = createOpenAIAdapter();
   const { keyId, targetLocale, sourceLocale } = job.data;
 
@@ -39,7 +43,7 @@ export async function handleMtTranslate(
   if (!ownerMembership) throw new Error(`No owner found for org ${key.project.orgId}`);
   const owner = ownerMembership.user;
 
-  if (owner.plan === "free") {
+  if (getEffectivePlan(owner.plan) === "free") {
     throw new Error("MT_NOT_AVAILABLE: machine translation requires a Pro plan");
   }
 
@@ -96,7 +100,7 @@ export async function handleMtTranslate(
     .set({ mtCharsUsed: mtCharsUsed + charCount })
     .where(eq(users.id, owner.id));
 
-  if (freshOwner?.stripeCustomerId) {
+  if (freshOwner?.stripeCustomerId && isStripeConfigured()) {
     await reportMtUsage(freshOwner.stripeCustomerId, charCount);
   }
 }

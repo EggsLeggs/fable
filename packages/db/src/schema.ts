@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   unique,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
 export const fileFormatEnum = pgEnum("file_format", [
@@ -14,6 +15,7 @@ export const fileFormatEnum = pgEnum("file_format", [
   "json_nested",
   "po",
   "yaml",
+  "lingui_json",
 ]);
 
 export const sourceTypeEnum = pgEnum("source_type", ["upload", "vcs"]);
@@ -88,9 +90,17 @@ export const billingCycleEnum = pgEnum("billing_cycle", ["monthly", "annual"]);
 
 export const timeFormatEnum = pgEnum("time_format", ["12h", "24h"]);
 
+export const voteValueEnum = pgEnum("vote_value", ["up", "down"]);
+
 export const profileVisibilityEnum = pgEnum("profile_visibility", [
   "public",
   "private",
+]);
+
+export const referralStatusEnum = pgEnum("referral_status", [
+  "pending",
+  "qualified",
+  "rewarded",
 ]);
 
 export type CustomLocale = { name: string; code: string };
@@ -137,6 +147,10 @@ export const users = pgTable("user", {
   mtCharsUsed: integer("mt_chars_used").notNull().default(0),
   mtCharsResetAt: timestamp("mt_chars_reset_at", { mode: "date" }),
   mtCharsCap: integer("mt_chars_cap"),
+  // Referral program
+  referralCode: text("referral_code").unique(),
+  referredBy: text("referred_by").references((): AnyPgColumn => users.id, { onDelete: "set null" }),
+  lifetimePro: boolean("lifetime_pro").notNull().default(false),
 });
 
 export const sessions = pgTable("session", {
@@ -220,6 +234,8 @@ export const projects = pgTable(
     glossaryAccess: glossaryAccessEnum("glossary_access").notNull().default("readonly"),
     notifyTranslatorsOnNewStrings: boolean("notify_translators_on_new_strings").notNull().default(false),
     customLocales: jsonb("custom_locales").$type<CustomLocale[]>().notNull().default([]),
+    translatorApprovalRequired: boolean("translator_approval_required").notNull().default(true),
+    adminSelfReviewRequired: boolean("admin_self_review_required").notNull().default(false),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },
@@ -329,6 +345,9 @@ export const translationKeys = pgTable(
       onDelete: "set null",
     }),
     keyHash: text("key_hash"),
+    maxLength: integer("max_length"),
+    isPlural: boolean("is_plural").notNull().default(false),
+    pluralKey: text("plural_key"),
     status: translationKeyStatusEnum("status").notNull().default("active"),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
@@ -336,27 +355,28 @@ export const translationKeys = pgTable(
   (t) => [unique().on(t.projectId, t.key)]
 );
 
-export const translations = pgTable(
-  "translation",
-  {
-    id: text("id").primaryKey(),
-    keyId: text("keyId")
-      .notNull()
-      .references(() => translationKeys.id, { onDelete: "cascade" }),
-    locale: text("locale").notNull(),
-    value: text("value").notNull(),
-    state: translationStateEnum("state").notNull().default("needs_review"),
-    translatedBy: text("translatedBy").references(() => users.id, {
-      onDelete: "set null",
-    }),
-    reviewedBy: text("reviewedBy").references(() => users.id, {
-      onDelete: "set null",
-    }),
-    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
-  },
-  (t) => [unique().on(t.keyId, t.locale)]
-);
+export const translations = pgTable("translation", {
+  id: text("id").primaryKey(),
+  keyId: text("keyId")
+    .notNull()
+    .references(() => translationKeys.id, { onDelete: "cascade" }),
+  locale: text("locale").notNull(),
+  value: text("value").notNull(),
+  pluralForms: jsonb("plural_forms").$type<Record<string, string>>(),
+  state: translationStateEnum("state").notNull().default("needs_review"),
+  translatedBy: text("translatedBy").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  reviewedBy: text("reviewedBy").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  approvedBy: text("approved_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  approvedAt: timestamp("approved_at", { mode: "date" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+});
 
 export const translationMemory = pgTable("translation_memory", {
   id: text("id").primaryKey(),
@@ -484,6 +504,65 @@ export const activityLog = pgTable("activity_log", {
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
 });
 
+export const translationVotes = pgTable(
+  "translation_vote",
+  {
+    id: text("id").primaryKey(),
+    translationId: text("translation_id")
+      .notNull()
+      .references(() => translations.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    vote: voteValueEnum("vote").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (t) => [unique().on(t.translationId, t.userId)]
+);
+
+export const comments = pgTable("comment", {
+  id: text("id").primaryKey(),
+  keyId: text("key_id")
+    .notNull()
+    .references(() => translationKeys.id, { onDelete: "cascade" }),
+  authorId: text("author_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  body: text("body").notNull(),
+  resolved: boolean("resolved").notNull().default(false),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const commentMentions = pgTable("comment_mention", {
+  id: text("id").primaryKey(),
+  commentId: text("comment_id")
+    .notNull()
+    .references(() => comments.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const referrals = pgTable(
+  "referral",
+  {
+    id: text("id").primaryKey(),
+    referrerId: text("referrer_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    refereeId: text("referee_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    status: referralStatusEnum("status").notNull().default("pending"),
+    qualifiedAt: timestamp("qualified_at", { mode: "date" }),
+    rewardedAt: timestamp("rewarded_at", { mode: "date" }),
+    rewardMilestone: integer("reward_milestone"),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (t) => [unique().on(t.refereeId)]
+);
+
 // Inferred types
 export type DbUser = typeof users.$inferSelect;
 export type DbOrganization = typeof organizations.$inferSelect;
@@ -517,3 +596,9 @@ export type DbTask = typeof tasks.$inferSelect;
 export type TaskStatus = (typeof taskStatusEnum.enumValues)[number];
 export type DbActivityLog = typeof activityLog.$inferSelect;
 export type ActivityType = (typeof activityTypeEnum.enumValues)[number];
+export type DbTranslationVote = typeof translationVotes.$inferSelect;
+export type VoteValue = (typeof voteValueEnum.enumValues)[number];
+export type DbComment = typeof comments.$inferSelect;
+export type DbCommentMention = typeof commentMentions.$inferSelect;
+export type DbReferral = typeof referrals.$inferSelect;
+export type ReferralStatus = (typeof referralStatusEnum.enumValues)[number];

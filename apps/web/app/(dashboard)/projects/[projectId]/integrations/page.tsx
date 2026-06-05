@@ -2,8 +2,9 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
-import { Loader2, CheckCircle2, ExternalLink, Plus, Pencil } from "lucide-react";
+import { Loader2, CheckCircle2, ExternalLink, Plus, Pencil, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 
 type Props = { params: Promise<{ projectId: string }> };
@@ -156,8 +157,18 @@ function ConnectedRepo({
   );
 }
 
-function AddRepoForm({ projectId, onAdded }: { projectId: string; onAdded: () => void }) {
-  const reposQuery = trpc.user.listGitHubRepos.useQuery();
+function AddRepoForm({
+  projectId,
+  onAdded,
+  githubAvailable,
+}: {
+  projectId: string;
+  onAdded: () => void;
+  githubAvailable: boolean;
+}) {
+  const reposQuery = trpc.user.listGitHubRepos.useQuery(undefined, {
+    enabled: githubAvailable,
+  });
   const [selectedRepo, setSelectedRepo] = useState("");
   const [branch, setBranch] = useState("");
   const [patterns, setPatterns] = useState("");
@@ -198,6 +209,10 @@ function AddRepoForm({ projectId, onAdded }: { projectId: string; onAdded: () =>
         .map((p) => p.trim())
         .filter(Boolean),
     });
+  }
+
+  if (!githubAvailable) {
+    return null;
   }
 
   if (!showForm) {
@@ -299,15 +314,20 @@ function AddRepoForm({ projectId, onAdded }: { projectId: string; onAdded: () =>
 
 export default function IntegrationsPage({ params }: Props) {
   const { projectId } = use(params);
-  const utils = trpc.useUtils();
 
+  const availabilityQuery = trpc.user.getIntegrationAvailability.useQuery();
   const installationQuery = trpc.user.getGitHubInstallation.useQuery();
   const integrationsQuery = trpc.sourceFile.listVcsIntegrations.useQuery({ projectId });
 
+  const githubAvailable = availabilityQuery.data?.github.available ?? false;
+  const openaiAvailable = availabilityQuery.data?.openai.available ?? false;
   const installation = installationQuery.data;
   const integrations = integrationsQuery.data ?? [];
 
-  const isLoading = installationQuery.isPending || integrationsQuery.isPending;
+  const isLoading =
+    availabilityQuery.isPending ||
+    installationQuery.isPending ||
+    integrationsQuery.isPending;
 
   return (
     <div className="flex w-full flex-1 flex-col gap-6">
@@ -338,7 +358,13 @@ export default function IntegrationsPage({ params }: Props) {
                 </div>
               )}
 
-              {!isLoading && !installation && (
+              {!isLoading && !githubAvailable && (
+                <div className="mt-3 rounded-lg bg-muted/60 px-3 py-2.5 text-xs text-muted-foreground">
+                  {t`GitHub integration is not configured on this server. Ask your administrator to set the GitHub App environment variables.`}
+                </div>
+              )}
+
+              {!isLoading && githubAvailable && !installation && (
                 <div className="mt-3 rounded-lg bg-muted/60 px-3 py-2.5 text-xs text-muted-foreground">
                   Connect your GitHub account in{" "}
                   <Link
@@ -351,7 +377,7 @@ export default function IntegrationsPage({ params }: Props) {
                 </div>
               )}
 
-              {!isLoading && installation && (
+              {!isLoading && githubAvailable && installation && (
                 <>
                   {integrations.length > 0 && (
                     <ul className="mt-3 flex flex-col gap-3 border-t border-border pt-3">
@@ -369,9 +395,41 @@ export default function IntegrationsPage({ params }: Props) {
                     <AddRepoForm
                       projectId={projectId}
                       onAdded={() => integrationsQuery.refetch()}
+                      githubAvailable={githubAvailable}
                     />
                   </div>
                 </>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-sm font-medium">{t`Machine translation`}</h2>
+
+        <div className="rounded-lg border border-border p-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium">{t`OpenAI`}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {t`Pre-translate keys with GPT-4o-mini. Requires a Pro plan and an OpenAI API key on the server.`}
+              </p>
+
+              {!isLoading && openaiAvailable && (
+                <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" />
+                  {t`Available on this server.`}
+                </div>
+              )}
+
+              {!isLoading && !openaiAvailable && (
+                <div className="mt-3 rounded-lg bg-muted/60 px-3 py-2.5 text-xs text-muted-foreground">
+                  {t`Machine translation is not configured on this server. Set OPENAI_API_KEY to enable it.`}
+                </div>
               )}
             </div>
           </div>

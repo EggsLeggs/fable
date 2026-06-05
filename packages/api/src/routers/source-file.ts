@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { eq, and, desc, count } from "drizzle-orm";
+import { eq, and, desc, count, ilike, or, isNull, asc, sql } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
@@ -9,11 +10,13 @@ import {
   sourceFiles,
   ingestJobs,
   translationKeys,
+  translations,
   vcsIntegrations,
   githubInstallations,
   type Db,
 } from "@fable/db";
 import { logActivity } from "../log-activity";
+import { assertGitHubAppConfigured } from "../integration-config";
 
 async function assertProjectAccess(db: Db, userId: string, projectId: string) {
   const project = await db.query.projects.findFirst({
@@ -167,6 +170,7 @@ export const sourceFileRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       await assertProjectAccess(ctx.db, ctx.session.user.id, input.projectId);
+      assertGitHubAppConfigured();
 
       const ghInstallation = await ctx.db.query.githubInstallations.findFirst({
         where: eq(githubInstallations.userId, ctx.session.user.id),
@@ -256,5 +260,124 @@ export const sourceFileRouter = router({
         where: eq(vcsIntegrations.projectId, input.projectId),
         orderBy: (t, { desc }) => [desc(t.createdAt)],
       });
+    }),
+
+  listSourceStrings: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        sourceFileId: z.string().optional(),
+        q: z.string().optional(),
+        label: z.string().optional(),
+        status: z.enum(["active", "archived"]).default("active"),
+        missingContext: z.boolean().optional(),
+        limit: z.number().int().min(1).max(200).default(100),
+        cursor: z.number().int().min(1).default(1),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      await assertProjectAccess(ctx.db, ctx.session.user.id, input.projectId);
+
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+        columns: { sourceLocale: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const limit = input.limit;
+      const offset = (input.cursor - 1) * limit;
+
+      const conditions: SQL[] = [
+        eq(translationKeys.projectId, input.projectId),
+        eq(translationKeys.status, input.status),
+      ];
+
+      if (input.sourceFileId) {
+        conditions.push(eq(translationKeys.sourceFileId, input.sourceFileId));
+      }
+
+      if (input.missingContext) {
+        conditions.push(isNull(translationKeys.description));
+      }
+
+      if (input.label) {
+        conditions.push(
+          sql`${translationKeys.tags} @> ${JSON.stringify([input.label])}::jsonb`
+        );
+      }
+
+      if (input.q) {
+        const searchCond = or(
+          ilike(translationKeys.key, `%${input.q}%`),
+          ilike(translations.value, `%${input.q}%`)
+        );
+        if (searchCond) conditions.push(searchCond);
+      }
+
+      const whereClause = and(...conditions);
+
+      const rows = await ctx.db
+        .select({
+          id: translationKeys.id,
+          key: translationKeys.key,
+          context: translationKeys.description,
+          labels: translationKeys.tags,
+          screenshot: translationKeys.screenshot,
+          status: translationKeys.status,
+          value: translations.value,
+          sfId: sourceFiles.id,
+          sfName: sourceFiles.name,
+          sfFormat: sourceFiles.format,
+        })
+        .from(translationKeys)
+        .leftJoin(
+          translations,
+          and(
+            eq(translations.keyId, translationKeys.id),
+            eq(translations.locale, project.sourceLocale)
+          )
+        )
+        .leftJoin(sourceFiles, eq(sourceFiles.id, translationKeys.sourceFileId))
+        .where(whereClause)
+        .orderBy(asc(translationKeys.key))
+        .limit(limit + 1)
+        .offset(offset);
+
+      const hasMore = rows.length > limit;
+      const items = hasMore ? rows.slice(0, limit) : rows;
+
+      let total: number | undefined;
+      if (input.cursor === 1) {
+        const [countResult] = await ctx.db
+          .select({ total: count() })
+          .from(translationKeys)
+          .leftJoin(
+            translations,
+            and(
+              eq(translations.keyId, translationKeys.id),
+              eq(translations.locale, project.sourceLocale)
+            )
+          )
+          .leftJoin(sourceFiles, eq(sourceFiles.id, translationKeys.sourceFileId))
+          .where(whereClause);
+        total = countResult?.total ?? 0;
+      }
+
+      return {
+        strings: items.map((r) => ({
+          id: r.id,
+          key: r.key,
+          value: r.value ?? null,
+          context: r.context ?? null,
+          labels: r.labels ?? [],
+          hasScreenshot: !!r.screenshot,
+          status: r.status,
+          sourceFile: r.sfId
+            ? { id: r.sfId, name: r.sfName!, format: r.sfFormat! }
+            : null,
+        })),
+        total,
+        nextCursor: hasMore ? input.cursor + 1 : null,
+      };
     }),
 });

@@ -17,15 +17,24 @@ import {
   ingestJobs,
   tasks,
   activityLog,
+  translationVotes,
+  comments,
+  commentMentions,
+  referrals,
 } from "./schema";
 
 export const usersRelations = relations(users, ({ many }) => ({
   orgMemberships: many(orgMembers),
   translationsAuthored: many(translations, { relationName: "translator" }),
   translationsReviewed: many(translations, { relationName: "reviewer" }),
+  translationsApproved: many(translations, { relationName: "approver" }),
   githubInstallations: many(githubInstallations),
   tasksAssigned: many(tasks, { relationName: "task_assignee" }),
   tasksCreated: many(tasks, { relationName: "task_creator" }),
+  translationVotes: many(translationVotes),
+  comments: many(comments, { relationName: "comment_author" }),
+  commentMentions: many(commentMentions),
+  referralsMade: many(referrals, { relationName: "referrer" }),
 }));
 
 export const githubInstallationsRelations = relations(
@@ -86,6 +95,7 @@ export const translationKeysRelations = relations(
       fields: [translationKeys.sourceFileId],
       references: [sourceFiles.id],
     }),
+    comments: many(comments),
   })
 );
 
@@ -124,7 +134,7 @@ export const ingestJobsRelations = relations(ingestJobs, ({ one }) => ({
   }),
 }));
 
-export const translationsRelations = relations(translations, ({ one }) => ({
+export const translationsRelations = relations(translations, ({ one, many }) => ({
   key: one(translationKeys, {
     fields: [translations.keyId],
     references: [translationKeys.id],
@@ -138,6 +148,47 @@ export const translationsRelations = relations(translations, ({ one }) => ({
     fields: [translations.reviewedBy],
     references: [users.id],
     relationName: "reviewer",
+  }),
+  approvedByUser: one(users, {
+    fields: [translations.approvedBy],
+    references: [users.id],
+    relationName: "approver",
+  }),
+  votes: many(translationVotes),
+}));
+
+export const translationVotesRelations = relations(translationVotes, ({ one }) => ({
+  translation: one(translations, {
+    fields: [translationVotes.translationId],
+    references: [translations.id],
+  }),
+  user: one(users, {
+    fields: [translationVotes.userId],
+    references: [users.id],
+  }),
+}));
+
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+  key: one(translationKeys, {
+    fields: [comments.keyId],
+    references: [translationKeys.id],
+  }),
+  author: one(users, {
+    fields: [comments.authorId],
+    references: [users.id],
+    relationName: "comment_author",
+  }),
+  mentions: many(commentMentions),
+}));
+
+export const commentMentionsRelations = relations(commentMentions, ({ one }) => ({
+  comment: one(comments, {
+    fields: [commentMentions.commentId],
+    references: [comments.id],
+  }),
+  user: one(users, {
+    fields: [commentMentions.userId],
+    references: [users.id],
   }),
 }));
 
@@ -208,5 +259,18 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
     fields: [tasks.createdBy],
     references: [users.id],
     relationName: "task_creator",
+  }),
+}));
+
+export const referralsRelations = relations(referrals, ({ one }) => ({
+  referrer: one(users, {
+    fields: [referrals.referrerId],
+    references: [users.id],
+    relationName: "referrer",
+  }),
+  referee: one(users, {
+    fields: [referrals.refereeId],
+    references: [users.id],
+    relationName: "referee",
   }),
 }));

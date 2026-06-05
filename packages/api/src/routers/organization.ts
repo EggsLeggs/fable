@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
 import { organizations, orgMembers, projects, users } from "@fable/db";
-import { PLAN_LIMITS } from "@fable/stripe";
+import { PLAN_LIMITS, getEffectivePlan } from "@fable/stripe";
 import { logActivity } from "../log-activity";
 
 async function logForAllOrgProjects(
@@ -201,7 +201,7 @@ export const organizationRouter = router({
         where: and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.role, "owner")),
         with: { user: { columns: { plan: true } } },
       });
-      if (owner?.user.plan === "free") {
+      if (getEffectivePlan(owner?.user.plan ?? "free") === "free") {
         const [{ value: memberCount }] = await ctx.db
           .select({ value: count() })
           .from(orgMembers)
@@ -252,7 +252,7 @@ export const organizationRouter = router({
         with: { user: { columns: { plan: true } } },
       });
 
-      if (owner?.user.plan === "free") {
+      if (getEffectivePlan(owner?.user.plan ?? "free") === "free") {
         const [{ value: memberCount }] = await ctx.db
           .select({ value: count() })
           .from(orgMembers)

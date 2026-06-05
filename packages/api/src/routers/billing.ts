@@ -3,7 +3,8 @@ import { eq, and, count } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
 import { users, organizations, orgMembers, projects, translationKeys, type Db } from "@fable/db";
-import { createCheckoutSession, createPortalSession, PLAN_LIMITS } from "@fable/stripe";
+import { createCheckoutSession, createPortalSession, PLAN_LIMITS, getEffectivePlan, isStripeConfigured } from "@fable/stripe";
+import { assertStripeConfigured } from "../integration-config";
 
 async function getOwnerOrg(db: Db, userId: string) {
   const membership = await db.query.orgMembers.findFirst({
@@ -32,6 +33,10 @@ export const billingRouter = router({
 
     if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
+    const billingAvailable = isStripeConfigured();
+    const effectivePlan = getEffectivePlan(user.plan);
+    const limits = PLAN_LIMITS[effectivePlan];
+
     const org = await getOwnerOrg(ctx.db, userId);
 
     const [projectCount, memberCount, keyCount] = org
@@ -55,14 +60,12 @@ export const billingRouter = router({
         ])
       : [0, 0, 0];
 
-    const limits =
-      PLAN_LIMITS[user.plan as keyof typeof PLAN_LIMITS] ?? PLAN_LIMITS.free;
-
     return {
-      plan: user.plan,
-      planStatus: user.planStatus,
+      plan: effectivePlan,
+      billingAvailable,
+      planStatus: billingAvailable ? user.planStatus : "active",
       billingCycle: user.billingCycle,
-      planCurrentPeriodEnd: user.planCurrentPeriodEnd,
+      planCurrentPeriodEnd: billingAvailable ? user.planCurrentPeriodEnd : null,
       mtCharsUsed: user.mtCharsUsed,
       mtCharsResetAt: user.mtCharsResetAt,
       mtCharsCap: user.mtCharsCap,
@@ -83,11 +86,13 @@ export const billingRouter = router({
   checkout: protectedProcedure
     .input(z.object({ billingCycle: z.enum(["monthly", "annual"]) }))
     .mutation(async ({ ctx, input }) => {
+      assertStripeConfigured();
+
       const userId = ctx.session.user.id;
 
       const user = await ctx.db.query.users.findFirst({
         where: eq(users.id, userId),
-        columns: { plan: true, stripeCustomerId: true, email: true },
+        columns: { plan: true, stripeCustomerId: true, email: true, referredBy: true },
       });
 
       if (!user) throw new TRPCError({ code: "NOT_FOUND" });
@@ -105,12 +110,15 @@ export const billingRouter = router({
         billingCycle: input.billingCycle,
         stripeCustomerId: user.stripeCustomerId,
         returnBaseUrl: appUrl,
+        trialDays: user.referredBy ? 60 : undefined,
       });
 
       return { url };
     }),
 
   portal: protectedProcedure.mutation(async ({ ctx }) => {
+    assertStripeConfigured();
+
     const userId = ctx.session.user.id;
 
     const user = await ctx.db.query.users.findFirst({
@@ -138,6 +146,8 @@ export const billingRouter = router({
   updateMtCap: protectedProcedure
     .input(z.object({ cap: z.number().int().positive().nullable() }))
     .mutation(async ({ ctx, input }) => {
+      assertStripeConfigured();
+
       const userId = ctx.session.user.id;
 
       const [updated] = await ctx.db
