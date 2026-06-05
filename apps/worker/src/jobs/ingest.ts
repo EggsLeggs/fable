@@ -138,14 +138,11 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
     const adapter = getAdapter(resolvedFormat);
     const parsed = adapter.parse(content);
 
-    // Look up all active keys in the project — keys are unique per project,
-    // not per source file, so scoping to sourceFileId causes insert conflicts
-    // when the same key exists under a different source file.
+    // Look up all keys in the project (active and archived) — keys are unique
+    // per project, not per source file. Fetching archived keys too prevents a
+    // unique-constraint error when a previously-archived key reappears in a sync.
     const existingKeys = await db.query.translationKeys.findMany({
-      where: and(
-        eq(translationKeys.projectId, sourceFile.projectId),
-        eq(translationKeys.status, "active")
-      ),
+      where: eq(translationKeys.projectId, sourceFile.projectId),
       with: {
         translations: {
           where: eq(translations.locale, project.sourceLocale),
@@ -156,9 +153,11 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
     const existingByKey = new Map(existingKeys.map((k) => [k.key, k]));
     const incomingKeys = new Set(Object.keys(parsed));
 
-    // Only archive keys that this source file owns and are no longer present.
-    const ownedKeys = new Set(
-      existingKeys.filter((k) => k.sourceFileId === sourceFileId).map((k) => k.key)
+    // Only archive keys that this source file actively owns and are no longer present.
+    const ownedActiveKeys = new Set(
+      existingKeys
+        .filter((k) => k.sourceFileId === sourceFileId && k.status === "active")
+        .map((k) => k.key)
     );
 
     let stringsAdded = 0;
@@ -190,6 +189,30 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
           });
 
           stringsAdded++;
+        } else if (existing.status === "archived") {
+          // Key was archived but has reappeared — reactivate it in place to
+          // avoid a unique-constraint violation on (projectId, key).
+          await tx
+            .update(translationKeys)
+            .set({ status: "active", sourceFileId, updatedAt: new Date() })
+            .where(eq(translationKeys.id, existing.id));
+
+          const sourceTranslation = existing.translations[0];
+          if (!sourceTranslation) {
+            await tx.insert(translations).values({
+              id: uuid(),
+              keyId: existing.id,
+              locale: project.sourceLocale,
+              value,
+              state: "approved",
+            });
+          } else if (sourceTranslation.value !== value) {
+            await tx
+              .update(translations)
+              .set({ value, updatedAt: new Date() })
+              .where(eq(translations.id, sourceTranslation.id));
+          }
+          stringsAdded++;
         } else {
           const sourceTranslation = existing.translations[0];
           if (sourceTranslation && sourceTranslation.value !== value) {
@@ -198,7 +221,7 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
               .set({ value, updatedAt: new Date() })
               .where(eq(translations.id, sourceTranslation.id));
 
-            // Mark all non-source translations as needs_review
+            // Mark all non-source translations as needs_review when source changes
             await tx
               .update(translations)
               .set({ state: "needs_review", updatedAt: new Date() })
@@ -225,7 +248,7 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
 
       // Archive keys owned by this source file that are no longer in it
       for (const [key, existing] of existingByKey) {
-        if (ownedKeys.has(key) && !incomingKeys.has(key)) {
+        if (ownedActiveKeys.has(key) && !incomingKeys.has(key)) {
           await tx
             .update(translationKeys)
             .set({ status: "archived", updatedAt: new Date() })
