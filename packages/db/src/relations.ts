@@ -11,13 +11,28 @@ import {
   glossaryEntries,
   glossaryTranslations,
   webhookConfigs,
+  githubInstallations,
+  vcsIntegrations,
+  sourceFiles,
+  ingestJobs,
 } from "./schema";
 
 export const usersRelations = relations(users, ({ many }) => ({
   orgMemberships: many(orgMembers),
   translationsAuthored: many(translations, { relationName: "translator" }),
   translationsReviewed: many(translations, { relationName: "reviewer" }),
+  githubInstallations: many(githubInstallations),
 }));
+
+export const githubInstallationsRelations = relations(
+  githubInstallations,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [githubInstallations.userId],
+      references: [users.id],
+    }),
+  })
+);
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   members: many(orgMembers),
@@ -42,6 +57,8 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   }),
   locales: many(projectLocales),
   keys: many(translationKeys),
+  sourceFiles: many(sourceFiles),
+  vcsIntegrations: many(vcsIntegrations),
 }));
 
 export const projectLocalesRelations = relations(projectLocales, ({ one }) => ({
@@ -59,8 +76,46 @@ export const translationKeysRelations = relations(
       references: [projects.id],
     }),
     translations: many(translations),
+    sourceFile: one(sourceFiles, {
+      fields: [translationKeys.sourceFileId],
+      references: [sourceFiles.id],
+    }),
   })
 );
+
+export const vcsIntegrationsRelations = relations(
+  vcsIntegrations,
+  ({ one, many }) => ({
+    project: one(projects, {
+      fields: [vcsIntegrations.projectId],
+      references: [projects.id],
+    }),
+    sourceFiles: many(sourceFiles),
+  })
+);
+
+export const sourceFilesRelations = relations(
+  sourceFiles,
+  ({ one, many }) => ({
+    project: one(projects, {
+      fields: [sourceFiles.projectId],
+      references: [projects.id],
+    }),
+    vcsIntegration: one(vcsIntegrations, {
+      fields: [sourceFiles.vcsIntegrationId],
+      references: [vcsIntegrations.id],
+    }),
+    ingestJobs: many(ingestJobs),
+    keys: many(translationKeys),
+  })
+);
+
+export const ingestJobsRelations = relations(ingestJobs, ({ one }) => ({
+  sourceFile: one(sourceFiles, {
+    fields: [ingestJobs.sourceFileId],
+    references: [sourceFiles.id],
+  }),
+}));
 
 export const translationsRelations = relations(translations, ({ one }) => ({
   key: one(translationKeys, {

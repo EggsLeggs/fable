@@ -9,6 +9,46 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 
+export const fileFormatEnum = pgEnum("file_format", [
+  "json_flat",
+  "json_nested",
+  "po",
+  "yaml",
+]);
+
+export const sourceTypeEnum = pgEnum("source_type", ["upload", "vcs"]);
+
+export const sourceFileStatusEnum = pgEnum("source_file_status", [
+  "active",
+  "archived",
+]);
+
+export const ingestTriggerEnum = pgEnum("ingest_trigger", [
+  "manual_upload",
+  "vcs_webhook",
+  "vcs_manual_sync",
+]);
+
+export const ingestJobStatusEnum = pgEnum("ingest_job_status", [
+  "queued",
+  "processing",
+  "done",
+  "failed",
+]);
+
+export const vcsProviderEnum = pgEnum("vcs_provider", ["github"]);
+
+export const vcsPushModeEnum = pgEnum("vcs_push_mode", [
+  "pull_request",
+  "direct_push",
+  "disabled",
+]);
+
+export const translationKeyStatusEnum = pgEnum("translation_key_status", [
+  "active",
+  "archived",
+]);
+
 export const translationStateEnum = pgEnum("translation_state", [
   "suggested",
   "needs_review",
@@ -183,6 +223,80 @@ export const projectLocales = pgTable(
   (t) => [unique().on(t.projectId, t.locale)]
 );
 
+export const githubInstallations = pgTable("github_installation", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  installationId: text("installation_id").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const vcsIntegrations = pgTable("vcs_integration", {
+  id: text("id").primaryKey(),
+  projectId: text("projectId")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  provider: vcsProviderEnum("provider").notNull().default("github"),
+  installationId: text("installation_id").notNull(),
+  repoOwner: text("repo_owner").notNull(),
+  repoName: text("repo_name").notNull(),
+  defaultBranch: text("default_branch").notNull().default("main"),
+  translationBranch: text("translation_branch")
+    .notNull()
+    .default("l10n_localise"),
+  pushMode: vcsPushModeEnum("push_mode").notNull().default("pull_request"),
+  webhookSecret: text("webhook_secret"),
+  filePatterns: jsonb("file_patterns").$type<string[]>().notNull().default([]),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const sourceFiles = pgTable(
+  "source_file",
+  {
+    id: text("id").primaryKey(),
+    projectId: text("projectId")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    path: text("path").notNull(),
+    format: fileFormatEnum("format").notNull(),
+    sourceType: sourceTypeEnum("source_type").notNull(),
+    vcsIntegrationId: text("vcs_integration_id").references(
+      () => vcsIntegrations.id,
+      { onDelete: "set null" }
+    ),
+    vcsPath: text("vcs_path"),
+    vcsBranch: text("vcs_branch"),
+    rawContent: text("raw_content"),
+    lastSyncedAt: timestamp("last_synced_at", { mode: "date" }),
+    lastPushedAt: timestamp("last_pushed_at", { mode: "date" }),
+    pushEnabled: boolean("push_enabled").notNull().default(true),
+    status: sourceFileStatusEnum("status").notNull().default("active"),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (t) => [unique().on(t.projectId, t.path)]
+);
+
+export const ingestJobs = pgTable("ingest_job", {
+  id: text("id").primaryKey(),
+  sourceFileId: text("source_file_id")
+    .notNull()
+    .references(() => sourceFiles.id, { onDelete: "cascade" }),
+  trigger: ingestTriggerEnum("trigger").notNull(),
+  status: ingestJobStatusEnum("status").notNull().default("queued"),
+  stringsAdded: integer("strings_added").notNull().default(0),
+  stringsUpdated: integer("strings_updated").notNull().default(0),
+  stringsRemoved: integer("strings_removed").notNull().default(0),
+  error: text("error"),
+  startedAt: timestamp("started_at", { mode: "date" }),
+  completedAt: timestamp("completed_at", { mode: "date" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+});
+
 export const translationKeys = pgTable(
   "translation_key",
   {
@@ -194,6 +308,11 @@ export const translationKeys = pgTable(
     description: text("description"),
     screenshot: text("screenshot"),
     tags: jsonb("tags").$type<string[]>().notNull().default([]),
+    sourceFileId: text("source_file_id").references(() => sourceFiles.id, {
+      onDelete: "set null",
+    }),
+    keyHash: text("key_hash"),
+    status: translationKeyStatusEnum("status").notNull().default("active"),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },
@@ -286,6 +405,10 @@ export type DbTranslationKey = typeof translationKeys.$inferSelect;
 export type DbTranslation = typeof translations.$inferSelect;
 export type DbTranslationMemory = typeof translationMemory.$inferSelect;
 export type DbGlossaryEntry = typeof glossaryEntries.$inferSelect;
+export type DbGithubInstallation = typeof githubInstallations.$inferSelect;
+export type DbVcsIntegration = typeof vcsIntegrations.$inferSelect;
+export type DbSourceFile = typeof sourceFiles.$inferSelect;
+export type DbIngestJob = typeof ingestJobs.$inferSelect;
 export type TranslationState = (typeof translationStateEnum.enumValues)[number];
 export type OrgRole = (typeof orgRoleEnum.enumValues)[number];
 export type ProjectVisibility = (typeof projectVisibilityEnum.enumValues)[number];
@@ -294,3 +417,9 @@ export type PlanStatus = (typeof planStatusEnum.enumValues)[number];
 export type BillingCycle = (typeof billingCycleEnum.enumValues)[number];
 export type TimeFormat = (typeof timeFormatEnum.enumValues)[number];
 export type ProfileVisibility = (typeof profileVisibilityEnum.enumValues)[number];
+export type FileFormat = (typeof fileFormatEnum.enumValues)[number];
+export type SourceType = (typeof sourceTypeEnum.enumValues)[number];
+export type IngestJobStatus = (typeof ingestJobStatusEnum.enumValues)[number];
+export type IngestTrigger = (typeof ingestTriggerEnum.enumValues)[number];
+export type TranslationKeyStatus =
+  (typeof translationKeyStatusEnum.enumValues)[number];

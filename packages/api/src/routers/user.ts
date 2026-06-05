@@ -2,7 +2,42 @@ import { z } from "zod";
 import { and, eq, ne } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
-import { users, type SpokenLanguageLevel } from "@fable/db";
+import { users, githubInstallations, type SpokenLanguageLevel } from "@fable/db";
+
+async function getInstallationToken(installationId: string): Promise<string> {
+  const appId = process.env.GITHUB_APP_ID;
+  const privateKey = process.env.GITHUB_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  if (!appId || !privateKey) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "GitHub App is not configured",
+    });
+  }
+  const jwt = await import("jsonwebtoken");
+  const appToken = jwt.default.sign({ iss: appId }, privateKey, {
+    algorithm: "RS256",
+    expiresIn: "10m",
+  });
+  const res = await fetch(
+    `https://api.github.com/app/installations/${installationId}/access_tokens`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${appToken}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
+  if (!res.ok) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to get GitHub installation token",
+    });
+  }
+  const data = (await res.json()) as { token: string };
+  return data.token;
+}
 
 const spokenLanguageLevelSchema = z.enum([
   "elementary",
@@ -94,4 +129,56 @@ export const userRouter = router({
 
       return updated!;
     }),
+
+  getGitHubInstallation: protectedProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db.query.githubInstallations.findFirst({
+      where: eq(githubInstallations.userId, ctx.session.user.id),
+      orderBy: (t, { desc }) => [desc(t.createdAt)],
+    });
+    return result ?? null;
+  }),
+
+  disconnectGitHub: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db
+      .delete(githubInstallations)
+      .where(eq(githubInstallations.userId, ctx.session.user.id));
+    return { success: true };
+  }),
+
+  listGitHubRepos: protectedProcedure.query(async ({ ctx }) => {
+    const installation = await ctx.db.query.githubInstallations.findFirst({
+      where: eq(githubInstallations.userId, ctx.session.user.id),
+    });
+    if (!installation) return [];
+
+    const token = await getInstallationToken(installation.installationId);
+
+    const res = await fetch(
+      "https://api.github.com/installation/repositories?per_page=100",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      }
+    );
+    if (!res.ok) return [];
+
+    const data = (await res.json()) as {
+      repositories: Array<{
+        id: number;
+        full_name: string;
+        private: boolean;
+        default_branch: string;
+      }>;
+    };
+
+    return data.repositories.map((r) => ({
+      id: r.id,
+      fullName: r.full_name,
+      private: r.private,
+      defaultBranch: r.default_branch,
+    }));
+  }),
 });

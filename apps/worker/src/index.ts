@@ -1,16 +1,18 @@
 import "./env";
 import { Worker } from "bullmq";
-import { redis } from "./queues";
+import { connection } from "./queues";
+import { handleIngest } from "./jobs/ingest";
 import { handleMtTranslate } from "./jobs/mt-translate";
 import { handleQaCheck } from "./jobs/qa-check";
 import { handleVcsSync } from "./jobs/vcs-sync";
 import { handleWebhookDelivery } from "./jobs/webhook";
 
 const workers = [
-  new Worker("mt-translate", handleMtTranslate, { connection: redis }),
-  new Worker("qa-check", handleQaCheck, { connection: redis }),
-  new Worker("vcs-sync", handleVcsSync, { connection: redis }),
-  new Worker("webhook-delivery", handleWebhookDelivery, { connection: redis }),
+  new Worker("ingest", handleIngest, { connection }),
+  new Worker("mt-translate", handleMtTranslate, { connection }),
+  new Worker("qa-check", handleQaCheck, { connection }),
+  new Worker("vcs-sync", handleVcsSync, { connection }),
+  new Worker("webhook-delivery", handleWebhookDelivery, { connection }),
 ];
 
 for (const worker of workers) {
