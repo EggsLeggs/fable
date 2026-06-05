@@ -11,6 +11,7 @@ import {
   orgMembers,
   type Db,
 } from "@fable/db";
+import { logActivity } from "../log-activity";
 
 async function getProjectMemberForKey(
   db: Db,
@@ -157,6 +158,19 @@ export const translationRouter = router({
         }
       });
 
+      await logActivity(ctx.db, {
+        projectId: project.id,
+        userId: ctx.session.user.id,
+        type: resultingState === "approved" ? "translation_approved" : "translation_suggested",
+        locale: input.locale,
+        metadata: {
+          keyId: input.keyId,
+          keyName: key.key,
+          translationId: savedId!,
+          translationValue: input.value.slice(0, 120),
+        },
+      });
+
       return { savedId: savedId!, resultingState };
     }),
 
@@ -182,7 +196,8 @@ export const translationRouter = router({
       const project = translation.key.project;
       if (
         project.adminSelfReviewRequired &&
-        translation.translatedBy === ctx.session.user.id
+        translation.translatedBy === ctx.session.user.id &&
+        member.role !== "owner"
       ) {
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -231,6 +246,19 @@ export const translationRouter = router({
           .where(eq(translations.id, input.translationId));
       });
 
+      await logActivity(ctx.db, {
+        projectId: project.id,
+        userId: ctx.session.user.id,
+        type: "translation_approved",
+        locale: translation.locale,
+        metadata: {
+          keyId: translation.keyId,
+          keyName: translation.key.key,
+          translationId: input.translationId,
+          translationValue: translation.value?.slice(0, 120) ?? undefined,
+        },
+      });
+
       return { success: true };
     }),
 
@@ -261,6 +289,19 @@ export const translationRouter = router({
         .update(translations)
         .set({ state: "rejected", updatedAt: new Date() })
         .where(eq(translations.id, input.translationId));
+
+      await logActivity(ctx.db, {
+        projectId: translation.key.project.id,
+        userId: ctx.session.user.id,
+        type: "translation_rejected",
+        locale: translation.locale,
+        metadata: {
+          keyId: translation.keyId,
+          keyName: translation.key.key,
+          translationId: input.translationId,
+          translationValue: translation.value?.slice(0, 120) ?? undefined,
+        },
+      });
 
       return { success: true };
     }),
@@ -302,16 +343,15 @@ export const translationRouter = router({
         const downvotes = s.votes.filter((v) => v.vote === "down").length;
         const canApprove =
           isAdmin &&
-          !(
-            project.adminSelfReviewRequired &&
-            s.translatedBy === ctx.session.user.id
-          );
+          (member.role === "owner" ||
+            !(project.adminSelfReviewRequired && s.translatedBy === ctx.session.user.id));
         return {
           ...s,
           upvotes,
           downvotes,
           userVote: (userVoteMap.get(s.id) ?? null) as "up" | "down" | null,
           canApprove,
+          isOwn: s.translatedBy === ctx.session.user.id,
         };
       });
 

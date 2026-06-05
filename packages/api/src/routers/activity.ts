@@ -23,6 +23,10 @@ const ACTIVITY_TYPE_VALUES = [
   "integration_created",
   "integration_updated",
   "integration_deleted",
+  "translation_suggested",
+  "translation_approved",
+  "translation_rejected",
+  "comment_added",
 ] as const;
 
 async function assertProjectAccess(db: Db, userId: string, projectId: string) {

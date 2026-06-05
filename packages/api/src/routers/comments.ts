@@ -11,6 +11,7 @@ import {
   users,
   type Db,
 } from "@fable/db";
+import { logActivity } from "../log-activity";
 
 async function assertKeyAccess(db: Db, userId: string, keyId: string) {
   const key = await db.query.translationKeys.findFirst({
@@ -27,7 +28,7 @@ async function assertKeyAccess(db: Db, userId: string, keyId: string) {
   });
   if (!member) throw new TRPCError({ code: "FORBIDDEN" });
 
-  return { key, member };
+  return { key, project: key.project, member };
 }
 
 function isAdminRole(role: string) {
@@ -80,7 +81,7 @@ export const commentsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await assertKeyAccess(ctx.db, ctx.session.user.id, input.keyId);
+      const { key, project } = await assertKeyAccess(ctx.db, ctx.session.user.id, input.keyId);
 
       const commentId = uuid();
       const now = new Date();
@@ -117,6 +118,18 @@ export const commentsRouter = router({
           );
         }
       }
+
+      await logActivity(ctx.db, {
+        projectId: project.id,
+        userId: ctx.session.user.id,
+        type: "comment_added",
+        metadata: {
+          keyId: input.keyId,
+          keyName: key.key,
+          commentId,
+          commentBody: input.body.slice(0, 120),
+        },
+      });
 
       return comment!;
     }),

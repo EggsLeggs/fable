@@ -682,6 +682,7 @@ function TranslationEditorPanel({
                       {s.translatedByUser && (
                         <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
                           <UserDisplayName user={s.translatedByUser} />
+                          {s.isOwn && <span className="ml-1">(own)</span>}
                         </p>
                       )}
                       {/* Voting */}
@@ -706,7 +707,7 @@ function TranslationEditorPanel({
                       {/* Admin actions */}
                       {isAdmin && (
                         <div className="flex items-center gap-1">
-                          {s.canApprove ? (
+                          {s.canApprove && (
                             <button
                               type="button"
                               onClick={() => approveMutation.mutate({ translationId: s.id })}
@@ -715,10 +716,6 @@ function TranslationEditorPanel({
                             >
                               Approve
                             </button>
-                          ) : (
-                            <span className="text-xs text-muted-foreground" title="Cannot approve your own translation on this project">
-                              Own
-                            </span>
                           )}
                           <button
                             type="button"

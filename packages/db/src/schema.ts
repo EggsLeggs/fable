@@ -477,6 +477,10 @@ export const activityTypeEnum = pgEnum("activity_type", [
   "integration_created",
   "integration_updated",
   "integration_deleted",
+  "translation_suggested",
+  "translation_approved",
+  "translation_rejected",
+  "comment_added",
 ]);
 
 export type ActivityMetadata = {
@@ -495,6 +499,12 @@ export type ActivityMetadata = {
   provider?: string;
   repoOwner?: string;
   repoName?: string;
+  keyId?: string;
+  keyName?: string;
+  translationId?: string;
+  translationValue?: string;
+  commentId?: string;
+  commentBody?: string;
 };
 
 export const activityLog = pgTable("activity_log", {

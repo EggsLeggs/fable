@@ -18,6 +18,10 @@ import {
   Check,
   CalendarRange,
   X,
+  MessageSquare,
+  CheckCircle,
+  XCircle,
+  Lightbulb,
 } from "lucide-react";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -51,6 +55,10 @@ const TYPE_LABELS: Record<ActivityType, string> = {
   integration_created: "Integration connected",
   integration_updated: "Integration updated",
   integration_deleted: "Integration removed",
+  translation_suggested: "Suggestion added",
+  translation_approved: "Translation approved",
+  translation_rejected: "Suggestion rejected",
+  comment_added: "Comment added",
 };
 
 const TYPE_GROUPS: { label: string; types: ActivityType[] }[] = [
@@ -60,6 +68,8 @@ const TYPE_GROUPS: { label: string; types: ActivityType[] }[] = [
   { label: "Members", types: ["member_joined", "member_left"] },
   { label: "Tasks", types: ["task_created", "task_updated", "task_deleted"] },
   { label: "Integrations", types: ["integration_created", "integration_updated", "integration_deleted"] },
+  { label: "Translations", types: ["translation_suggested", "translation_approved", "translation_rejected"] },
+  { label: "Comments", types: ["comment_added"] },
 ];
 
 function activityIcon(type: ActivityType) {
@@ -73,6 +83,10 @@ function activityIcon(type: ActivityType) {
   if (type === "task_created") return <CheckSquare className="h-3.5 w-3.5" />;
   if (type === "task_updated") return <PencilLine className="h-3.5 w-3.5" />;
   if (type === "task_deleted") return <Trash2 className="h-3.5 w-3.5" />;
+  if (type === "translation_suggested") return <Lightbulb className="h-3.5 w-3.5" />;
+  if (type === "translation_approved") return <CheckCircle className="h-3.5 w-3.5" />;
+  if (type === "translation_rejected") return <XCircle className="h-3.5 w-3.5" />;
+  if (type === "comment_added") return <MessageSquare className="h-3.5 w-3.5" />;
   return <GitBranch className="h-3.5 w-3.5" />;
 }
 
@@ -84,6 +98,10 @@ function activityIconBg(type: ActivityType): string {
   if (type === "member_joined") return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400";
   if (type === "member_left") return "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
   if (type.startsWith("task_")) return "bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400";
+  if (type === "translation_suggested") return "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400";
+  if (type === "translation_approved") return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400";
+  if (type === "translation_rejected") return "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
+  if (type === "comment_added") return "bg-slate-100 text-slate-700 dark:bg-slate-900/40 dark:text-slate-400";
   return "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-400";
 }
 
@@ -104,6 +122,12 @@ type ActivityMetadata = {
   provider?: string;
   repoOwner?: string;
   repoName?: string;
+  keyId?: string;
+  keyName?: string;
+  translationId?: string;
+  translationValue?: string;
+  commentId?: string;
+  commentBody?: string;
 };
 
 function formatStatus(s: unknown): string {
@@ -201,6 +225,14 @@ function activityDescription(type: ActivityType, meta: ActivityMetadata): string
       return meta.repoName ? `Updated ${meta.repoOwner}/${meta.repoName}` : "Updated integration";
     case "integration_deleted":
       return meta.repoName ? `Removed ${meta.repoOwner}/${meta.repoName}` : "Removed integration";
+    case "translation_suggested":
+      return meta.keyName ? `Suggested translation for "${meta.keyName}"` : "Added a translation suggestion";
+    case "translation_approved":
+      return meta.keyName ? `Approved translation for "${meta.keyName}"` : "Approved a translation";
+    case "translation_rejected":
+      return meta.keyName ? `Rejected suggestion for "${meta.keyName}"` : "Rejected a translation suggestion";
+    case "comment_added":
+      return meta.keyName ? `Commented on "${meta.keyName}"` : "Added a comment";
   }
 }
 
