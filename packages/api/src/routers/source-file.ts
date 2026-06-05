@@ -30,6 +30,17 @@ async function assertProjectAccess(db: Db, userId: string, projectId: string) {
 }
 
 export const sourceFileRouter = router({
+  get: protectedProcedure
+    .input(z.object({ sourceFileId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const file = await ctx.db.query.sourceFiles.findFirst({
+        where: eq(sourceFiles.id, input.sourceFileId),
+      });
+      if (!file) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertProjectAccess(ctx.db, ctx.session.user.id, file.projectId);
+      return file;
+    }),
+
   list: protectedProcedure
     .input(z.object({ projectId: z.string() }))
     .query(async ({ ctx, input }) => {

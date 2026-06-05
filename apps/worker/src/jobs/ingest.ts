@@ -11,7 +11,7 @@ import {
   vcsIntegrations,
   projects,
 } from "@fable/db";
-import { getAdapter } from "@fable/formats";
+import { getAdapter, detectFormat } from "@fable/formats";
 
 export interface IngestJobPayload {
   ingestJobId: string;
@@ -133,12 +133,17 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
       );
     }
 
-    const adapter = getAdapter(sourceFile.format);
+    const detectedFormat = detectFormat(sourceFile.name, content);
+    const resolvedFormat = detectedFormat ?? sourceFile.format;
+    const adapter = getAdapter(resolvedFormat);
     const parsed = adapter.parse(content);
 
+    // Look up all active keys in the project — keys are unique per project,
+    // not per source file, so scoping to sourceFileId causes insert conflicts
+    // when the same key exists under a different source file.
     const existingKeys = await db.query.translationKeys.findMany({
       where: and(
-        eq(translationKeys.sourceFileId, sourceFileId),
+        eq(translationKeys.projectId, sourceFile.projectId),
         eq(translationKeys.status, "active")
       ),
       with: {
@@ -150,6 +155,11 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
 
     const existingByKey = new Map(existingKeys.map((k) => [k.key, k]));
     const incomingKeys = new Set(Object.keys(parsed));
+
+    // Only archive keys that this source file owns and are no longer present.
+    const ownedKeys = new Set(
+      existingKeys.filter((k) => k.sourceFileId === sourceFileId).map((k) => k.key)
+    );
 
     let stringsAdded = 0;
     let stringsUpdated = 0;
@@ -213,9 +223,9 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
         }
       }
 
-      // Archive keys no longer in the file
+      // Archive keys owned by this source file that are no longer in it
       for (const [key, existing] of existingByKey) {
-        if (!incomingKeys.has(key)) {
+        if (ownedKeys.has(key) && !incomingKeys.has(key)) {
           await tx
             .update(translationKeys)
             .set({ status: "archived", updatedAt: new Date() })
@@ -226,7 +236,7 @@ export async function handleIngest(job: Job<IngestJobPayload>): Promise<void> {
 
       await tx
         .update(sourceFiles)
-        .set({ lastSyncedAt: new Date(), updatedAt: new Date() })
+        .set({ lastSyncedAt: new Date(), updatedAt: new Date(), rawContent: content, format: resolvedFormat })
         .where(eq(sourceFiles.id, sourceFileId));
 
       await tx
