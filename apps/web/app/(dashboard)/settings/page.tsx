@@ -6,11 +6,10 @@ import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
 import { Button, Input } from "@fable/ui";
-import { changePassword, deleteUser } from "@fable/auth/client";
+import { changePassword, deleteUser } from "@/lib/auth-client";
 import type { SpokenLanguage, SpokenLanguageLevel } from "@fable/db";
 import { trpc } from "@/lib/trpc/client";
 import {
-  SITE_LANGUAGES,
   SPOKEN_LANGUAGE_LEVELS,
   SPOKEN_LANGUAGES,
   TIME_FORMATS,
@@ -22,7 +21,6 @@ type UpdateProfileInput = {
   username?: string | null;
   timezone?: string;
   timeFormat?: "12h" | "24h";
-  siteLocale?: string;
   spokenLanguages?: SpokenLanguage[];
   profileVisibility?: "public" | "private";
 };
@@ -362,24 +360,7 @@ export default function ProfileSettingsPage() {
             </FieldGroup>
           </Section>
 
-          <Section title={t`Preferences`}>
-            <FieldGroup
-              label={t`Site language`}
-              description={t`More languages coming soon.`}
-            >
-              <select
-                value="en"
-                disabled
-                className="input bg-muted text-muted-foreground"
-              >
-                {SITE_LANGUAGES.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </FieldGroup>
-
+          <Section title={t`Date & time`}>
             <FieldGroup label={t`Timezone`}>
               <select
                 value={timezone}

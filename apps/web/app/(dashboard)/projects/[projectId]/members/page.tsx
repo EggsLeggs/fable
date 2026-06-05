@@ -4,13 +4,15 @@ import { use, useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
-import { useSession } from "@fable/auth/client";
 
 type Props = { params: Promise<{ projectId: string }> };
 
 export default function MembersPage({ params }: Props) {
   const { projectId } = use(params);
-  const { data: session } = useSession();
+
+  const userQuery = trpc.user.me.useQuery();
+  const currentUserId = userQuery.data?.id;
+
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteError, setInviteError] = useState<string | null>(null);
 
@@ -58,7 +60,7 @@ export default function MembersPage({ params }: Props) {
   const org = orgQuery.data;
   const members = org?.members ?? [];
 
-  const currentUserMember = members.find((m) => m.userId === session?.user?.id);
+  const currentUserMember = members.find((m) => m.userId === currentUserId);
   const isOwner = currentUserMember?.role === "owner";
 
   const isLoading = projectQuery.isPending || orgQuery.isPending;
@@ -131,7 +133,7 @@ export default function MembersPage({ params }: Props) {
         <ul className="flex flex-col gap-2">
           {members.map((member) => {
             const displayName = member.user.name || member.user.email;
-            const isSelf = member.userId === session?.user?.id;
+            const isSelf = member.userId === currentUserId;
             const memberRole = member.role === "owner" ? "Owner" : "Collaborator";
             const canRemove = isOwner && !isSelf && member.role !== "owner";
 

@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { t } from "@lingui/core/macro";
-import { signIn, signUp } from "@fable/auth/client";
-import type { SignUpEmailInput } from "@fable/auth/client";
+import { signIn, signUp, type SignUpEmailInput } from "@/lib/auth-client";
 import { trpc } from "@/lib/trpc/client";
 
 type Props = {

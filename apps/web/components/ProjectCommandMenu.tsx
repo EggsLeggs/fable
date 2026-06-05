@@ -15,7 +15,7 @@ export function ProjectCommandMenu({ open, onOpenChange }: Props) {
   const { data: projects = [] } = trpc.project.listAll.useQuery();
 
   function navigate(projectId: string) {
-    router.push(`/projects/${projectId}/members`);
+    router.push(`/projects/${projectId}/collaborators`);
     onOpenChange(false);
   }
 

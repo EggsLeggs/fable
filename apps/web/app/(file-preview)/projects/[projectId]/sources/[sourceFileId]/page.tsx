@@ -3,7 +3,7 @@
 import { use } from "react";
 import Link from "next/link";
 import { ChevronRight, X, Loader2, FileText } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@wrksz/themes/client";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import {
   githubGist,

@@ -54,7 +54,7 @@ export function ProjectSwitcher({ collapsed, onSearchOpen }: Props) {
   }, [open]);
 
   function selectProject(id: string) {
-    router.push(`/projects/${id}/members`);
+    router.push(`/projects/${id}/collaborators`);
     setOpen(false);
     setQuery("");
   }
