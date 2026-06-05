@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Database,
   Languages,
+  MessageSquare,
   ListChecks,
   Plug,
   Activity,
@@ -136,6 +137,7 @@ export function AppSidebar({ userName, userEmail, userAvatarUrl }: Props) {
               {(
                 [
                   { href: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
+                  { href: "strings", label: "Strings", Icon: MessageSquare },
                   { href: "sources", label: "Sources", Icon: Database },
                   { href: "translations", label: "Translations", Icon: Languages },
                   { href: "tasks", label: "Tasks", Icon: ListChecks },

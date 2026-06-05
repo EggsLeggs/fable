@@ -14,14 +14,15 @@ function parseRedisOptions(url: string) {
   }
 }
 
-export const connection = parseRedisOptions(
+const connection = parseRedisOptions(
   process.env.REDIS_URL ?? "redis://localhost:6379"
 );
 
-export const queues = {
-  ingest: new Queue("ingest", { connection }),
-  vcsSync: new Queue("vcs-sync", { connection }),
-  mtTranslate: new Queue("mt-translate", { connection }),
-  qaCheck: new Queue("qa-check", { connection }),
-  webhookDelivery: new Queue("webhook-delivery", { connection }),
-};
+let ingestQueue: Queue | null = null;
+
+export function getIngestQueue(): Queue {
+  if (!ingestQueue) {
+    ingestQueue = new Queue("ingest", { connection });
+  }
+  return ingestQueue;
+}
