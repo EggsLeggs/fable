@@ -60,6 +60,7 @@ A few things to know:
 
 - No en-dashes or em-dashes anywhere: not in comments, UI strings, labels, error messages, or documentation. Use a hyphen or rewrite the sentence.
 - No filler phrases ("straightforward", "simply", "just", "easy", "let's explore", "certainly").
+- Always display users by `username` (as `@username`) in the UI and activity feed. Fall back to `name` then `email` only if `username` is null. Never use real name as the primary identifier.
 
 ### Database Layer (/packages/db)
 
@@ -201,6 +202,16 @@ No logger package exists. Use `console.log` / `console.error` for worker and ser
 2. **tRPC router**: add a procedure to an existing router in `packages/api/src/routers/` or create a new router file and register it in `packages/api/src/root.ts`.
 3. **Frontend**: add UI in `apps/web/app/` or `apps/web/components/`, using tRPC React Query hooks for data.
 4. **Worker** (async jobs only): add a job handler in `apps/worker/src/jobs/`, register a new Worker in `src/index.ts`, add a Queue in `src/queues.ts`.
+
+## Activity Log
+
+The `activity_log` table (`packages/db/src/schema.ts`) records project events. When adding a new feature that creates, updates, or deletes a significant resource, call `logActivity` (from `packages/api/src/log-activity.ts`) after the mutation succeeds.
+
+- Use `@fable/api/log-activity` in Next.js API route handlers.
+- Use `../log-activity` (relative) inside tRPC routers.
+- Pick the closest existing `ActivityType` enum value or add a new one to `activityTypeEnum` in the schema.
+- Set `locale` on the log entry when the event is locale-specific (locale added/removed, locale-scoped task, etc.).
+- Store enough context in `metadata` that the activity feed can render a human-readable sentence without a follow-up DB lookup.
 
 ## Adding a New Environment Variable
 

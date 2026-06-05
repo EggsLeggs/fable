@@ -5,7 +5,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./root": "./src/root.ts",
-    "./trpc": "./src/trpc.ts"
+    "./trpc": "./src/trpc.ts",
+    "./log-activity": "./src/log-activity.ts"
   },
   "dependencies": {
     "@fable/auth": "*",

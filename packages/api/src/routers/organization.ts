@@ -3,8 +3,23 @@ import { and, count, eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
-import { organizations, orgMembers, users } from "@fable/db";
+import { organizations, orgMembers, projects, users } from "@fable/db";
 import { PLAN_LIMITS } from "@fable/stripe";
+import { logActivity } from "../log-activity";
+
+async function logForAllOrgProjects(
+  db: Parameters<typeof logActivity>[0],
+  orgId: string,
+  params: Omit<Parameters<typeof logActivity>[1], "projectId">
+) {
+  const orgProjects = await db.query.projects.findMany({
+    where: eq(projects.orgId, orgId),
+    columns: { id: true },
+  });
+  await Promise.all(
+    orgProjects.map((p) => logActivity(db, { ...params, projectId: p.id }))
+  );
+}
 
 
 
@@ -103,6 +118,21 @@ export const organizationRouter = router({
         with: { members: { with: { user: true } } },
       });
       if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (member.role === "translator") {
+        return {
+          ...org,
+          members: org.members.map((m) => ({
+            ...m,
+            user: {
+              ...m.user,
+              name: "",
+              email: "",
+            },
+          })),
+        };
+      }
+
       return org;
     }),
 
@@ -121,11 +151,23 @@ export const organizationRouter = router({
       if (input.userId === ctx.session.user.id) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "CANNOT_REMOVE_SELF" });
       }
+      const targetUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, input.userId),
+        columns: { id: true, name: true, username: true, email: true },
+      });
       await ctx.db
         .delete(orgMembers)
         .where(
           and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.userId, input.userId))
         );
+      await logForAllOrgProjects(ctx.db, input.orgId, {
+        userId: ctx.session.user.id,
+        type: "member_left",
+        metadata: {
+          memberUserId: input.userId,
+          memberName: targetUser?.username ?? targetUser?.name ?? targetUser?.email ?? input.userId,
+        },
+      });
     }),
 
   inviteByEmail: protectedProcedure
@@ -172,6 +214,17 @@ export const organizationRouter = router({
         .insert(orgMembers)
         .values({ id: uuid(), orgId: input.orgId, userId: targetUser.id, role: "member" })
         .returning();
+
+      await logForAllOrgProjects(ctx.db, input.orgId, {
+        userId: ctx.session.user.id,
+        type: "member_joined",
+        metadata: {
+          memberUserId: targetUser.id,
+          memberName: targetUser.username ?? targetUser.name ?? targetUser.email,
+          role: "member",
+        },
+      });
+
       return member!;
     }),
 
@@ -222,6 +275,20 @@ export const organizationRouter = router({
         })
         .returning();
 
+      const invitedUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, input.userId),
+        columns: { id: true, name: true, username: true, email: true },
+      });
+      await logForAllOrgProjects(ctx.db, input.orgId, {
+        userId: ctx.session.user.id,
+        type: "member_joined",
+        metadata: {
+          memberUserId: input.userId,
+          memberName: invitedUser?.username ?? invitedUser?.name ?? invitedUser?.email ?? input.userId,
+          role: input.role,
+        },
+      });
+
       return member!;
     }),
 
@@ -256,6 +323,17 @@ export const organizationRouter = router({
         .insert(orgMembers)
         .values({ id: uuid(), orgId: input.orgId, userId: targetUser.id, role: "translator" })
         .returning();
+
+      await logForAllOrgProjects(ctx.db, input.orgId, {
+        userId: ctx.session.user.id,
+        type: "member_joined",
+        metadata: {
+          memberUserId: targetUser.id,
+          memberName: targetUser.username ?? targetUser.name ?? targetUser.email,
+          role: "translator",
+        },
+      });
+
       return member!;
     }),
 
@@ -280,10 +358,23 @@ export const organizationRouter = router({
       if (!target || target.role !== "translator") {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+      const translatorUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, input.userId),
+        columns: { id: true, name: true, username: true, email: true },
+      });
       await ctx.db
         .delete(orgMembers)
         .where(
           and(eq(orgMembers.orgId, input.orgId), eq(orgMembers.userId, input.userId))
         );
+      await logForAllOrgProjects(ctx.db, input.orgId, {
+        userId: ctx.session.user.id,
+        type: "member_left",
+        metadata: {
+          memberUserId: input.userId,
+          memberName: translatorUser?.username ?? translatorUser?.name ?? translatorUser?.email ?? input.userId,
+          role: "translator",
+        },
+      });
     }),
 });

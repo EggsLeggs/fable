@@ -5,6 +5,7 @@ import { router, protectedProcedure } from "../trpc";
 import { tasks, projects, orgMembers } from "@fable/db";
 import { TRPCError } from "@trpc/server";
 import type { Db } from "@fable/db";
+import { logActivity } from "../log-activity";
 
 async function assertProjectAccess(db: Db, userId: string, projectId: string) {
   const project = await db.query.projects.findFirst({
@@ -77,10 +78,11 @@ export const taskRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       await assertProjectAccess(ctx.db, ctx.session.user.id, input.projectId);
+      const taskId = uuid();
       const [task] = await ctx.db
         .insert(tasks)
         .values({
-          id: uuid(),
+          id: taskId,
           projectId: input.projectId,
           title: input.title,
           description: input.description ?? null,
@@ -92,6 +94,20 @@ export const taskRouter = router({
           dueDate: input.dueDate ?? null,
         })
         .returning();
+
+      await logActivity(ctx.db, {
+        projectId: input.projectId,
+        userId: ctx.session.user.id,
+        type: "task_created",
+        locale: input.locale ?? null,
+        metadata: {
+          taskId,
+          taskTitle: input.title,
+          taskLocale: input.locale ?? null,
+          taskStatus: input.status,
+        },
+      });
+
       return task!;
     }),
 
@@ -121,6 +137,43 @@ export const taskRouter = router({
         .set({ ...data, updatedAt: new Date() })
         .where(eq(tasks.id, taskId))
         .returning();
+
+      const changes: Record<string, { from: unknown; to: unknown }> = {};
+      if (data.title !== undefined && data.title !== task.title) {
+        changes.title = { from: task.title, to: data.title };
+      }
+      if (data.status !== undefined && data.status !== task.status) {
+        changes.status = { from: task.status, to: data.status };
+      }
+      if ("locale" in data && data.locale !== task.locale) {
+        changes.locale = { from: task.locale, to: data.locale };
+      }
+      if ("assignedTo" in data && data.assignedTo !== task.assignedTo) {
+        changes.assignedTo = { from: task.assignedTo, to: data.assignedTo };
+      }
+      if ("dueDate" in data) {
+        const fromIso = task.dueDate?.toISOString() ?? null;
+        const toIso = data.dueDate instanceof Date ? data.dueDate.toISOString() : (data.dueDate ?? null);
+        if (fromIso !== toIso) {
+          changes.dueDate = { from: fromIso, to: toIso };
+        }
+      }
+
+      const newLocale = (data.locale !== undefined ? data.locale : task.locale) ?? null;
+      await logActivity(ctx.db, {
+        projectId: task.projectId,
+        userId: ctx.session.user.id,
+        type: "task_updated",
+        locale: newLocale,
+        metadata: {
+          taskId,
+          taskTitle: data.title ?? task.title,
+          taskLocale: newLocale,
+          taskStatus: data.status ?? task.status,
+          changes: Object.keys(changes).length > 0 ? changes : undefined,
+        },
+      });
+
       return updated!;
     }),
 
@@ -145,5 +198,12 @@ export const taskRouter = router({
         .update(tasks)
         .set({ deletedAt: new Date(), updatedAt: new Date() })
         .where(eq(tasks.id, input.taskId));
+
+      await logActivity(ctx.db, {
+        projectId: task.projectId,
+        userId: ctx.session.user.id,
+        type: "task_deleted",
+        metadata: { taskId: input.taskId, taskTitle: task.title },
+      });
     }),
 });

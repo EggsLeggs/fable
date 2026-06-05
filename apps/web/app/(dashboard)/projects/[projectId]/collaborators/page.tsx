@@ -1,60 +1,49 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { trpc } from "@/lib/trpc/client";
+import { UserAvatar } from "@/components/UserAvatar";
 
 type Props = { params: Promise<{ projectId: string }> };
 
-function MemberAvatar({
-  name,
-  email,
-  image,
-}: {
-  name: string;
-  email: string;
-  image?: string | null;
-}) {
-  const [gravatarUrl, setGravatarUrl] = useState<string | null>(null);
+type OrgMember = {
+  user: {
+    name: string;
+    email: string;
+    image: string | null;
+    username: string | null;
+  };
+};
 
-  useEffect(() => {
-    if (image) return;
-    async function compute() {
-      const normalized = email.trim().toLowerCase();
-      const msgBuffer = new TextEncoder().encode(normalized);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-      const hashHex = Array.from(new Uint8Array(hashBuffer))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-      setGravatarUrl(
-        `https://www.gravatar.com/avatar/${hashHex}?s=64&d=identicon`
-      );
-    }
-    void compute();
-  }, [email, image]);
+function memberAvatarLabel(member: OrgMember["user"], isTeamMember: boolean): string {
+  if (!isTeamMember) {
+    return member.username ? `@${member.username}` : "?";
+  }
+  return member.name || member.email;
+}
 
-  const src = image ?? gravatarUrl;
-
-  if (src) {
+function memberPrimaryLine(member: OrgMember["user"], isTeamMember: boolean) {
+  if (!isTeamMember) {
     return (
-      <img
-        src={src}
-        alt={name}
-        className="h-8 w-8 shrink-0 rounded-full object-cover"
-        width={32}
-        height={32}
-      />
+      <p className="truncate text-sm font-medium">
+        {member.username ? `@${member.username}` : "?"}
+      </p>
     );
   }
 
+  const name = member.name || member.email;
   return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium uppercase">
-      {(name || email).charAt(0)}
-    </div>
+    <p className="truncate text-sm font-medium">
+      {name}
+      {member.username && (
+        <span className="font-normal text-muted-foreground"> @{member.username}</span>
+      )}
+    </p>
   );
 }
 
@@ -243,7 +232,6 @@ export default function CollaboratorsPage({ params }: Props) {
 
         <ul className="flex flex-col gap-2">
           {teamMembers.map((member) => {
-            const displayName = member.user.name || member.user.email;
             const isSelf = member.userId === currentUserId;
             const canRemove = isOwner && !isSelf && member.role !== "owner";
 
@@ -252,14 +240,15 @@ export default function CollaboratorsPage({ params }: Props) {
                 key={member.id}
                 className="flex items-center gap-3 rounded-lg border border-border p-3"
               >
-                <MemberAvatar
-                  name={member.user.name}
-                  email={member.user.email}
-                  image={member.user.image}
+                <UserAvatar
+                  name={memberAvatarLabel(member.user, isTeamMember)}
+                  email={isTeamMember ? member.user.email : undefined}
+                  src={member.user.image}
+                  className="h-8 w-8"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{displayName}</p>
-                  {isOwner && member.user.name && (
+                  {memberPrimaryLine(member.user, isTeamMember)}
+                  {isOwner && isTeamMember && member.user.email && (
                     <p className="truncate text-xs text-muted-foreground">
                       {member.user.email}
                     </p>
@@ -316,7 +305,6 @@ export default function CollaboratorsPage({ params }: Props) {
         ) : (
           <ul className="flex flex-col gap-2">
             {translators.map((member) => {
-              const displayName = member.user.name || member.user.email;
               const canRemove = isTeamMember;
 
               return (
@@ -324,16 +312,19 @@ export default function CollaboratorsPage({ params }: Props) {
                   key={member.id}
                   className="flex items-center gap-3 rounded-lg border border-border p-3"
                 >
-                  <MemberAvatar
-                    name={member.user.name}
-                    email={member.user.email}
-                    image={member.user.image}
+                  <UserAvatar
+                    name={memberAvatarLabel(member.user, isTeamMember)}
+                    email={isTeamMember ? member.user.email : undefined}
+                    src={member.user.image}
+                    className="h-8 w-8"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{displayName}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {member.user.email}
-                    </p>
+                    {memberPrimaryLine(member.user, isTeamMember)}
+                    {isOwner && isTeamMember && member.user.email && (
+                      <p className="truncate text-xs text-muted-foreground">
+                        {member.user.email}
+                      </p>
+                    )}
                   </div>
                   {canRemove && (
                     <button

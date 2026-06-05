@@ -16,6 +16,7 @@ import {
   sourceFiles,
   ingestJobs,
   tasks,
+  activityLog,
 } from "./schema";
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -63,6 +64,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   sourceFiles: many(sourceFiles),
   vcsIntegrations: many(vcsIntegrations),
   tasks: many(tasks),
+  activityLogs: many(activityLog),
 }));
 
 export const projectLocalesRelations = relations(projectLocales, ({ one }) => ({
@@ -174,6 +176,17 @@ export const webhookConfigsRelations = relations(webhookConfigs, ({ one }) => ({
   org: one(organizations, {
     fields: [webhookConfigs.orgId],
     references: [organizations.id],
+  }),
+}));
+
+export const activityLogRelations = relations(activityLog, ({ one }) => ({
+  project: one(projects, {
+    fields: [activityLog.projectId],
+    references: [projects.id],
+  }),
+  user: one(users, {
+    fields: [activityLog.userId],
+    references: [users.id],
   }),
 }));
 

@@ -6,6 +6,7 @@ import { auth } from "@fable/auth";
 import { db, sourceFiles, ingestJobs, orgMembers, projects } from "@fable/db";
 import { detectFormat } from "@fable/formats";
 import { getIngestQueue } from "@/lib/queues";
+import { logActivity } from "@fable/api/log-activity";
 
 export const dynamic = "force-dynamic";
 
@@ -118,6 +119,13 @@ export async function POST(
       { jobId: `ingest:upload:${ingestJobId}` }
     );
 
+    await logActivity(db, {
+      projectId,
+      userId: session.user.id,
+      type: "source_updated",
+      metadata: { sourceId: existingFile.id, name: filename, sourcePath: filePath },
+    });
+
     return NextResponse.json(
       { sourceFileId: existingFile.id, ingestJobId },
       { status: 202 }
@@ -148,6 +156,13 @@ export async function POST(
     { ingestJobId, sourceFileId },
     { jobId: `ingest:upload:${ingestJobId}` }
   );
+
+  await logActivity(db, {
+    projectId,
+    userId: session.user.id,
+    type: "source_created",
+    metadata: { sourceId: sourceFileId, name: filename, sourcePath: filePath },
+  });
 
   return NextResponse.json({ sourceFileId, ingestJobId }, { status: 202 });
 }

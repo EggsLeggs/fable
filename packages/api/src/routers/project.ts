@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { eq, and, count, ne } from "drizzle-orm";
+import { eq, and, count, ne, sql } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { projects, projectLocales, orgMembers, translationKeys, translations, type Db } from "@fable/db";
 import { TRPCError } from "@trpc/server";
 import { PLAN_LIMITS } from "@fable/stripe";
+import { logActivity } from "../log-activity";
 
 const customLocaleSchema = z.object({ name: z.string().min(1), code: z.string().min(1) });
 
@@ -139,6 +140,13 @@ export const projectRouter = router({
         isSource: true,
       });
 
+      await logActivity(ctx.db, {
+        projectId: id,
+        userId: ctx.session.user.id,
+        type: "project_created",
+        metadata: { name: input.name },
+      });
+
       return project!;
     }),
 
@@ -167,6 +175,21 @@ export const projectRouter = router({
         .set({ ...data, updatedAt: new Date() })
         .where(eq(projects.id, id))
         .returning();
+
+      const changedFields = Object.keys(data) as (keyof typeof data)[];
+      if (changedFields.length > 0) {
+        const changes: Record<string, { from: unknown; to: unknown }> = {};
+        for (const field of changedFields) {
+          changes[field] = { from: project[field as keyof typeof project], to: data[field] };
+        }
+        await logActivity(ctx.db, {
+          projectId: id,
+          userId: ctx.session.user.id,
+          type: "project_updated",
+          metadata: { name: project.name, changes },
+        });
+      }
+
       return updated!;
     }),
 
@@ -196,6 +219,15 @@ export const projectRouter = router({
         .insert(projectLocales)
         .values({ id: uuid(), ...input, isSource: false })
         .returning();
+
+      await logActivity(ctx.db, {
+        projectId: input.projectId,
+        userId: ctx.session.user.id,
+        type: "locale_added",
+        locale: input.locale,
+        metadata: { locale: input.locale },
+      });
+
       return locale!;
     }),
 
@@ -215,6 +247,14 @@ export const projectRouter = router({
         throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot remove the source locale." });
       }
       await ctx.db.delete(projectLocales).where(eq(projectLocales.id, input.localeId));
+
+      await logActivity(ctx.db, {
+        projectId: input.projectId,
+        userId: ctx.session.user.id,
+        type: "locale_removed",
+        locale: locale.locale,
+        metadata: { locale: locale.locale },
+      });
     }),
 
   updateSourceLocale: protectedProcedure
@@ -240,6 +280,53 @@ export const projectRouter = router({
       } else {
         await ctx.db.insert(projectLocales).values({ id: uuid(), projectId: input.id, locale: input.sourceLocale, isSource: true });
       }
+    }),
+
+  dashboardStats: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.id),
+        with: { locales: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertOrgAccess(ctx.db, ctx.session.user.id, project.orgId);
+
+      const [keyRow] = await ctx.db
+        .select({ value: count() })
+        .from(translationKeys)
+        .where(and(eq(translationKeys.projectId, input.id), eq(translationKeys.status, "active")));
+      const keyCount = keyRow?.value ?? 0;
+
+      const localeRows = await ctx.db
+        .select({
+          locale: translations.locale,
+          total: count(),
+          approved: sql<number>`cast(count(*) filter (where ${translations.state} = 'approved') as integer)`,
+        })
+        .from(translations)
+        .innerJoin(translationKeys, eq(translations.keyId, translationKeys.id))
+        .where(
+          and(
+            eq(translationKeys.projectId, input.id),
+            eq(translationKeys.status, "active")
+          )
+        )
+        .groupBy(translations.locale);
+
+      const localeStatsMap = new Map(localeRows.map((r) => [r.locale, r]));
+
+      const localeStats = project.locales
+        .filter((l) => !l.isSource)
+        .map((l) => {
+          const row = localeStatsMap.get(l.locale);
+          const translated = row?.total ?? 0;
+          const approved = row?.approved ?? 0;
+          const pct = keyCount === 0 ? 0 : Math.round((approved / keyCount) * 100);
+          return { localeId: l.id, locale: l.locale, translated, approved, pct };
+        });
+
+      return { project, keyCount, localeStats };
     }),
 
   badgeStats: publicProcedure
