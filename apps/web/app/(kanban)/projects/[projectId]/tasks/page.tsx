@@ -13,8 +13,22 @@ import {
   CheckCircle2,
   Clock3,
   X,
+  GripVertical,
+  Info,
 } from "lucide-react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { getLanguageName } from "@/lib/language-constants";
@@ -94,81 +108,10 @@ function getDueDateClass(dueDate: Date): string {
   return "text-muted-foreground";
 }
 
-function TaskCard({
-  task,
-  projectId,
-  onStatusChange,
-  onDelete,
-}: {
-  task: Task;
-  projectId: string;
-  onStatusChange: (taskId: string, status: TaskStatus) => void;
-  onDelete: (taskId: string) => void;
-}) {
-  const router = useRouter();
-
+function TaskCardOverlay({ task }: { task: Task }) {
   return (
-    <div
-      className="group relative cursor-pointer rounded-lg border border-border bg-background p-3 shadow-sm transition-all hover:border-ring/40 hover:shadow-md"
-      onClick={() => router.push(`/projects/${projectId}/tasks/${task.id}`)}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-medium leading-snug">{task.title}</p>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <button
-              type="button"
-              className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-foreground group-hover:opacity-100"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <MoreHorizontal className="h-3.5 w-3.5" />
-            </button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              className="z-50 min-w-[160px] overflow-hidden rounded-lg border border-border bg-popover p-1 shadow-lg"
-              sideOffset={4}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {task.status !== "todo" && (
-                <DropdownMenu.Item
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm outline-none hover:bg-muted"
-                  onSelect={() => onStatusChange(task.id, "todo")}
-                >
-                  <Circle className="h-3.5 w-3.5 text-muted-foreground" />
-                  Move to To Do
-                </DropdownMenu.Item>
-              )}
-              {task.status !== "in_progress" && (
-                <DropdownMenu.Item
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm outline-none hover:bg-muted"
-                  onSelect={() => onStatusChange(task.id, "in_progress")}
-                >
-                  <Clock3 className="h-3.5 w-3.5 text-blue-500" />
-                  Move to In Progress
-                </DropdownMenu.Item>
-              )}
-              {task.status !== "done" && (
-                <DropdownMenu.Item
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm outline-none hover:bg-muted"
-                  onSelect={() => onStatusChange(task.id, "done")}
-                >
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                  Mark as Done
-                </DropdownMenu.Item>
-              )}
-              <DropdownMenu.Separator className="my-1 h-px bg-border" />
-              <DropdownMenu.Item
-                className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-destructive outline-none hover:bg-destructive/10"
-                onSelect={() => onDelete(task.id)}
-              >
-                Delete
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
-      </div>
-
+    <div className="w-[372px] rotate-1 rounded-lg border border-border bg-background p-3 shadow-xl opacity-95">
+      <p className="text-sm font-medium leading-snug">{task.title}</p>
       {(task.locale || task.sourceFile) && (
         <div className="mt-2 flex flex-wrap gap-1">
           {task.locale && (
@@ -184,31 +127,157 @@ function TaskCard({
           )}
         </div>
       )}
+    </div>
+  );
+}
 
-      <div className="mt-2.5 flex items-center justify-between gap-2">
-        {task.assignedToUser ? (
-          <div className="flex items-center gap-1.5">
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[10px] font-semibold uppercase text-muted-foreground">
-              {getInitials(task.assignedToUser.name)}
-            </div>
-            <span className="max-w-[90px] truncate text-xs text-muted-foreground">
-              {task.assignedToUser.username
-                ? `@${task.assignedToUser.username}`
-                : task.assignedToUser.name.split(" ")[0]}
-            </span>
+function TaskCard({
+  task,
+  projectId,
+  onStatusChange,
+  onDelete,
+}: {
+  task: Task;
+  projectId: string;
+  onStatusChange: (taskId: string, status: TaskStatus) => void;
+  onDelete: (taskId: string) => void;
+}) {
+  const router = useRouter();
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+    data: { task },
+  });
+
+  const style = transform
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+    : undefined;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "group relative rounded-lg border border-border bg-background shadow-sm transition-shadow hover:border-ring/40 hover:shadow-md",
+        isDragging && "opacity-0"
+      )}
+    >
+      <div className="flex items-start gap-1 p-3">
+        {/* Drag handle */}
+        <button
+          type="button"
+          {...listeners}
+          {...attributes}
+          onClick={(e) => e.stopPropagation()}
+          className="mt-0.5 flex h-4 w-4 shrink-0 cursor-grab items-center justify-center rounded text-muted-foreground/30 opacity-0 transition-opacity hover:text-muted-foreground group-hover:opacity-100 active:cursor-grabbing"
+          aria-label="Drag to reorder"
+        >
+          <GripVertical className="h-3.5 w-3.5" />
+        </button>
+
+        {/* Card content */}
+        <div className="min-w-0 flex-1">
+          {/* Title + menu row */}
+          <div className="flex items-start justify-between gap-2">
+            <p
+              className="cursor-pointer text-sm font-medium leading-snug"
+              onClick={() => router.push(`/projects/${projectId}/tasks/${task.id}`)}
+            >
+              {task.title}
+            </p>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button
+                  type="button"
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-foreground group-hover:opacity-100"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreHorizontal className="h-3.5 w-3.5" />
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  className="z-50 min-w-[160px] overflow-hidden rounded-lg border border-border bg-popover p-1 shadow-lg"
+                  sideOffset={4}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {task.status !== "todo" && (
+                    <DropdownMenu.Item
+                      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm outline-none hover:bg-muted"
+                      onSelect={() => onStatusChange(task.id, "todo")}
+                    >
+                      <Circle className="h-3.5 w-3.5 text-muted-foreground" />
+                      Move to To Do
+                    </DropdownMenu.Item>
+                  )}
+                  {task.status !== "in_progress" && (
+                    <DropdownMenu.Item
+                      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm outline-none hover:bg-muted"
+                      onSelect={() => onStatusChange(task.id, "in_progress")}
+                    >
+                      <Clock3 className="h-3.5 w-3.5 text-blue-500" />
+                      Move to In Progress
+                    </DropdownMenu.Item>
+                  )}
+                  {task.status !== "done" && (
+                    <DropdownMenu.Item
+                      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm outline-none hover:bg-muted"
+                      onSelect={() => onStatusChange(task.id, "done")}
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                      Mark as Done
+                    </DropdownMenu.Item>
+                  )}
+                  <DropdownMenu.Separator className="my-1 h-px bg-border" />
+                  <DropdownMenu.Item
+                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-destructive outline-none hover:bg-destructive/10"
+                    onSelect={() => onDelete(task.id)}
+                  >
+                    Delete
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
           </div>
-        ) : (
-          <span className="text-xs text-muted-foreground/40">Unassigned</span>
-        )}
 
-        {task.dueDate && (
-          <span
-            className={cn("flex items-center gap-0.5 text-xs", getDueDateClass(task.dueDate))}
-          >
-            <Calendar className="h-3 w-3" />
-            {formatShortDate(task.dueDate)}
-          </span>
-        )}
+          {/* Badges */}
+          {(task.locale || task.sourceFile) && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {task.locale && (
+                <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                  {getLanguageName(task.locale)}
+                </span>
+              )}
+              {task.sourceFile && (
+                <span className="flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                  <FileText className="h-2.5 w-2.5" />
+                  {task.sourceFile.name}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="mt-2.5 flex items-center justify-between gap-2">
+            {task.assignedToUser ? (
+              <div className="flex items-center gap-1.5">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-muted text-[10px] font-semibold uppercase text-muted-foreground">
+                  {getInitials(task.assignedToUser.name)}
+                </div>
+                <span className="max-w-[90px] truncate text-xs text-muted-foreground">
+                  {task.assignedToUser.username
+                    ? `@${task.assignedToUser.username}`
+                    : task.assignedToUser.name.split(" ")[0]}
+                </span>
+              </div>
+            ) : null}
+            {task.dueDate && (
+              <span className={cn("flex items-center gap-0.5 text-xs", getDueDateClass(task.dueDate))}>
+                <Calendar className="h-3 w-3" />
+                {formatShortDate(task.dueDate)}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -302,22 +371,43 @@ function KanbanColumn({
     return entries;
   }, [tasks]);
 
+  const { setNodeRef, isOver } = useDroppable({ id: status });
+
   return (
     <div
       className={cn(
-        "w-[320px] flex-shrink-0 rounded-xl border border-border bg-background/80 backdrop-blur-sm",
-        config.headerClass
+        "w-[380px] flex-shrink-0 rounded-xl border border-border bg-background/80 backdrop-blur-sm transition-colors",
+        config.headerClass,
+        isOver && "border-ring/60 bg-muted/40"
       )}
     >
       <div className="flex items-center gap-2 px-4 py-3">
         <Icon className={cn("h-4 w-4 shrink-0", config.iconClass)} />
         <h2 className="text-sm font-semibold">{config.label}</h2>
+        {status === "done" && (
+          <Tooltip.Provider delayDuration={200}>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <Info className="h-3.5 w-3.5 shrink-0 cursor-default text-muted-foreground/50 hover:text-muted-foreground" />
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  className="z-50 max-w-[200px] rounded-lg border border-border bg-popover px-3 py-2 text-xs text-popover-foreground shadow-md"
+                  sideOffset={6}
+                >
+                  Only shows completed tasks from the last 30 days.
+                  <Tooltip.Arrow className="fill-border" />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        )}
         <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-medium tabular-nums text-muted-foreground">
           {tasks.length}
         </span>
       </div>
 
-      <div className="px-3 pb-3">
+      <div ref={setNodeRef} className="min-h-[60px] px-3 pb-3">
         {localeGroups.length === 0 && (
           <p className="py-8 text-center text-xs text-muted-foreground/60">No tasks</p>
         )}
@@ -563,6 +653,11 @@ export default function TasksPage({ params }: Props) {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
   const [showCreate, setShowCreate] = useState(false);
   const [createDefaultStatus, setCreateDefaultStatus] = useState<TaskStatus>("todo");
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
 
   const tasksQuery = trpc.task.list.useQuery({ projectId });
   const projectQuery = trpc.project.getById.useQuery({ id: projectId });
@@ -574,8 +669,20 @@ export default function TasksPage({ params }: Props) {
   const filesQuery = trpc.sourceFile.list.useQuery({ projectId });
 
   const updateStatus = trpc.task.update.useMutation({
-    onSuccess: () => utils.task.list.invalidate({ projectId }),
-    onError: () => toast.error("Failed to update task"),
+    onMutate: async (input) => {
+      if (!input.status) return;
+      await utils.task.list.cancel({ projectId });
+      const previous = utils.task.list.getData({ projectId });
+      utils.task.list.setData({ projectId }, (old) =>
+        old?.map((t) => (t.id === input.taskId ? { ...t, status: input.status! } : t))
+      );
+      return { previous };
+    },
+    onError: (_, __, context) => {
+      if (context?.previous) utils.task.list.setData({ projectId }, context.previous);
+      toast.error("Failed to update task");
+    },
+    onSettled: () => utils.task.list.invalidate({ projectId }),
   });
 
   const deleteTask = trpc.task.delete.useMutation({
@@ -614,6 +721,22 @@ export default function TasksPage({ params }: Props) {
       else next.add(key);
       return next;
     });
+  }
+
+  function handleDragStart({ active }: DragStartEvent) {
+    const task = (active.data.current as { task: Task } | undefined)?.task;
+    setActiveTask(task ?? null);
+  }
+
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    setActiveTask(null);
+    if (!over) return;
+    const task = (active.data.current as { task: Task } | undefined)?.task;
+    if (!task) return;
+    const newStatus = over.id as TaskStatus;
+    if (task.status !== newStatus) {
+      updateStatus.mutate({ taskId: task.id, status: newStatus });
+    }
   }
 
   function handleStatusChange(taskId: string, status: TaskStatus) {
@@ -741,22 +864,32 @@ export default function TasksPage({ params }: Props) {
         </div>
       </header>
 
-      <div className="flex-1 overflow-auto bg-background bg-dot-pattern">
-        <div className="flex min-w-max items-start gap-5 p-5">
-          {(["todo", "in_progress", "done"] as const).map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              tasks={byStatus[status]}
-              projectId={projectId}
-              collapsedGroups={collapsedGroups}
-              onToggleGroup={toggleGroup}
-              onStatusChange={handleStatusChange}
-              onDelete={handleDelete}
-            />
-          ))}
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={() => setActiveTask(null)}
+      >
+        <div className="flex-1 overflow-auto bg-background bg-dot-pattern">
+          <div className="flex min-w-max items-start gap-5 p-5">
+            {(["todo", "in_progress", "done"] as const).map((status) => (
+              <KanbanColumn
+                key={status}
+                status={status}
+                tasks={byStatus[status]}
+                projectId={projectId}
+                collapsedGroups={collapsedGroups}
+                onToggleGroup={toggleGroup}
+                onStatusChange={handleStatusChange}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+        <DragOverlay dropAnimation={null}>
+          {activeTask ? <TaskCardOverlay task={activeTask} /> : null}
+        </DragOverlay>
+      </DndContext>
 
       {showCreate && (
         <CreateTaskDialog
