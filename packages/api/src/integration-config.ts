@@ -1,12 +1,21 @@
 import { TRPCError } from "@trpc/server";
 import { isStripeConfigured } from "@fable/stripe";
 
+function getGitHubAppSlug(): string | undefined {
+  // Server-only env var (read at runtime). Avoid NEXT_PUBLIC_* here: Next.js inlines
+  // those at build time, so Railway/runtime values are ignored in Docker deploys.
+  const slug =
+    process.env.GITHUB_APP_SLUG?.trim() ||
+    process.env["NEXT_PUBLIC_GITHUB_APP_SLUG"]?.trim();
+  return slug || undefined;
+}
+
 export function isGitHubAppConfigured(): boolean {
   return Boolean(
     process.env.GITHUB_APP_ID?.trim() &&
       process.env.GITHUB_PRIVATE_KEY?.trim() &&
       process.env.GITHUB_WEBHOOK_SECRET?.trim() &&
-      process.env.NEXT_PUBLIC_GITHUB_APP_SLUG?.trim()
+      getGitHubAppSlug()
   );
 }
 
@@ -18,7 +27,7 @@ export function getIntegrationAvailability() {
   return {
     github: {
       available: isGitHubAppConfigured(),
-      appSlug: process.env.NEXT_PUBLIC_GITHUB_APP_SLUG?.trim() ?? null,
+      appSlug: getGitHubAppSlug() ?? null,
     },
     openai: {
       available: isOpenAIConfigured(),
