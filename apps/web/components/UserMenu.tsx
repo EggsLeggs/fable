@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { LogOut, Settings } from "lucide-react";
+import { t } from "@lingui/core/macro";
 import { signOut } from "@fable/auth/client";
 import { UserAvatar } from "@/components/UserAvatar";
 
@@ -34,10 +35,10 @@ export function UserMenu({ userName, userEmail, userAvatarUrl, collapsed }: Prop
   }, [open]);
 
   const themes = [
-    { id: "system", label: "System" },
-    { id: "dark", label: "Dark" },
-    { id: "light", label: "Light" },
-  ] as const;
+    { id: "system" as const, label: t`System` },
+    { id: "dark" as const, label: t`Dark` },
+    { id: "light" as const, label: t`Light` },
+  ];
 
   function navigate(href: string) {
     setOpen(false);
@@ -76,12 +77,12 @@ export function UserMenu({ userName, userEmail, userAvatarUrl, collapsed }: Prop
               className="flex w-full items-center gap-2 rounded-[5px] px-3 py-2 text-left text-xs hover:bg-secondary"
             >
               <Settings className="h-3.5 w-3.5 text-muted-foreground" />
-              Settings
+              {t`Settings`}
             </button>
           </div>
           <div className="border-t border-border" />
           <div className="p-1">
-            <p className="px-3 py-2 text-xs text-muted-foreground">Theme</p>
+            <p className="px-3 py-2 text-xs text-muted-foreground">{t`Theme`}</p>
             {themes.map(({ id, label }) => (
               <button
                 key={id}
@@ -105,7 +106,7 @@ export function UserMenu({ userName, userEmail, userAvatarUrl, collapsed }: Prop
             className="flex w-full items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:bg-secondary"
           >
             <LogOut className="h-4 w-4" />
-            Log out
+            {t`Log out`}
           </button>
         </div>
       )}

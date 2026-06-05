@@ -2,22 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const tabs = [
-  { href: "/settings", label: "Profile" },
-  { href: "/settings/billing", label: "Billing" },
-  { href: "/settings/connections", label: "Connections" },
-];
+import { t } from "@lingui/core/macro";
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  const tabs = [
+    { href: "/settings", label: t`Profile` },
+    { href: "/settings/billing", label: t`Billing` },
+    { href: "/settings/connections", label: t`Connections` },
+  ];
+
   return (
     <div className="flex w-full flex-1 flex-col">
       <header className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t`Settings`}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Manage your account and organisation settings.
+          {t`Manage your account and organisation settings.`}
         </p>
       </header>
 

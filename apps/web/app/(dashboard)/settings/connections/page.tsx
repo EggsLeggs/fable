@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Loader2, Unlink } from "lucide-react";
 import { toast } from "sonner";
+import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 
 function GitHubIcon({ className }: { className?: string }) {
@@ -18,11 +19,11 @@ export default function ConnectionsPage() {
 
   const disconnect = trpc.user.disconnectGitHub.useMutation({
     onSuccess: () => {
-      toast.success("GitHub disconnected");
+      toast.success(t`GitHub disconnected`);
       utils.user.getGitHubInstallation.invalidate();
       utils.user.listGitHubRepos.invalidate();
     },
-    onError: () => toast.error("Failed to disconnect"),
+    onError: () => toast.error(t`Failed to disconnect`),
   });
 
   const appSlug = process.env.NEXT_PUBLIC_GITHUB_APP_SLUG;
@@ -35,7 +36,7 @@ export default function ConnectionsPage() {
   return (
     <div className="flex flex-col gap-6">
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium">Connected accounts</h2>
+        <h2 className="text-sm font-medium">{t`Connected accounts`}</h2>
 
         <div className="rounded-lg border border-border p-4">
           <div className="flex items-start justify-between gap-4">
@@ -46,8 +47,7 @@ export default function ConnectionsPage() {
               <div>
                 <p className="text-sm font-medium">GitHub</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Allows projects to sync source files and push translations
-                  back as pull requests.
+                  {t`Allows projects to sync source files and push translations back as pull requests.`}
                 </p>
               </div>
             </div>
@@ -67,11 +67,11 @@ export default function ConnectionsPage() {
                   ) : (
                     <Unlink className="h-3.5 w-3.5" />
                   )}
-                  Disconnect
+                  {t`Disconnect`}
                 </button>
               ) : connectUrl ? (
                 <a href={connectUrl} className="btn-primary text-sm">
-                  Connect
+                  {t`Connect`}
                 </a>
               ) : (
                 <p className="text-xs text-destructive">
@@ -85,7 +85,7 @@ export default function ConnectionsPage() {
             <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" />
               <p className="text-xs text-muted-foreground">
-                Connected — installation{" "}
+                {t`Connected`}{" - "}{t`installation`}{" "}
                 <span className="font-mono">{installation.installationId}</span>
               </p>
             </div>
