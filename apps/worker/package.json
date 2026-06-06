@@ -12,6 +12,7 @@
     "@fable/ai": "*",
     "@fable/db": "*",
     "@fable/formats": "*",
+    "@fable/ingest": "*",
     "@fable/qa": "*",
     "@fable/stripe": "*",
     "bullmq": "^5.51.3",

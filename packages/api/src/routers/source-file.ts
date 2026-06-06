@@ -13,6 +13,7 @@ import {
   translations,
   vcsIntegrations,
   githubInstallations,
+  fileFormatEnum,
   type Db,
 } from "@fable/db";
 import { logActivity } from "../log-activity";
@@ -206,6 +207,56 @@ export const sourceFileRouter = router({
         keyCount: countMap.get(f.id) ?? 0,
         latestIngestJob: f.ingestJobs[0] ?? null,
       }));
+    }),
+
+  configure: protectedProcedure
+    .input(
+      z.object({
+        sourceFileId: z.string(),
+        translationPattern: z.string().nullable(),
+        formatOverride: z.enum(fileFormatEnum.enumValues).nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const file = await ctx.db.query.sourceFiles.findFirst({
+        where: eq(sourceFiles.id, input.sourceFileId),
+      });
+      if (!file) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertProjectAccess(ctx.db, ctx.session.user.id, file.projectId);
+
+      const translationPattern = input.translationPattern?.trim() || null;
+
+      await ctx.db
+        .update(sourceFiles)
+        .set({
+          translationPattern,
+          formatOverride: input.formatOverride,
+          updatedAt: new Date(),
+        })
+        .where(eq(sourceFiles.id, input.sourceFileId));
+
+      await logActivity(ctx.db, {
+        projectId: file.projectId,
+        userId: ctx.session.user.id,
+        type: "source_updated",
+        metadata: {
+          sourceId: file.id,
+          name: file.name,
+          sourcePath: file.path,
+          changes: {
+            translationPattern: {
+              from: file.translationPattern,
+              to: translationPattern,
+            },
+            formatOverride: {
+              from: file.formatOverride,
+              to: input.formatOverride,
+            },
+          },
+        },
+      });
+
+      return { success: true };
     }),
 
   getIngestJobs: protectedProcedure

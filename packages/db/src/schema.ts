@@ -308,6 +308,7 @@ export const sourceFiles = pgTable(
     name: text("name").notNull(),
     path: text("path").notNull(),
     format: fileFormatEnum("format").notNull(),
+    formatOverride: fileFormatEnum("format_override"),
     sourceType: sourceTypeEnum("source_type").notNull(),
     vcsIntegrationId: text("vcs_integration_id").references(
       () => vcsIntegrations.id,

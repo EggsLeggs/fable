@@ -10,39 +10,11 @@ import {
   translations,
   projects,
 } from "@fable/db";
-import { getAdapter, resolveOutputPath } from "@fable/formats";
+import { buildTranslationFiles } from "@fable/formats";
+import { getInstallationToken } from "@fable/ingest/providers/github";
 
 export interface PushTranslationsPayload {
   pushJobId: string;
-}
-
-async function getInstallationToken(installationId: string): Promise<string> {
-  const appId = process.env.GITHUB_APP_ID;
-  const privateKey = process.env.GITHUB_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  if (!appId || !privateKey) {
-    throw new Error("GITHUB_APP_ID and GITHUB_PRIVATE_KEY must be set");
-  }
-  const jwt = await import("jsonwebtoken");
-  const appToken = jwt.default.sign({ iss: appId }, privateKey, {
-    algorithm: "RS256",
-    expiresIn: "10m",
-  });
-  const res = await fetch(
-    `https://api.github.com/app/installations/${installationId}/access_tokens`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${appToken}`,
-        Accept: "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    }
-  );
-  if (!res.ok) {
-    throw new Error(`Failed to get installation token: ${res.status}`);
-  }
-  const data = (await res.json()) as { token: string };
-  return data.token;
 }
 
 function ghHeaders(token: string): Record<string, string> {
@@ -280,29 +252,39 @@ export async function handlePushTranslations(
       });
       if (keys.length === 0) continue;
       const keyIds = keys.map((k) => k.id);
+      if (pushJob.locales.length === 0) continue;
 
-      for (const locale of pushJob.locales) {
-        const approvedTranslations = await db.query.translations.findMany({
-          where: and(
-            inArray(translations.keyId, keyIds),
-            eq(translations.locale, locale),
-            eq(translations.state, "approved")
-          ),
-        });
-        if (approvedTranslations.length === 0) continue;
+      const approvedTranslations = await db.query.translations.findMany({
+        where: and(
+          inArray(translations.keyId, keyIds),
+          inArray(translations.locale, pushJob.locales),
+          eq(translations.state, "approved")
+        ),
+      });
+      if (approvedTranslations.length === 0) continue;
 
-        const translationMap: Record<string, string> = {};
-        for (const t of approvedTranslations) {
-          const key = keys.find((k) => k.id === t.keyId);
-          if (key) translationMap[key.key] = t.value;
-        }
+      const sourceTranslations =
+        sourceFile.format === "lingui_json"
+          ? await db.query.translations.findMany({
+              where: and(
+                inArray(translations.keyId, keyIds),
+                eq(translations.locale, project.sourceLocale),
+                eq(translations.state, "approved")
+              ),
+            })
+          : [];
 
-        const outputPath = resolveOutputPath(sourceFile, project.sourceLocale, locale);
-        if (!outputPath) continue;
+      const files = buildTranslationFiles({
+        sourceFile,
+        keys,
+        approvedTranslations,
+        sourceTranslations,
+        sourceLocale: project.sourceLocale,
+        targetLocales: pushJob.locales,
+      });
 
-        const adapter = getAdapter(sourceFile.format);
-        const content = adapter.serialize(translationMap);
-        filesToCommit.push({ path: outputPath, content });
+      for (const file of files) {
+        filesToCommit.push(file);
       }
     }
 

@@ -13,6 +13,7 @@ import {
   Trash2,
   Download,
   GitPullRequest,
+  Settings,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
@@ -22,6 +23,7 @@ import type { FileFormat } from "@fable/formats";
 import { SelectCombobox } from "@/components/ui/select-combobox";
 import { ExportModal } from "./export-modal";
 import { PushModal } from "./push-modal";
+import { SourceFileConfigDialog } from "./source-file-config-dialog";
 
 const ALL_FORMATS: FileFormat[] = [
   "json_flat",
@@ -225,7 +227,9 @@ type SourceFileItem = {
   id: string;
   name: string;
   path: string;
-  format: string;
+  format: FileFormat;
+  formatOverride: FileFormat | null;
+  translationPattern: string | null;
   sourceType: string;
   keyCount: number;
   lastSyncedAt: Date | null;
@@ -243,10 +247,12 @@ function SourceFileRow({
   file,
   projectId,
   onArchived,
+  onConfigure,
 }: {
   file: SourceFileItem;
   projectId: string;
   onArchived: () => void;
+  onConfigure: () => void;
 }) {
   const utils = trpc.useUtils();
   const [resyncing, setResyncing] = useState(false);
@@ -354,6 +360,14 @@ function SourceFileRow({
       </td>
       <td className="py-3 pr-4 text-right">
         <div className="flex items-center justify-end gap-1">
+          <button
+            type="button"
+            onClick={onConfigure}
+            className="flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
+            title="Configure file"
+          >
+            <Settings className="h-3.5 w-3.5" />
+          </button>
           {file.sourceType !== "upload" && (
             <button
               type="button"
@@ -396,10 +410,13 @@ export function FilesTab({ projectId }: Props) {
   const [showUpload, setShowUpload] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showPush, setShowPush] = useState(false);
+  const [configFile, setConfigFile] = useState<SourceFileItem | null>(null);
   const utils = trpc.useUtils();
 
   const filesQuery = trpc.sourceFile.list.useQuery({ projectId });
+  const projectQuery = trpc.project.getById.useQuery({ id: projectId });
   const files = (filesQuery.data ?? []) as SourceFileItem[];
+  const sourceLocale = projectQuery.data?.sourceLocale ?? "en";
 
   const hasProcessing = files.some(
     (f) =>
@@ -518,6 +535,7 @@ export function FilesTab({ projectId }: Props) {
                   onArchived={() =>
                     utils.sourceFile.list.invalidate({ projectId })
                   }
+                  onConfigure={() => setConfigFile(file)}
                 />
               ))}
             </tbody>
@@ -539,6 +557,18 @@ export function FilesTab({ projectId }: Props) {
 
       {showPush && (
         <PushModal projectId={projectId} onClose={() => setShowPush(false)} />
+      )}
+
+      {configFile && (
+        <SourceFileConfigDialog
+          sourceFileId={configFile.id}
+          filePath={configFile.path}
+          sourceLocale={sourceLocale}
+          currentPattern={configFile.translationPattern}
+          currentFormatOverride={configFile.formatOverride}
+          onClose={() => setConfigFile(null)}
+          onSaved={() => utils.sourceFile.list.invalidate({ projectId })}
+        />
       )}
     </div>
   );

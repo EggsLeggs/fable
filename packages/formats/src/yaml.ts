@@ -20,7 +20,11 @@ function flatten(
 export const yamlAdapter: FormatAdapter = {
   name: "YAML",
   extensions: [".yml", ".yaml"],
+  defaultOutputPattern: "%original_path%/%locale%/%original_file_name%",
   parse(content) {
+    return flatten(yaml.load(content) as Record<string, unknown>);
+  },
+  parseTranslation(content) {
     return flatten(yaml.load(content) as Record<string, unknown>);
   },
   serialize(translations) {

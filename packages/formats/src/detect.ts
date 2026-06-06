@@ -3,6 +3,7 @@ import { poAdapter } from "./po";
 import { yamlAdapter } from "./yaml";
 import { linguiJsonAdapter } from "./lingui-json";
 import type { FormatAdapter } from "./adapter";
+import { inferOutputPattern } from "./resolve-pattern";
 
 export type FileFormat = "json_flat" | "json_nested" | "po" | "yaml" | "lingui_json";
 
@@ -59,6 +60,18 @@ export function getAdapter(format: FileFormat): FormatAdapter {
     case "lingui_json":
       return linguiJsonAdapter;
   }
+}
+
+export function getDefaultOutputPattern(
+  format: FileFormat,
+  sourcePath: string,
+  sourceLocale: string
+): string {
+  return (
+    inferOutputPattern(sourcePath, sourceLocale) ??
+    getAdapter(format).defaultOutputPattern ??
+    "%original_path%/%locale%/%original_file_name%"
+  );
 }
 
 export const FORMAT_LABELS: Record<FileFormat, string> = {

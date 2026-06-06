@@ -34,7 +34,11 @@ function unflatten(flat: Record<string, string>): Record<string, unknown> {
 export const jsonFlat: FormatAdapter = {
   name: "JSON (flat)",
   extensions: [".json"],
+  defaultOutputPattern: "%original_path%/%locale%/%original_file_name%",
   parse(content) {
+    return JSON.parse(content) as Record<string, string>;
+  },
+  parseTranslation(content) {
     return JSON.parse(content) as Record<string, string>;
   },
   serialize(translations) {
@@ -45,7 +49,11 @@ export const jsonFlat: FormatAdapter = {
 export const jsonNested: FormatAdapter = {
   name: "JSON (nested)",
   extensions: [".json"],
+  defaultOutputPattern: "%original_path%/%locale%/%original_file_name%",
   parse(content) {
+    return flatten(JSON.parse(content) as Record<string, unknown>);
+  },
+  parseTranslation(content) {
     return flatten(JSON.parse(content) as Record<string, unknown>);
   },
   serialize(translations) {

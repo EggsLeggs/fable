@@ -23,7 +23,7 @@ export interface ParsedString {
 
 /**
  * Reads the translation field (not message) from a Lingui locale catalog.
- * Used when importing a locale file into Fable — we want the translated text,
+ * Used when importing a locale file into Fable. We want the translated text,
  * not the source message text that .parse() returns.
  */
 export function parseLinguiJsonTranslations(content: string): Record<string, string> {
@@ -62,6 +62,7 @@ export function parseLinguiJsonDetailed(content: string): ParsedString[] {
 export const linguiJsonAdapter: FormatAdapter = {
   name: "Lingui JSON",
   extensions: [".json"],
+  defaultOutputPattern: "%original_path%/%locale%/%original_file_name%",
   parse(content) {
     const result: Record<string, string> = {};
     for (const ps of parseLinguiJsonDetailed(content)) {
@@ -69,10 +70,13 @@ export const linguiJsonAdapter: FormatAdapter = {
     }
     return result;
   },
-  serialize(translations) {
+  parseTranslation(content) {
+    return parseLinguiJsonTranslations(content);
+  },
+  serialize(translated, sourceStrings) {
     const out: Record<string, { message: string; translation: string }> = {};
-    for (const [key, value] of Object.entries(translations)) {
-      out[key] = { message: value, translation: value };
+    for (const [key, value] of Object.entries(translated)) {
+      out[key] = { message: sourceStrings?.[key] ?? value, translation: value };
     }
     return JSON.stringify(out, null, 2) + "\n";
   },

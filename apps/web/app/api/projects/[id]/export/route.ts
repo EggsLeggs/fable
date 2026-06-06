@@ -10,7 +10,7 @@ import {
   translationKeys,
   translations,
 } from "@fable/db";
-import { getAdapter, resolveOutputPath } from "@fable/formats";
+import { buildTranslationFiles } from "@fable/formats";
 import { zipSync, strToU8 } from "fflate";
 
 export const dynamic = "force-dynamic";
@@ -68,28 +68,37 @@ export async function GET(
     if (keys.length === 0) continue;
     const keyIds = keys.map((k) => k.id);
 
-    for (const locale of locales) {
-      const outputPath = resolveOutputPath(file, project.sourceLocale, locale);
-      if (!outputPath) continue;
+    const approvedTranslations = await db.query.translations.findMany({
+      where: and(
+        inArray(translations.keyId, keyIds),
+        inArray(translations.locale, locales),
+        eq(translations.state, "approved")
+      ),
+    });
+    if (approvedTranslations.length === 0) continue;
 
-      const approvedTranslations = await db.query.translations.findMany({
-        where: and(
-          inArray(translations.keyId, keyIds),
-          eq(translations.locale, locale),
-          eq(translations.state, "approved")
-        ),
-      });
-      if (approvedTranslations.length === 0) continue;
+    const sourceTranslations =
+      file.format === "lingui_json"
+        ? await db.query.translations.findMany({
+            where: and(
+              inArray(translations.keyId, keyIds),
+              eq(translations.locale, project.sourceLocale),
+              eq(translations.state, "approved")
+            ),
+          })
+        : [];
 
-      const translationMap: Record<string, string> = {};
-      for (const t of approvedTranslations) {
-        const key = keys.find((k) => k.id === t.keyId);
-        if (key) translationMap[key.key] = t.value;
-      }
+    const entries = buildTranslationFiles({
+      sourceFile: file,
+      keys,
+      approvedTranslations,
+      sourceTranslations,
+      sourceLocale: project.sourceLocale,
+      targetLocales: locales,
+    });
 
-      const adapter = getAdapter(file.format);
-      const content = adapter.serialize(translationMap);
-      zipEntries[outputPath] = strToU8(content);
+    for (const entry of entries) {
+      zipEntries[entry.path] = strToU8(entry.content);
     }
   }
 

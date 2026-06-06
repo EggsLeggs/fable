@@ -1,0 +1,22 @@
+{
+  "name": "@fable/ingest",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./providers/github": "./src/providers/github.ts"
+  },
+  "dependencies": {
+    "@fable/db": "*",
+    "@fable/formats": "*",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^14.0.0"
+  },
+  "devDependencies": {
+    "@fable/tsconfig": "*",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^20",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.8.3"
+  }
+}

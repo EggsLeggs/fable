@@ -33,7 +33,8 @@ A few things to know:
 - `apps/worker` — BullMQ workers (mt-translate, qa-check, vcs-sync, webhook-delivery)
 - `packages/db` — Drizzle schema, relations, migrations, postgres client
 - `packages/auth` — Better Auth server config + client helper
-- `packages/formats` — i18n format parsers/serialisers (JSON flat, JSON nested, YAML, PO)
+- `packages/formats` - i18n format adapters. Each adapter implements `FormatAdapter` (parse, parseTranslation, serialize, defaultOutputPattern). To add a format: create `src/<name>.ts`, implement `FormatAdapter`, add to the registry in `src/detect.ts`, and export from `src/index.ts`.
+- `packages/ingest` - core ingest logic + VcsProvider interface. GitHub provider lives in `src/providers/github.ts`. To add a provider (GitLab, Bitbucket) implement `VcsProvider` and export a factory from a new file in `src/providers/`.
 - `packages/ai` — LLMAdapter interface + OpenAI gpt-4o-mini implementation + prompt builder
 - `packages/qa` — QA check engine: placeholders, length, punctuation, whitespace
 - `packages/ui` — shadcn-style components (Button, Badge, Input) + Tailwind CSS variables
@@ -152,7 +153,7 @@ if (!member) throw new TRPCError({ code: "FORBIDDEN" });
 
 **Formats package (`packages/formats`)**
 
-- Parsers/serialisers: `packages/formats/src/{json,yaml,po}.ts`
+- Format adapters: `packages/formats/src/{json,yaml,po,lingui-json}.ts`
 
 **Worker (`apps/worker`)**
 

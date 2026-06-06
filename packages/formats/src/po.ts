@@ -53,6 +53,11 @@ function serializePo(translations: Record<string, string>): string {
 export const poAdapter: FormatAdapter = {
   name: "PO / Gettext",
   extensions: [".po"],
+  defaultOutputPattern:
+    "%original_path%/%locale%/LC_MESSAGES/%original_file_name%",
   parse: parsePo,
+  parseTranslation(content) {
+    return parsePo(content);
+  },
   serialize: serializePo,
 };
