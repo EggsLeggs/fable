@@ -46,30 +46,12 @@ export default async function RootPage() {
   const localiseUrl = process.env.NEXT_PUBLIC_LOCALISE_URL ?? null;
   const githubUrl = "https://github.com/EggsLeggs/fable";
 
-  const stats = [
-    { label: "open source" },
-    { label: "self-hostable" },
-    { label: "9 languages" },
-  ];
-
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       <HomeNav isLoggedIn={isLoggedIn} localiseUrl={localiseUrl} />
 
       {/* Hero */}
-      <section className="relative mx-auto max-w-5xl px-6 pb-0 pt-36 text-center">
-        {/* Stats card - top right */}
-        <div className="absolute right-6 top-36 hidden lg:flex items-center divide-x divide-border rounded-xl border border-border bg-card px-1 py-1 shadow-sm">
-          {stats.map((stat, i) => (
-            <span
-              key={i}
-              className="px-5 py-2 text-xs font-medium text-muted-foreground"
-            >
-              {stat.label}
-            </span>
-          ))}
-        </div>
-
+      <section className="mx-auto max-w-5xl px-6 pb-0 pt-36 text-center">
         {/* GitHub star badge */}
         <div className="mb-8 flex justify-center">
           <a
