@@ -29,34 +29,34 @@ export const feedbackRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.feedbackResponses.findFirst({
-        where: eq(feedbackResponses.userId, ctx.session.user.id),
-      });
-      if (existing) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "You have already submitted feedback.",
-        });
+      try {
+        const [response] = await ctx.db
+          .insert(feedbackResponses)
+          .values({
+            id: randomUUID(),
+            userId: ctx.session.user.id,
+            platform: input.platform,
+            otherPlatform: input.otherPlatform ?? null,
+            currentToolRating: input.currentToolRating,
+            likesCurrentTool: input.likesCurrentTool,
+            currentToolFrustration: input.currentToolFrustration,
+            fableRating: input.fableRating,
+            likesFable: input.likesFable,
+            dislikesFable: input.dislikesFable,
+            knownBugs: input.knownBugs,
+            switchingIntent: input.switchingIntent,
+          })
+          .returning();
+
+        return response!;
+      } catch (err) {
+        if (err instanceof Error && "code" in err && err.code === "23505") {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "You have already submitted feedback.",
+          });
+        }
+        throw err;
       }
-
-      const [response] = await ctx.db
-        .insert(feedbackResponses)
-        .values({
-          id: randomUUID(),
-          userId: ctx.session.user.id,
-          platform: input.platform,
-          otherPlatform: input.otherPlatform ?? null,
-          currentToolRating: input.currentToolRating,
-          likesCurrentTool: input.likesCurrentTool,
-          currentToolFrustration: input.currentToolFrustration,
-          fableRating: input.fableRating,
-          likesFable: input.likesFable,
-          dislikesFable: input.dislikesFable,
-          knownBugs: input.knownBugs,
-          switchingIntent: input.switchingIntent,
-        })
-        .returning();
-
-      return response!;
     }),
 });

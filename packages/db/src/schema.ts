@@ -1,5 +1,7 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   integer,
   jsonb,
   pgEnum,
@@ -600,24 +602,37 @@ export const commentMentions = pgTable("comment_mention", {
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
-export const feedbackResponses = pgTable("feedback_response", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .unique()
-    .references(() => users.id, { onDelete: "cascade" }),
-  platform: feedbackPlatformEnum("platform").notNull(),
-  otherPlatform: text("other_platform"),
-  currentToolRating: integer("current_tool_rating").notNull(),
-  likesCurrentTool: text("likes_current_tool").notNull().default(""),
-  currentToolFrustration: text("current_tool_frustration").notNull().default(""),
-  fableRating: integer("fable_rating").notNull(),
-  likesFable: text("likes_fable").notNull().default(""),
-  dislikesFable: text("dislikes_fable").notNull().default(""),
-  knownBugs: text("known_bugs").notNull().default(""),
-  switchingIntent: feedbackSwitchingIntentEnum("switching_intent").notNull(),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
-});
+export const feedbackResponses = pgTable(
+  "feedback_response",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .unique()
+      .references(() => users.id, { onDelete: "cascade" }),
+    platform: feedbackPlatformEnum("platform").notNull(),
+    otherPlatform: text("other_platform"),
+    currentToolRating: integer("current_tool_rating").notNull(),
+    likesCurrentTool: text("likes_current_tool").notNull().default(""),
+    currentToolFrustration: text("current_tool_frustration").notNull().default(""),
+    fableRating: integer("fable_rating").notNull(),
+    likesFable: text("likes_fable").notNull().default(""),
+    dislikesFable: text("dislikes_fable").notNull().default(""),
+    knownBugs: text("known_bugs").notNull().default(""),
+    switchingIntent: feedbackSwitchingIntentEnum("switching_intent").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => [
+    check(
+      "feedback_response_rating_range",
+      sql`${table.currentToolRating} between 1 and 5 and ${table.fableRating} between 1 and 5`,
+    ),
+    check(
+      "feedback_response_other_platform",
+      sql`${table.platform}::text = 'other' or ${table.otherPlatform} is null`,
+    ),
+  ],
+);
 
 export const referrals = pgTable(
   "referral",

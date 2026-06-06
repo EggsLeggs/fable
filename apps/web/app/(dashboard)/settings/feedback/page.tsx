@@ -62,7 +62,7 @@ function FieldGroup({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium">{label}</label>
+      <p className="text-sm font-medium">{label}</p>
       {description ? (
         <p className="text-xs text-muted-foreground">{description}</p>
       ) : null}
@@ -303,7 +303,7 @@ export default function FeedbackSettingsPage() {
                     onChange={(event) => updateForm("dislikesFable", event.target.value)}
                     maxLength={FEEDBACK_TEXT_MAX}
                     rows={3}
-                    placeholder={t`Is there anything you feel is missing orawkward?`}
+                    placeholder={t`Is there anything you feel is missing or awkward?`}
                     className="min-h-[88px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                   />
                 </FieldGroup>
