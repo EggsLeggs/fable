@@ -114,8 +114,6 @@ export default async function RootPage() {
             <p className="mt-3 text-sm text-muted-foreground">
               One project, three team members, and 1,000 translation keys to
               get your first locale shipped.
-              <br />
-              No credit card required.
             </p>
             <Link
               href={primaryHref}
@@ -123,6 +121,9 @@ export default async function RootPage() {
             >
               {isLoggedIn ? "Go to projects" : "Get started"}
             </Link>
+            <p className="mt-3 text-xs text-muted-foreground">
+              No credit card required.
+            </p>
           </section>
         </div>
       </div>
