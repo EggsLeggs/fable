@@ -9,6 +9,7 @@ import {
   Settings,
   Users,
   BookOpen,
+  Brain,
   type LucideIcon,
 } from "lucide-react";
 import { t } from "@lingui/core/macro";
@@ -23,6 +24,7 @@ export type AppNavHref =
   | "translations"
   | "tasks"
   | "glossary"
+  | "tm"
   | "integrations"
   | "activity"
   | "collaborators"
@@ -42,6 +44,7 @@ export function getAppNavItems(): AppNavItem[] {
     { href: "translations", label: t`Translations`, Icon: Languages },
     { href: "tasks", label: t`Tasks`, Icon: ListChecks },
     { href: "glossary", label: t`Glossary`, Icon: BookOpen },
+    { href: "tm", label: t`Translation Memory`, Icon: Brain },
     { href: "integrations", label: t`Integrations`, Icon: Plug },
     { href: "activity", label: t`Activity`, Icon: Activity },
     { href: "collaborators", label: t`Collaborators`, Icon: Users },
