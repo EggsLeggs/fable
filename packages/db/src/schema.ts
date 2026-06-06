@@ -110,6 +110,19 @@ export const referralStatusEnum = pgEnum("referral_status", [
   "rewarded",
 ]);
 
+export const feedbackPlatformEnum = pgEnum("feedback_platform", [
+  "crowdin",
+  "lokalise",
+  "phrase",
+  "other",
+]);
+
+export const feedbackSwitchingIntentEnum = pgEnum("feedback_switching_intent", [
+  "yes",
+  "maybe",
+  "no",
+]);
+
 export type CustomLocale = { name: string; code: string };
 
 export type SpokenLanguageLevel =
@@ -587,6 +600,25 @@ export const commentMentions = pgTable("comment_mention", {
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
+export const feedbackResponses = pgTable("feedback_response", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  platform: feedbackPlatformEnum("platform").notNull(),
+  otherPlatform: text("other_platform"),
+  currentToolRating: integer("current_tool_rating").notNull(),
+  likesCurrentTool: text("likes_current_tool").notNull().default(""),
+  currentToolFrustration: text("current_tool_frustration").notNull().default(""),
+  fableRating: integer("fable_rating").notNull(),
+  likesFable: text("likes_fable").notNull().default(""),
+  dislikesFable: text("dislikes_fable").notNull().default(""),
+  knownBugs: text("known_bugs").notNull().default(""),
+  switchingIntent: feedbackSwitchingIntentEnum("switching_intent").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+});
+
 export const referrals = pgTable(
   "referral",
   {
@@ -647,3 +679,6 @@ export type DbComment = typeof comments.$inferSelect;
 export type DbCommentMention = typeof commentMentions.$inferSelect;
 export type DbReferral = typeof referrals.$inferSelect;
 export type ReferralStatus = (typeof referralStatusEnum.enumValues)[number];
+export type DbFeedbackResponse = typeof feedbackResponses.$inferSelect;
+export type FeedbackPlatform = (typeof feedbackPlatformEnum.enumValues)[number];
+export type FeedbackSwitchingIntent = (typeof feedbackSwitchingIntentEnum.enumValues)[number];

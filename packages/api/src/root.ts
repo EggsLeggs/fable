@@ -3,6 +3,7 @@ import { activityRouter } from "./routers/activity";
 import { billingRouter } from "./routers/billing";
 import { commentsRouter } from "./routers/comments";
 import { exportRouter } from "./routers/export";
+import { feedbackRouter } from "./routers/feedback";
 import { organizationRouter } from "./routers/organization";
 import { projectRouter } from "./routers/project";
 import { referralRouter } from "./routers/referral";
@@ -18,6 +19,7 @@ export const appRouter = router({
   billing: billingRouter,
   comments: commentsRouter,
   export: exportRouter,
+  feedback: feedbackRouter,
   organization: organizationRouter,
   project: projectRouter,
   referral: referralRouter,
