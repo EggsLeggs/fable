@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, count } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
 import {
@@ -9,6 +9,9 @@ import {
   projects,
   orgMembers,
 } from "@fable/db";
+
+const ADMIN_ROLES = ["owner", "admin", "member"] as const;
+const OWNER_ADMIN_ROLES = ["owner", "admin"] as const;
 
 function similarity(a: string, b: string): number {
   if (a === b) return 100;
@@ -102,5 +105,126 @@ export const tmRouter = router({
         .slice(0, 5);
 
       return scored;
+    }),
+
+  list: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        targetLocale: z.string().optional(),
+        limit: z.number().int().min(1).max(100).default(50),
+        offset: z.number().int().min(0).default(0),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+        columns: { orgId: true, sourceLocale: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const member = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, project.orgId)
+        ),
+      });
+      if (!member) throw new TRPCError({ code: "FORBIDDEN" });
+
+      const conditions = input.targetLocale
+        ? and(
+            eq(translationMemory.orgId, project.orgId),
+            eq(translationMemory.targetLocale, input.targetLocale)
+          )
+        : eq(translationMemory.orgId, project.orgId);
+
+      const [entries, [countRow]] = await Promise.all([
+        ctx.db.query.translationMemory.findMany({
+          where: conditions,
+          orderBy: (t, { desc }) => [desc(t.updatedAt)],
+          limit: input.limit,
+          offset: input.offset,
+        }),
+        ctx.db
+          .select({ total: count() })
+          .from(translationMemory)
+          .where(conditions),
+      ]);
+
+      return { entries, total: countRow?.total ?? 0 };
+    }),
+
+  deleteEntry: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        projectId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+        columns: { orgId: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const member = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, project.orgId)
+        ),
+      });
+      if (!member) throw new TRPCError({ code: "FORBIDDEN" });
+      if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      await ctx.db
+        .delete(translationMemory)
+        .where(
+          and(
+            eq(translationMemory.id, input.id),
+            eq(translationMemory.orgId, project.orgId)
+          )
+        );
+
+      return { success: true };
+    }),
+
+  clearLocale: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        targetLocale: z.string().min(2).max(10),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+        columns: { orgId: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const member = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, project.orgId)
+        ),
+      });
+      if (!member) throw new TRPCError({ code: "FORBIDDEN" });
+      if (!(OWNER_ADMIN_ROLES as readonly string[]).includes(member.role)) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      await ctx.db
+        .delete(translationMemory)
+        .where(
+          and(
+            eq(translationMemory.orgId, project.orgId),
+            eq(translationMemory.targetLocale, input.targetLocale)
+          )
+        );
+
+      return { success: true };
     }),
 });
