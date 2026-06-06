@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, MessageSquareMore, Settings } from "lucide-react";
 import { t } from "@lingui/core/macro";
 import { signOut } from "@/lib/auth-client";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -87,6 +87,14 @@ export function UserMenu({
             >
               <Settings className="h-3.5 w-3.5 text-muted-foreground" />
               {t`Settings`}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/settings/feedback")}
+              className="mt-0.5 flex w-full items-center gap-2 rounded-[5px] px-3 py-2 text-left text-xs hover:bg-secondary"
+            >
+              <MessageSquareMore className="h-3.5 w-3.5 text-muted-foreground" />
+              {t`Feedback`}
             </button>
           </div>
           <div className="border-t border-border" />

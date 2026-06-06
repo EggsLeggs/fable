@@ -22,9 +22,10 @@ import {
   comments,
   commentMentions,
   referrals,
+  feedbackResponses,
 } from "./schema";
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   orgMemberships: many(orgMembers),
   translationsAuthored: many(translations, { relationName: "translator" }),
   translationsReviewed: many(translations, { relationName: "reviewer" }),
@@ -36,6 +37,10 @@ export const usersRelations = relations(users, ({ many }) => ({
   comments: many(comments, { relationName: "comment_author" }),
   commentMentions: many(commentMentions),
   referralsMade: many(referrals, { relationName: "referrer" }),
+  feedbackResponse: one(feedbackResponses, {
+    fields: [users.id],
+    references: [feedbackResponses.userId],
+  }),
 }));
 
 export const githubInstallationsRelations = relations(
@@ -289,5 +294,12 @@ export const referralsRelations = relations(referrals, ({ one }) => ({
     fields: [referrals.refereeId],
     references: [users.id],
     relationName: "referee",
+  }),
+}));
+
+export const feedbackResponsesRelations = relations(feedbackResponses, ({ one }) => ({
+  user: one(users, {
+    fields: [feedbackResponses.userId],
+    references: [users.id],
   }),
 }));
