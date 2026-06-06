@@ -3,8 +3,29 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
-import { Trans } from "@lingui/react/macro";
 import { trpc } from "@/lib/trpc/client";
+
+function Section({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
+      <div className="mb-5">
+        <h2 className="text-sm font-semibold">{title}</h2>
+        {description && (
+          <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+        )}
+      </div>
+      <div className="space-y-5">{children}</div>
+    </section>
+  );
+}
 
 function UsageMeter({
   label,
@@ -90,32 +111,25 @@ export default function BillingPage() {
 
   return (
     <div className="flex w-full flex-1 flex-col">
-      <div className="max-w-xl space-y-8">
+      <div className="max-w-xl">
         {showReferralOffer && (
-          <section className="rounded-lg border border-primary/30 bg-primary/5 p-5">
-            <p className="text-sm font-medium text-foreground">{t`2 months of Pro free`}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              <Trans>
-                You were referred. Your discount is saved and will be applied when you add your card.
-              </Trans>
-            </p>
+          <Section
+            title={t`2 months of Pro free`}
+            description={t`You were referred. Your discount is saved and will be applied when you add your card.`}
+          >
             <a
               href={`/api/referral/start-trial?billingCycle=${billingCycle}`}
-              className="btn-primary mt-4 inline-block text-sm"
+              className="btn-primary inline-block text-sm"
             >
               {t`Start trial`}
             </a>
-          </section>
+          </Section>
         )}
 
-        {/* Plan summary */}
-        <section className="rounded-lg border border-border bg-card p-6">
-          <div className="mb-4 flex items-center justify-between">
+        <Section title={t`Current plan`}>
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-                {t`Current plan`}
-              </p>
-              <div className="mt-1 flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <span className="text-xl font-bold capitalize">
                   {usage?.plan ?? "free"}
                 </span>
@@ -135,14 +149,14 @@ export default function BillingPage() {
             {isPro && billingAvailable ? (
               <button
                 type="button"
-                className="btn-secondary text-sm"
+                className="btn-secondary shrink-0 text-sm"
                 onClick={() => portalMutation.mutate()}
                 disabled={portalMutation.isPending}
               >
                 {portalMutation.isPending ? t`Opening...` : t`Manage billing`}
               </button>
             ) : !isPro && billingAvailable ? (
-              <div className="flex flex-col items-end gap-2">
+              <div className="flex shrink-0 flex-col items-end gap-2">
                 <div className="flex items-center gap-1 rounded-lg border border-border bg-muted p-0.5 text-xs">
                   <button
                     type="button"
@@ -177,16 +191,14 @@ export default function BillingPage() {
           </div>
 
           {!billingAvailable && (
-            <p className="mt-4 border-t border-border pt-4 text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {t`Billing is not configured on this server. Upgrades are unavailable and all accounts use the free tier.`}
             </p>
           )}
-        </section>
+        </Section>
 
-        {/* Usage */}
-        <section>
-          <h2 className="mb-4 text-sm font-semibold">{t`Usage this period`}</h2>
-          <div className="space-y-4 rounded-lg border border-border bg-card p-6">
+        <Section title={t`Usage this period`}>
+          <div className="space-y-4 rounded-lg border border-border p-4">
             <UsageMeter
               label={t`Projects`}
               used={usage?.usage.projects ?? 0}
@@ -210,16 +222,14 @@ export default function BillingPage() {
               />
             )}
           </div>
-        </section>
+        </Section>
 
-        {/* MT overage cap */}
         {isPro && billingAvailable && (
-          <section>
-            <h2 className="mb-1 text-sm font-semibold">{t`MT overage cap`}</h2>
-            <p className="mb-4 text-xs text-muted-foreground">
-              {t`Stop machine translation once your monthly usage reaches this limit. This cap applies across all your projects. Leave blank for no cap (you will be billed per character above the 50k included).`}
-            </p>
-            <div className="flex items-center gap-3">
+          <Section
+            title={t`MT overage cap`}
+            description={t`Stop machine translation once your monthly usage reaches this limit. This cap applies across all your projects. Leave blank for no cap (you will be billed per character above the 50k included).`}
+          >
+            <div className="flex flex-wrap items-center gap-3">
               <input
                 type="number"
                 min={0}
@@ -250,10 +260,10 @@ export default function BillingPage() {
                 </button>
               )}
             </div>
-          </section>
+          </Section>
         )}
 
-        <p className="text-xs text-muted-foreground">
+        <p className="border-t border-border pt-6 text-xs text-muted-foreground">
           <a href="/pricing" className="underline underline-offset-2">
             {t`View full pricing details`}
           </a>

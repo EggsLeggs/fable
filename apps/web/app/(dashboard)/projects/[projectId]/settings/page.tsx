@@ -5,8 +5,19 @@ import { useRouter } from "next/navigation";
 import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
-import { Button, Input } from "@fable/ui";
+import { Input } from "@fable/ui";
+import { InlineUpdateAction } from "@/components/inline-update-action";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc/client";
+import { cn } from "@/lib/utils";
 
 type Props = { params: Promise<{ projectId: string }> };
 
@@ -14,26 +25,15 @@ function Section({
   title,
   description,
   children,
-  variant,
 }: {
   title: string;
   description?: string;
   children: React.ReactNode;
-  variant?: "danger";
 }) {
-  const borderClass =
-    variant === "danger"
-      ? "border-destructive/30"
-      : "border-border";
-
   return (
-    <section className={`rounded-lg border ${borderClass} bg-card p-6`}>
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
       <div className="mb-5">
-        <h2
-          className={`text-sm font-semibold ${variant === "danger" ? "text-destructive" : ""}`}
-        >
-          {title}
-        </h2>
+        <h2 className="text-sm font-semibold">{title}</h2>
         {description && (
           <p className="mt-1 text-xs text-muted-foreground">{description}</p>
         )}
@@ -88,34 +88,35 @@ function InlineTextField({
 
   return (
     <FieldGroup label={label} description={description}>
-      <div className="flex items-start gap-2">
+      <div
+        className={cn(
+          "flex items-start transition-[gap] duration-100 ease-out",
+          isDirty ? "gap-2" : "gap-0"
+        )}
+      >
         {multiline ? (
           <textarea
             {...(inputProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={3}
-            className="input flex-1 resize-none"
+            className="input min-w-0 flex-1 resize-none transition-[flex-grow] duration-100 ease-out"
           />
         ) : (
           <Input
             {...(inputProps as React.ComponentProps<typeof Input>)}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="flex-1"
+            className="min-w-0 flex-1 transition-[flex-grow] duration-100 ease-out"
           />
         )}
-        {isDirty && (
-          <Button
-            type="button"
-            size="sm"
-            onClick={onUpdate}
-            disabled={updating}
-            className="shrink-0"
-          >
-            {updating ? t`Saving...` : t`Save`}
-          </Button>
-        )}
+        <InlineUpdateAction
+          visible={isDirty}
+          onClick={onUpdate}
+          disabled={updating}
+        >
+          {updating ? t`Saving...` : t`Save`}
+        </InlineUpdateAction>
       </div>
     </FieldGroup>
   );
@@ -129,7 +130,7 @@ function badgeColor(pct: number): string {
   return "red";
 }
 
-function BadgeGenerator({ projectId, projectName }: { projectId: string; projectName: string }) {
+function BadgeGenerator({ projectId }: { projectId: string }) {
   const [copied, setCopied] = useState<"markdown" | "html" | null>(null);
 
   const statsQuery = trpc.project.badgeStats.useQuery({ id: projectId });
@@ -154,9 +155,6 @@ function BadgeGenerator({ projectId, projectName }: { projectId: string; project
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-muted-foreground">
-        Add a badge to your <strong>{projectName}</strong> README showing live translation progress.
-      </p>
       <div className="flex items-center gap-3">
         {statsQuery.isLoading ? (
           <div className="h-5 w-24 animate-pulse rounded bg-muted" />
@@ -228,9 +226,10 @@ export default function ProjectGeneralSettingsPage({ params }: Props) {
   const desc = descDraft ?? project?.description ?? "";
 
   const [updatingField, setUpdatingField] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [confirmName, setConfirmName] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [nameCopied, setNameCopied] = useState(false);
 
   useEffect(() => {
     if (!project || synced.current === project.id) return;
@@ -284,6 +283,22 @@ export default function ProjectGeneralSettingsPage({ params }: Props) {
     save({ id: projectId, description: desc.trim() || undefined }, "description");
   }
 
+  function handleDeleteDialogOpenChange(open: boolean) {
+    setDeleteDialogOpen(open);
+    if (!open) {
+      setConfirmName("");
+      setNameCopied(false);
+    }
+  }
+
+  function handleCopyProjectName() {
+    if (!project) return;
+    void navigator.clipboard.writeText(project.name).then(() => {
+      setNameCopied(true);
+      setTimeout(() => setNameCopied(false), 2000);
+    });
+  }
+
   function handleDelete() {
     if (confirmName !== project?.name) {
       toast.error(t`Project name does not match.`);
@@ -298,7 +313,8 @@ export default function ProjectGeneralSettingsPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-xl space-y-6">
+    <div className="flex w-full flex-1 flex-col">
+      <div className="max-w-xl">
       <Section title={t`Project details`} description={t`Basic information about this project.`}>
         <InlineTextField
           label={t`Name`}
@@ -323,37 +339,69 @@ export default function ProjectGeneralSettingsPage({ params }: Props) {
       </Section>
 
       <Section title={t`GitHub badge`} description={t`Embed a badge in your repository's README.`}>
-        <BadgeGenerator projectId={projectId} projectName={project.name} />
+        <BadgeGenerator projectId={projectId} />
       </Section>
 
-      <section className="rounded-lg border border-destructive/30 bg-card p-6">
-        <h2 className="text-sm font-semibold text-destructive">{t`Danger zone`}</h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {t`Permanently delete this project and all associated translation keys, locales, and data. This cannot be undone.`}
-        </p>
+      <Section
+        title={t`Danger zone`}
+        description={t`Permanently delete this project and all associated translation keys, locales, and data. This cannot be undone.`}
+      >
+        <Button
+          type="button"
+          variant="destructive"
+          onClick={() => setDeleteDialogOpen(true)}
+        >
+          {t`Delete project`}
+        </Button>
+      </Section>
+      </div>
 
-        {!showDeleteConfirm ? (
-          <Button
-            type="button"
-            variant="destructive"
-            className="mt-4"
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            {t`Delete project`}
-          </Button>
-        ) : (
-          <div className="mt-4 space-y-3">
-            <FieldGroup
-              label={t`Type the project name to confirm`}
-              description={`"${project.name}"`}
-            >
+      <Dialog open={deleteDialogOpen} onOpenChange={handleDeleteDialogOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t`Delete project`}</DialogTitle>
+            <DialogDescription>
+              {t`Permanently delete this project and all associated translation keys, locales, and data. This cannot be undone.`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex flex-col gap-1.5">
+              <p className="text-sm font-medium">
+                {t`Type`}{" "}
+                <span className="inline-flex items-center gap-1 align-middle">
+                  <code className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">
+                    {project.name}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={handleCopyProjectName}
+                    className="rounded p-0.5 text-muted-foreground hover:text-foreground"
+                    aria-label={t`Copy project name`}
+                  >
+                    {nameCopied ? (
+                      <Check className="h-3.5 w-3.5 text-green-500" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                </span>{" "}
+                {t`to confirm`}
+              </p>
               <Input
                 value={confirmName}
                 onChange={(e) => setConfirmName(e.target.value)}
                 placeholder={project.name}
               />
-            </FieldGroup>
-            <div className="flex gap-2">
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handleDeleteDialogOpenChange(false)}
+                disabled={deleting}
+              >
+                {t`Cancel`}
+              </Button>
               <Button
                 type="button"
                 variant="destructive"
@@ -362,20 +410,10 @@ export default function ProjectGeneralSettingsPage({ params }: Props) {
               >
                 {deleting ? t`Deleting...` : t`Delete project`}
               </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setShowDeleteConfirm(false);
-                  setConfirmName("");
-                }}
-              >
-                {t`Cancel`}
-              </Button>
-            </div>
+            </DialogFooter>
           </div>
-        )}
-      </section>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

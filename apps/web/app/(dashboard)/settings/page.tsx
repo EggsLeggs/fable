@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
-import { Button, Input } from "@fable/ui";
+import { Input } from "@fable/ui";
+import { Button } from "@/components/ui/button";
 import { changePassword, deleteUser } from "@/lib/auth-client";
 import type { SpokenLanguage, SpokenLanguageLevel } from "@fable/db";
 import { trpc } from "@/lib/trpc/client";
@@ -15,7 +16,20 @@ import {
   TIME_FORMATS,
   TIMEZONES,
 } from "@/lib/profile-constants";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { InlineUpdateAction } from "@/components/inline-update-action";
 import { SelectCombobox } from "@/components/ui/select-combobox";
+import { SelectField } from "@/components/ui/select-field";
+import { cn } from "@/lib/utils";
 
 type UpdateProfileInput = {
   name?: string;
@@ -56,7 +70,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-6">
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
       <div className="mb-5">
         <h2 className="text-sm font-semibold">{title}</h2>
         {description && (
@@ -91,24 +105,25 @@ function InlineTextField({
 
   return (
     <FieldGroup label={label} description={description}>
-      <div className="flex items-center gap-2">
+      <div
+        className={cn(
+          "flex items-center transition-[gap] duration-100 ease-out",
+          isDirty ? "gap-2" : "gap-0"
+        )}
+      >
         <Input
           {...inputProps}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1"
+          className="min-w-0 flex-1 transition-[flex-grow] duration-100 ease-out"
         />
-        {isDirty && (
-          <Button
-            type="button"
-            size="sm"
-            onClick={onUpdate}
-            disabled={updating}
-            className="shrink-0"
-          >
-            {updating ? t`Updating...` : t`Update`}
-          </Button>
-        )}
+        <InlineUpdateAction
+          visible={isDirty}
+          onClick={onUpdate}
+          disabled={updating}
+        >
+          {updating ? t`Updating...` : t`Update`}
+        </InlineUpdateAction>
       </div>
     </FieldGroup>
   );
@@ -135,9 +150,10 @@ export default function ProfileSettingsPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
   const [deleting, setDeleting] = useState(false);
 
@@ -274,6 +290,26 @@ export default function ProfileSettingsPage() {
     saveSpokenLanguages(spokenLanguages.filter((_, i) => i !== index));
   }
 
+  function resetPasswordForm() {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  }
+
+  function handlePasswordDialogOpenChange(open: boolean) {
+    setPasswordDialogOpen(open);
+    if (!open) {
+      resetPasswordForm();
+    }
+  }
+
+  function handleDeleteDialogOpenChange(open: boolean) {
+    setDeleteDialogOpen(open);
+    if (!open) {
+      setDeletePassword("");
+    }
+  }
+
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -298,9 +334,8 @@ export default function ProfileSettingsPage() {
       return;
     }
 
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    resetPasswordForm();
+    setPasswordDialogOpen(false);
     toast.success(t`Password updated.`);
   }
 
@@ -331,8 +366,7 @@ export default function ProfileSettingsPage() {
 
   return (
     <div className="flex w-full flex-1 flex-col">
-      <div className="max-w-xl space-y-6">
-        <div className="space-y-6">
+      <div className="max-w-xl">
           <Section
             title={t`Account`}
             description={t`Your public identity on Fable.`}
@@ -376,7 +410,7 @@ export default function ProfileSettingsPage() {
 
           <Section title={t`Date & time`}>
             <FieldGroup label={t`Timezone`}>
-              <SelectCombobox
+              <SelectField
                 value={timezone}
                 onValueChange={handleTimezoneChange}
                 disabled={updatingField === "timezone"}
@@ -385,14 +419,13 @@ export default function ProfileSettingsPage() {
             </FieldGroup>
 
             <FieldGroup label={t`Time format`}>
-              <SelectCombobox
+              <SelectField
                 value={timeFormat}
                 onValueChange={(value) =>
                   handleTimeFormatChange(value as "12h" | "24h")
                 }
                 disabled={updatingField === "timeFormat"}
                 options={TIME_FORMATS.map(({ value, label }) => ({ value, label }))}
-                searchable={false}
               />
             </FieldGroup>
           </Section>
@@ -470,15 +503,21 @@ export default function ProfileSettingsPage() {
             title={t`Profile privacy`}
             description={t`Control who can see your public profile.`}
           >
-            <div className="space-y-2">
-              <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50">
-                <input
-                  type="radio"
-                  name="profileVisibility"
+            <RadioGroup
+              value={profileVisibility}
+              onValueChange={(value) =>
+                handleProfileVisibilityChange(value as "public" | "private")
+              }
+              disabled={updatingField === "profileVisibility"}
+              className="space-y-2"
+            >
+              <Label
+                htmlFor="profile-visibility-private"
+                className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 font-normal hover:bg-muted/50"
+              >
+                <RadioGroupItem
                   value="private"
-                  checked={profileVisibility === "private"}
-                  onChange={() => handleProfileVisibilityChange("private")}
-                  disabled={updatingField === "profileVisibility"}
+                  id="profile-visibility-private"
                   className="mt-0.5"
                 />
                 <span>
@@ -487,15 +526,14 @@ export default function ProfileSettingsPage() {
                     {t`Only you can view your profile.`}
                   </span>
                 </span>
-              </label>
-              <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50">
-                <input
-                  type="radio"
-                  name="profileVisibility"
+              </Label>
+              <Label
+                htmlFor="profile-visibility-public"
+                className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 font-normal hover:bg-muted/50"
+              >
+                <RadioGroupItem
                   value="public"
-                  checked={profileVisibility === "public"}
-                  onChange={() => handleProfileVisibilityChange("public")}
-                  disabled={updatingField === "profileVisibility"}
+                  id="profile-visibility-public"
                   className="mt-0.5"
                 />
                 <span>
@@ -504,13 +542,46 @@ export default function ProfileSettingsPage() {
                     {t`Anyone can view your profile page.`}
                   </span>
                 </span>
-              </label>
-            </div>
+              </Label>
+            </RadioGroup>
           </Section>
-        </div>
 
-        <form onSubmit={handleChangePassword}>
-          <Section title={t`Password`}>
+        <Section
+          title={t`Password`}
+          description={t`Update the password for your account.`}
+        >
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => setPasswordDialogOpen(true)}
+          >
+            {t`Change password`}
+          </Button>
+        </Section>
+
+        <Section
+          title={t`Danger zone`}
+          description={t`Permanently delete your account and all associated data. This action cannot be undone.`}
+        >
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={() => setDeleteDialogOpen(true)}
+          >
+            {t`Delete account`}
+          </Button>
+        </Section>
+      </div>
+
+      <Dialog open={passwordDialogOpen} onOpenChange={handlePasswordDialogOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t`Change password`}</DialogTitle>
+            <DialogDescription>
+              {t`Enter your current password and choose a new one.`}
+            </DialogDescription>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={handleChangePassword}>
             <FieldGroup label={t`Current password`}>
               <Input
                 type="password"
@@ -537,68 +608,70 @@ export default function ProfileSettingsPage() {
                 minLength={8}
               />
             </FieldGroup>
-            <div className="flex justify-end">
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handlePasswordDialogOpenChange(false)}
+                disabled={passwordSaving}
+              >
+                {t`Cancel`}
+              </Button>
               <Button
                 type="submit"
-                variant="secondary"
-                disabled={passwordSaving || !currentPassword || !newPassword}
+                disabled={
+                  passwordSaving ||
+                  !currentPassword ||
+                  !newPassword ||
+                  !confirmPassword
+                }
               >
                 {passwordSaving ? t`Updating...` : t`Update password`}
               </Button>
-            </div>
-          </Section>
-        </form>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
-        <section className="rounded-lg border border-destructive/30 bg-card p-6">
-          <h2 className="text-sm font-semibold text-destructive">{t`Danger zone`}</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {t`Permanently delete your account and all associated data. This action cannot be undone.`}
-          </p>
-
-          {!showDeleteConfirm ? (
-            <Button
-              type="button"
-              variant="destructive"
-              className="mt-4"
-              onClick={() => setShowDeleteConfirm(true)}
-            >
-              {t`Delete account`}
-            </Button>
-          ) : (
-            <div className="mt-4 space-y-3">
-              <FieldGroup label={t`Confirm with your password`}>
-                <Input
-                  type="password"
-                  value={deletePassword}
-                  onChange={(e) => setDeletePassword(e.target.value)}
-                  autoComplete="current-password"
-                  placeholder={t`Enter your password`}
-                />
-              </FieldGroup>
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="destructive"
-                  disabled={deleting}
-                  onClick={handleDeleteAccount}
-                >
-                  {deleting ? t`Deleting...` : t`Confirm deletion`}
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => {
-                    setShowDeleteConfirm(false);
-                    setDeletePassword("");
-                  }}
-                >
-                  {t`Cancel`}
-                </Button>
-              </div>
-            </div>
-          )}
-        </section>
-      </div>
+      <Dialog open={deleteDialogOpen} onOpenChange={handleDeleteDialogOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t`Delete account`}</DialogTitle>
+            <DialogDescription>
+              {t`Permanently delete your account and all associated data. This action cannot be undone.`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <FieldGroup label={t`Confirm with your password`}>
+              <Input
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                autoComplete="current-password"
+                placeholder={t`Enter your password`}
+              />
+            </FieldGroup>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handleDeleteDialogOpenChange(false)}
+                disabled={deleting}
+              >
+                {t`Cancel`}
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={deleting || !deletePassword}
+                onClick={handleDeleteAccount}
+              >
+                {deleting ? t`Deleting...` : t`Delete account`}
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { LogOut, Settings } from "lucide-react";
 import { t } from "@lingui/core/macro";
 import { signOut } from "@/lib/auth-client";
 import { UserAvatar } from "@/components/UserAvatar";
+import { SidebarDropdownPanel } from "@/components/SidebarDropdownPanel";
 
 type Props = {
   userName: string;
@@ -72,12 +73,13 @@ export function UserMenu({
         )}
       </button>
 
-      {open && (
-        <div
-          className={`absolute bottom-full z-50 mb-2 rounded-lg border border-border bg-popover py-1 shadow-lg ${
-            collapsed ? "left-0 w-48" : "left-0 right-0 min-w-48"
-          }`}
-        >
+      <SidebarDropdownPanel
+        open={open}
+        origin="bottom"
+        className={`absolute bottom-full z-50 mb-2 rounded-lg border border-border bg-popover py-1 shadow-lg ${
+          collapsed ? "left-0 w-48" : "left-0 right-0 min-w-48"
+        }`}
+      >
           <div className="border-b border-border px-3 py-2">
             <p className="truncate text-sm font-medium text-popover-foreground">
               {userName}
@@ -125,8 +127,7 @@ export function UserMenu({
             <LogOut className="h-4 w-4" />
             {t`Log out`}
           </button>
-        </div>
-      )}
+      </SidebarDropdownPanel>
     </div>
   );
 }

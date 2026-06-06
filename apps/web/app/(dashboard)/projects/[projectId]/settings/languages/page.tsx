@@ -22,7 +22,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-6">
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
       <div className="mb-5">
         <h2 className="text-sm font-semibold">{title}</h2>
         {description && (
@@ -162,7 +162,7 @@ export default function LanguagesSettingsPage({ params }: Props) {
   );
 
   return (
-    <div className="max-w-xl space-y-6">
+    <div className="max-w-xl">
       <Section
         title={t`Source language`}
         description={t`The language your strings are written in. All translations are derived from this.`}

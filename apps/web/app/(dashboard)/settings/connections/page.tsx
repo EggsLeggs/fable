@@ -7,6 +7,28 @@ import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 
+function Section({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
+      <div className="mb-5">
+        <h2 className="text-sm font-semibold">{title}</h2>
+        {description && (
+          <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+        )}
+      </div>
+      <div className="space-y-5">{children}</div>
+    </section>
+  );
+}
+
 function GitHubIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -47,10 +69,11 @@ export default function ConnectionsPage() {
   const isLoading = availabilityQuery.isPending || installationQuery.isPending;
 
   return (
-    <div className="flex flex-col gap-6">
-      <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium">{t`Connected accounts`}</h2>
-
+    <div className="max-w-xl">
+      <Section
+        title={t`Connected accounts`}
+        description={t`Link external services to sync source files and push translations.`}
+      >
         <div className="rounded-lg border border-border p-4">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
@@ -121,7 +144,7 @@ export default function ConnectionsPage() {
             </div>
           )}
         </div>
-      </section>
+      </Section>
     </div>
   );
 }

@@ -7,18 +7,26 @@ import { Trans } from "@lingui/react/macro";
 import { trpc } from "@/lib/trpc/client";
 import type { ReferralMilestone } from "@fable/api/referral-rewards";
 
-const MILESTONE_ICONS: Record<string, string> = {
-  subscription_months: "calendar",
-  physical_item_swag_pack: "package",
-  physical_item_device: "monitor",
-  physical_item_mac_mini: "cpu",
-};
-
-function milestoneIcon(milestone: ReferralMilestone): string {
-  if (milestone.type === "physical_item" && milestone.item) {
-    return MILESTONE_ICONS[`physical_item_${milestone.item}`] ?? "package";
-  }
-  return MILESTONE_ICONS[milestone.type] ?? "gift";
+function Section({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
+      <div className="mb-5">
+        <h2 className="text-sm font-semibold">{title}</h2>
+        {description && (
+          <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+        )}
+      </div>
+      <div className="space-y-5">{children}</div>
+    </section>
+  );
 }
 
 function MilestoneRow({
@@ -35,12 +43,12 @@ function MilestoneRow({
 
   return (
     <div
-      className={`flex items-center gap-4 rounded-lg border p-4 transition-colors ${
+      className={`flex items-center gap-4 rounded-md border p-4 transition-colors ${
         isClaimed
           ? "border-primary/30 bg-primary/5"
           : isUnlocked
-          ? "border-border bg-card"
-          : "border-border bg-card opacity-60"
+          ? "border-border"
+          : "border-border opacity-60"
       }`}
     >
       <div
@@ -85,6 +93,48 @@ function MilestoneRow({
   );
 }
 
+function HowItWorks() {
+  return (
+    <ol className="space-y-2 text-sm text-muted-foreground">
+      <li className="flex gap-2">
+        <span className="shrink-0 font-medium text-foreground">1.</span>
+        <span>{t`Share your link with a friend or on social media.`}</span>
+      </li>
+      <li className="flex gap-2">
+        <span className="shrink-0 font-medium text-foreground">2.</span>
+        <Trans>
+          <span>They sign up and get <strong className="text-foreground">2 months of Pro free</strong> when they upgrade.</span>
+        </Trans>
+      </li>
+      <li className="flex gap-2">
+        <span className="shrink-0 font-medium text-foreground">3.</span>
+        <span>{t`Once they complete 3 paid months on a monthly plan, or 1 paid year on an annual plan, you earn a reward.`}</span>
+      </li>
+    </ol>
+  );
+}
+
+function HowItWorksNonPro() {
+  return (
+    <ol className="space-y-2 text-sm text-muted-foreground">
+      <li className="flex gap-2">
+        <span className="shrink-0 font-medium text-foreground">1.</span>
+        <span>{t`Upgrade to Pro and share your referral link.`}</span>
+      </li>
+      <li className="flex gap-2">
+        <span className="shrink-0 font-medium text-foreground">2.</span>
+        <Trans>
+          <span>Your friends get <strong className="text-foreground">2 months of Pro free</strong> when they upgrade.</span>
+        </Trans>
+      </li>
+      <li className="flex gap-2">
+        <span className="shrink-0 font-medium text-foreground">3.</span>
+        <span>{t`Once they complete 3 paid months on a monthly plan, or 1 paid year on an annual plan, you earn a reward.`}</span>
+      </li>
+    </ol>
+  );
+}
+
 export default function ReferralsPage() {
   const [copied, setCopied] = useState(false);
 
@@ -118,36 +168,19 @@ export default function ReferralsPage() {
   if (!isPro) {
     return (
       <div className="flex w-full flex-1 flex-col">
-        <div className="max-w-xl space-y-6">
-          <section className="rounded-lg border border-border bg-card p-6">
-            <h2 className="text-sm font-semibold">{t`Pro required`}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {t`Only Pro subscribers can refer people and earn referral rewards.`}
-            </p>
-            <Link href="/settings/billing" className="btn-primary mt-4 inline-block text-sm">
+        <div className="max-w-xl">
+          <Section
+            title={t`Pro required`}
+            description={t`Only Pro subscribers can refer people and earn referral rewards.`}
+          >
+            <Link href="/settings/billing" className="btn-primary inline-block text-sm">
               {t`Upgrade to Pro`}
             </Link>
-          </section>
+          </Section>
 
-          <section className="rounded-lg border border-border bg-muted/40 p-5">
-            <h2 className="mb-3 text-sm font-semibold">{t`How it works`}</h2>
-            <ol className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex gap-2">
-                <span className="shrink-0 font-medium text-foreground">1.</span>
-                <span>{t`Upgrade to Pro and share your referral link.`}</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="shrink-0 font-medium text-foreground">2.</span>
-                <Trans>
-                  <span>Your friends get <strong className="text-foreground">2 months of Pro free</strong> when they upgrade.</span>
-                </Trans>
-              </li>
-              <li className="flex gap-2">
-                <span className="shrink-0 font-medium text-foreground">3.</span>
-                <span>{t`Once they complete 3 paid months on a monthly plan, or 1 paid year on an annual plan, you earn a reward.`}</span>
-              </li>
-            </ol>
-          </section>
+          <Section title={t`How it works`}>
+            <HowItWorksNonPro />
+          </Section>
         </div>
       </div>
     );
@@ -164,14 +197,9 @@ export default function ReferralsPage() {
 
   return (
     <div className="flex w-full flex-1 flex-col">
-      <div className="max-w-xl space-y-8">
-
-        {/* Referral link */}
-        <section className="rounded-lg border border-border bg-card p-6">
-          <p className="mb-1 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            {t`Your referral link`}
-          </p>
-          <p className="mb-4 text-sm text-muted-foreground">
+      <div className="max-w-xl">
+        <Section title={t`Your referral link`}>
+          <p className="text-sm text-muted-foreground">
             <Trans>
               Share this link. Anyone who signs up gets <strong>2 months of Pro free</strong> when they upgrade.
             </Trans>
@@ -192,35 +220,31 @@ export default function ReferralsPage() {
           ) : (
             <p className="text-sm text-muted-foreground">{t`Generating your link...`}</p>
           )}
-        </section>
+        </Section>
 
-        {/* Stats */}
-        <section>
-          <h2 className="mb-4 text-sm font-semibold">{t`Your referrals`}</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-lg border border-border bg-card p-4 text-center">
+        <Section title={t`Your referrals`}>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
               <p className="text-2xl font-bold">{qualifiedCount}</p>
               <p className="mt-0.5 text-xs text-muted-foreground">{t`Qualified`}</p>
             </div>
-            <div className="rounded-lg border border-border bg-card p-4 text-center">
+            <div>
               <p className="text-2xl font-bold">{pendingCount}</p>
               <p className="mt-0.5 text-xs text-muted-foreground">{t`Pending`}</p>
             </div>
           </div>
           {pendingCount > 0 && (
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               <Trans>
                 Pending referrals qualify after 3 paid months on a monthly plan, or 1 paid year on an annual plan.
               </Trans>
             </p>
           )}
-        </section>
+        </Section>
 
-        {/* Progress toward next milestone */}
         {stats?.nextMilestone && (
-          <section>
-            <div className="mb-2 flex items-center justify-between text-sm">
-              <span className="font-medium">{t`Progress to next reward`}</span>
+          <Section title={t`Progress to next reward`}>
+            <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
                 {qualifiedCount} / {stats.nextMilestone.count}
               </span>
@@ -233,17 +257,15 @@ export default function ReferralsPage() {
                 }}
               />
             </div>
-            <p className="mt-1.5 text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {stats.nextMilestone.count - qualifiedCount === 1
                 ? t`1 more referral to unlock ${stats.nextMilestone.label}`
                 : t`${stats.nextMilestone.count - qualifiedCount} more referrals to unlock ${stats.nextMilestone.label}`}
             </p>
-          </section>
+          </Section>
         )}
 
-        {/* Milestones */}
-        <section>
-          <h2 className="mb-4 text-sm font-semibold">{t`Rewards`}</h2>
+        <Section title={t`Rewards`}>
           <div className="space-y-2">
             {milestones.map((milestone) => (
               <MilestoneRow
@@ -254,29 +276,11 @@ export default function ReferralsPage() {
               />
             ))}
           </div>
-        </section>
+        </Section>
 
-        {/* How it works */}
-        <section className="rounded-lg border border-border bg-muted/40 p-5">
-          <h2 className="mb-3 text-sm font-semibold">{t`How it works`}</h2>
-          <ol className="space-y-2 text-sm text-muted-foreground">
-            <li className="flex gap-2">
-              <span className="shrink-0 font-medium text-foreground">1.</span>
-              <span>{t`Share your link with a friend or on social media.`}</span>
-            </li>
-            <li className="flex gap-2">
-              <span className="shrink-0 font-medium text-foreground">2.</span>
-              <Trans>
-                <span>They sign up and get <strong className="text-foreground">2 months of Pro free</strong> when they upgrade.</span>
-              </Trans>
-            </li>
-            <li className="flex gap-2">
-              <span className="shrink-0 font-medium text-foreground">3.</span>
-              <span>{t`Once they complete 3 paid months on a monthly plan, or 1 paid year on an annual plan, you earn a reward.`}</span>
-            </li>
-          </ol>
-        </section>
-
+        <Section title={t`How it works`}>
+          <HowItWorks />
+        </Section>
       </div>
     </div>
   );

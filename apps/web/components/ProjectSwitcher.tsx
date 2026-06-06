@@ -6,6 +6,7 @@ import { Check, ChevronDown, Plus } from "lucide-react";
 import { t } from "@lingui/core/macro";
 import { trpc } from "@/lib/trpc/client";
 import { ProjectAvatar } from "@/components/ProjectAvatar";
+import { SidebarDropdownPanel } from "@/components/SidebarDropdownPanel";
 import Link from "next/link";
 
 type Props = {
@@ -76,37 +77,42 @@ export function ProjectSwitcher({ collapsed }: Props) {
   }
 
   return (
-    <div className="relative min-w-0 flex-1" ref={ref}>
-      {hasProjects ? (
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-sidebar-accent"
-        >
-          <ProjectAvatar
-            projectId={displayProject!.id}
-            name={displayProject!.name}
-            className="h-6 w-6 text-[11px]"
-          />
-          <span className="min-w-0 flex-1 truncate font-medium text-sidebar-foreground">
-            {displayProject!.name}
-          </span>
-          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-        </button>
-      ) : (
-        <Link
-          href="/projects/new"
-          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-        >
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-muted">
-            <Plus className="h-3.5 w-3.5" />
-          </div>
-          <span className="min-w-0 flex-1 truncate font-medium">{t`Add project`}</span>
-        </Link>
-      )}
+    <div className="contents" ref={ref}>
+      <div className="min-w-0 flex-1">
+        {hasProjects ? (
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-sidebar-accent"
+          >
+            <ProjectAvatar
+              projectId={displayProject!.id}
+              name={displayProject!.name}
+              className="h-6 w-6 text-[11px]"
+            />
+            <span className="min-w-0 flex-1 truncate font-medium text-sidebar-foreground">
+              {displayProject!.name}
+            </span>
+            <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+          </button>
+        ) : (
+          <Link
+            href="/projects/new"
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          >
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-muted">
+              <Plus className="h-3.5 w-3.5" />
+            </div>
+            <span className="min-w-0 flex-1 truncate font-medium">{t`Add project`}</span>
+          </Link>
+        )}
+      </div>
 
-      {open && (
-        <div className="absolute inset-x-0 top-full z-50 rounded-lg border border-border bg-popover shadow-lg">
+      <SidebarDropdownPanel
+        open={open}
+        origin="top"
+        className="absolute inset-x-2 top-full z-50 rounded-lg border border-border bg-popover shadow-lg"
+      >
           <div className="max-h-48 overflow-y-auto p-1">
             {projects.map((project) => (
               <button
@@ -149,8 +155,7 @@ export function ProjectSwitcher({ collapsed }: Props) {
               </Link>
             )}
           </div>
-        </div>
-      )}
+      </SidebarDropdownPanel>
     </div>
   );
 }

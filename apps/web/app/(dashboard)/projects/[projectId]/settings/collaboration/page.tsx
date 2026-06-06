@@ -3,6 +3,9 @@
 import { use, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { t } from "@lingui/core/macro";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { trpc } from "@/lib/trpc/client";
 import type { GlossaryAccess } from "@fable/db";
 
@@ -18,7 +21,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-6">
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
       <div className="mb-5">
         <h2 className="text-sm font-semibold">{title}</h2>
         {description && (
@@ -173,61 +176,67 @@ export default function CollaborationSettingsPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-xl space-y-6">
+    <div className="max-w-xl">
       <Section
         title={t`Visibility`}
         description={t`Control who can view and contribute to this project.`}
       >
-        <div className="space-y-2">
+        <RadioGroup
+          value={visibility}
+          onValueChange={(value) =>
+            handleVisibilityChange(value as "public" | "private")
+          }
+          disabled={updatingField === "visibility"}
+          className="space-y-2"
+        >
           {visibilityOptions.map(({ value, label, description }) => (
-            <label
+            <Label
               key={value}
-              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50"
+              htmlFor={`visibility-${value}`}
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 font-normal hover:bg-muted/50"
             >
-              <input
-                type="radio"
-                name="visibility"
+              <RadioGroupItem
                 value={value}
-                checked={visibility === value}
-                onChange={() => handleVisibilityChange(value)}
-                disabled={updatingField === "visibility"}
+                id={`visibility-${value}`}
                 className="mt-0.5"
               />
               <span>
                 <span className="block text-sm font-medium">{label}</span>
                 <span className="block text-xs text-muted-foreground">{description}</span>
               </span>
-            </label>
+            </Label>
           ))}
-        </div>
+        </RadioGroup>
       </Section>
 
       <Section
         title={t`Glossary access`}
         description={t`Set what translators can do with the organisation glossary on this project.`}
       >
-        <div className="space-y-2">
+        <RadioGroup
+          value={glossaryAccess}
+          onValueChange={(value) => handleGlossaryAccessChange(value as GlossaryAccess)}
+          disabled={updatingField === "glossaryAccess"}
+          className="space-y-2"
+        >
           {glossaryOptions.map(({ value, label, description }) => (
-            <label
+            <Label
               key={value}
-              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50"
+              htmlFor={`glossary-${value}`}
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 font-normal hover:bg-muted/50"
             >
-              <input
-                type="radio"
-                name="glossaryAccess"
+              <RadioGroupItem
                 value={value}
-                checked={glossaryAccess === value}
-                onChange={() => handleGlossaryAccessChange(value)}
-                disabled={updatingField === "glossaryAccess"}
+                id={`glossary-${value}`}
                 className="mt-0.5"
               />
               <span>
                 <span className="block text-sm font-medium">{label}</span>
                 <span className="block text-xs text-muted-foreground">{description}</span>
               </span>
-            </label>
+            </Label>
           ))}
-        </div>
+        </RadioGroup>
       </Section>
 
       <Section
@@ -236,14 +245,15 @@ export default function CollaborationSettingsPage({ params }: Props) {
       >
         <div className="space-y-3">
           {notificationOptions.map(({ field, label, description, checked, onChange }) => (
-            <label
+            <Label
               key={field}
-              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50"
+              htmlFor={field}
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 font-normal hover:bg-muted/50"
             >
-              <input
-                type="checkbox"
+              <Checkbox
+                id={field}
                 checked={checked}
-                onChange={(e) => onChange(e.target.checked)}
+                onCheckedChange={(value) => onChange(value === true)}
                 disabled={updatingField === field}
                 className="mt-0.5"
               />
@@ -251,7 +261,7 @@ export default function CollaborationSettingsPage({ params }: Props) {
                 <span className="block text-sm font-medium">{label}</span>
                 <span className="block text-xs text-muted-foreground">{description}</span>
               </span>
-            </label>
+            </Label>
           ))}
         </div>
       </Section>
@@ -262,14 +272,15 @@ export default function CollaborationSettingsPage({ params }: Props) {
       >
         <div className="space-y-3">
           {workflowOptions.map(({ field, label, description, checked, onChange }) => (
-            <label
+            <Label
               key={field}
-              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50"
+              htmlFor={field}
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 font-normal hover:bg-muted/50"
             >
-              <input
-                type="checkbox"
+              <Checkbox
+                id={field}
                 checked={checked}
-                onChange={(e) => onChange(e.target.checked)}
+                onCheckedChange={(value) => onChange(value === true)}
                 disabled={updatingField === field}
                 className="mt-0.5"
               />
@@ -277,7 +288,7 @@ export default function CollaborationSettingsPage({ params }: Props) {
                 <span className="block text-sm font-medium">{label}</span>
                 <span className="block text-xs text-muted-foreground">{description}</span>
               </span>
-            </label>
+            </Label>
           ))}
         </div>
         <p className="mt-3 rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">

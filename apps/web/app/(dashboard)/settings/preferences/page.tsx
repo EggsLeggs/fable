@@ -6,6 +6,8 @@ import { t } from "@lingui/core/macro";
 import { useLingui } from "@/components/lingui-provider";
 import type { Locale } from "@/locales";
 import { localeNames } from "@/locales";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SelectCombobox } from "@/components/ui/select-combobox";
 
 function Section({
@@ -18,7 +20,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-6">
+    <section className="border-t border-border py-6 first:border-t-0 first:pt-0 last:pb-0">
       <div className="mb-5">
         <h2 className="text-sm font-semibold">{title}</h2>
         {description && (
@@ -64,7 +66,7 @@ export default function PreferencesSettingsPage() {
   ];
 
   return (
-    <div className="max-w-xl space-y-6">
+    <div className="max-w-xl">
       <Section
         title={t`Interface language`}
         description={t`Choose the language used across the Fable interface.`}
@@ -86,24 +88,24 @@ export default function PreferencesSettingsPage() {
         title={t`Theme`}
         description={t`Choose how Fable looks on this device.`}
       >
-        <div className="space-y-2">
+        <RadioGroup
+          value={mounted ? theme : ""}
+          onValueChange={(value) =>
+            setTheme(value as (typeof themes)[number]["id"])
+          }
+          className="space-y-2"
+        >
           {themes.map(({ id, label }) => (
-            <label
+            <Label
               key={id}
-              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 hover:bg-muted/50"
+              htmlFor={`theme-${id}`}
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 font-normal hover:bg-muted/50"
             >
-              <input
-                type="radio"
-                name="theme"
-                value={id}
-                checked={mounted && theme === id}
-                onChange={() => setTheme(id)}
-                className="mt-0.5"
-              />
+              <RadioGroupItem value={id} id={`theme-${id}`} className="mt-0.5" />
               <span className="text-sm font-medium">{label}</span>
-            </label>
+            </Label>
           ))}
-        </div>
+        </RadioGroup>
       </Section>
     </div>
   );

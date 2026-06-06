@@ -9,8 +9,6 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-  ComboboxTrigger,
-  ComboboxValue,
 } from "@/components/ui/combobox";
 
 export type SelectOption = {
@@ -31,7 +29,7 @@ type SelectComboboxProps = {
   id?: string;
   searchPlaceholder?: string;
   emptyMessage?: string;
-  /** Show a search field inside the popup. Defaults to true when there are more than 6 options. */
+  /** @deprecated Search now happens in the trigger input. Kept for API compatibility. */
   searchable?: boolean;
 };
 
@@ -47,7 +45,6 @@ export function SelectCombobox({
   id,
   searchPlaceholder = "Search...",
   emptyMessage = "No results found.",
-  searchable,
 }: SelectComboboxProps) {
   const allOptions = React.useMemo(() => {
     if (emptyOption !== undefined) {
@@ -60,36 +57,26 @@ export function SelectCombobox({
     allOptions.find((option) => option.value === value) ??
     (emptyOption !== undefined ? allOptions[0] : null);
 
-  const showSearch = searchable ?? allOptions.length > 6;
-
   return (
     <Combobox
       items={allOptions}
       value={selectedItem}
       onValueChange={(item) => onValueChange(item?.value ?? "")}
       isItemEqualToValue={(a, b) => a.value === b.value}
+      itemToStringLabel={(option) => option.label}
       disabled={disabled}
     >
-      <ComboboxTrigger
+      <ComboboxInput
         id={id}
-        render={
-          <button
-            type="button"
-            disabled={disabled}
-            className={cn(
-              "flex w-full items-center justify-between gap-2 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition-colors hover:border-foreground/40 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
-              triggerClassName,
-              className
-            )}
-          />
-        }
-      >
-        <ComboboxValue placeholder={placeholder ?? emptyOption ?? "Select..."} />
-      </ComboboxTrigger>
-      <ComboboxContent className="min-w-[var(--anchor-width)]">
-        {showSearch && (
-          <ComboboxInput showTrigger={false} placeholder={searchPlaceholder} />
+        disabled={disabled}
+        placeholder={placeholder ?? searchPlaceholder ?? emptyOption ?? "Select..."}
+        className={cn(
+          "w-full rounded-lg bg-background shadow-sm transition-colors hover:border-foreground/40",
+          triggerClassName,
+          className
         )}
+      />
+      <ComboboxContent className="min-w-[var(--anchor-width)]">
         <ComboboxEmpty>{emptyMessage}</ComboboxEmpty>
         <ComboboxList>
           {(item) => (

@@ -27,7 +27,7 @@ export function ProjectCommandMenu({ open, onOpenChange }: Props) {
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40" />
-        <Dialog.Content className="fixed left-1/2 top-[20%] z-50 w-full max-w-md -translate-x-1/2 rounded-xl border border-border bg-popover p-0 shadow-xl">
+        <Dialog.Content className="fixed left-1/2 top-[20%] z-50 w-full max-w-md -translate-x-1/2 rounded-lg border border-border bg-popover p-0 shadow-lg">
           <Dialog.Title className="sr-only">{title}</Dialog.Title>
           <Command label={title}>
             <div className="flex items-center border-b border-border px-3">

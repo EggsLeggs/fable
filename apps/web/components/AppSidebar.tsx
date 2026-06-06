@@ -95,7 +95,7 @@ export function AppSidebar({ userName, userHandle, userEmail, userAvatarUrl }: P
         }`}
       >
         <div
-          className={`flex items-center gap-2 p-2 ${
+          className={`flex shrink-0 items-center gap-2 p-2 ${
             collapsed ? "justify-center" : "justify-between pb-2"
           }`}
         >
@@ -123,8 +123,10 @@ export function AppSidebar({ userName, userHandle, userEmail, userAvatarUrl }: P
           </button>
         </div>
 
+        <Separator className="mx-2 shrink-0 bg-sidebar-border" />
+
         <div
-          className={`relative flex items-center gap-1 px-2 pb-2 ${
+          className={`relative flex shrink-0 items-center gap-1 px-2 pb-2 pt-2 ${
             collapsed ? "justify-center" : ""
           }`}
         >
@@ -134,16 +136,14 @@ export function AppSidebar({ userName, userHandle, userEmail, userAvatarUrl }: P
               type="button"
               onClick={() => setCommandMenuOpen(true)}
               title={t`Search projects (⌘K)`}
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             >
               <Search className="h-3.5 w-3.5" />
             </button>
           )}
         </div>
 
-        <Separator className="mx-2 bg-sidebar-border" />
-
-        <nav className="flex flex-1 flex-col gap-1 px-2 pt-2">
+        <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto px-2 pt-2">
           {displayProjectId && (
             <>
               {navItems.map(({ href, label, Icon }) => {
@@ -173,7 +173,7 @@ export function AppSidebar({ userName, userHandle, userEmail, userAvatarUrl }: P
           )}
         </nav>
 
-        <div className="px-2 pb-2 pt-2">
+        <div className="shrink-0 px-2 pb-2 pt-2">
           <SidebarAdCard collapsed={collapsed} />
           <UserMenu
             userName={userName}
