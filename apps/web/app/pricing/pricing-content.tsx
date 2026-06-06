@@ -164,7 +164,7 @@ export function PricingContent() {
         </div>
 
         {/* Enterprise */}
-        <div className="flex flex-col rounded-xl border border-border bg-card p-6 sm:p-8 opacity-80">
+        <div className="flex flex-col rounded-xl border border-border bg-card p-6 sm:p-8">
           <div className="mb-6">
             <div className="flex items-center gap-2">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -181,13 +181,12 @@ export function PricingContent() {
               {t`For large teams that need custom limits, SSO, and SLAs.`}
             </p>
           </div>
-          <button
-            type="button"
-            disabled
-            className="mb-6 block rounded-lg border border-border bg-muted px-4 py-2 text-center text-sm font-medium text-muted-foreground opacity-60"
+          <a
+            href="mailto:enterprise@fable.dev"
+            className="mb-6 block rounded-lg border border-border bg-muted px-4 py-2 text-center text-sm font-medium transition-colors hover:bg-muted/80"
           >
             {t`Contact us`}
-          </button>
+          </a>
           <ul className="space-y-3">
             {enterpriseFeatures.map((f) => (
               <FeatureItem key={f} text={f} />

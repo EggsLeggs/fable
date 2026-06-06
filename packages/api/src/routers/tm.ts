@@ -2,6 +2,7 @@ import { z } from "zod";
 import { eq, and, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
+import { getEffectivePlan } from "@fable/stripe";
 import {
   translationKeys,
   translations,
@@ -64,6 +65,14 @@ export const tmRouter = router({
         ),
       });
       if (!member) throw new TRPCError({ code: "FORBIDDEN" });
+
+      const owner = await ctx.db.query.orgMembers.findFirst({
+        where: and(eq(orgMembers.orgId, key.project.orgId), eq(orgMembers.role, "owner")),
+        with: { user: { columns: { plan: true } } },
+      });
+      if (getEffectivePlan(owner?.user.plan ?? "free") === "free") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "PLAN_UPGRADE_REQUIRED" });
+      }
 
       // Get the source value for this key
       const sourceTranslation = await ctx.db.query.translations.findFirst({
