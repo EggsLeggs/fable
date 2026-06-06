@@ -18,6 +18,7 @@
     "@fable/auth": "*",
     "@fable/db": "*",
     "@fable/formats": "*",
+    "@fable/logger": "*",
     "@fable/stripe": "*",
     "@fable/ui": "*",
     "@lingui/conf": "^5.3.2",
