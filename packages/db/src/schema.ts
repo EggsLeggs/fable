@@ -125,6 +125,11 @@ export const feedbackSwitchingIntentEnum = pgEnum("feedback_switching_intent", [
   "no",
 ]);
 
+export const glossaryEntryStatusEnum = pgEnum("glossary_entry_status", [
+  "pending",
+  "approved",
+]);
+
 export type CustomLocale = { name: string; code: string };
 
 export type SpokenLanguageLevel =
@@ -448,6 +453,10 @@ export const glossaryEntries = pgTable("glossary_entry", {
   definition: text("definition"),
   forbidden: boolean("forbidden").notNull().default(false),
   caseSensitive: boolean("caseSensitive").notNull().default(false),
+  status: glossaryEntryStatusEnum("status").notNull().default("approved"),
+  submittedBy: text("submitted_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
 });
@@ -682,6 +691,8 @@ export type IngestTrigger = (typeof ingestTriggerEnum.enumValues)[number];
 export type TranslationKeyStatus =
   (typeof translationKeyStatusEnum.enumValues)[number];
 export type GlossaryAccess = (typeof glossaryAccessEnum.enumValues)[number];
+export type GlossaryEntryStatus = (typeof glossaryEntryStatusEnum.enumValues)[number];
+export type DbGlossaryTranslation = typeof glossaryTranslations.$inferSelect;
 export type DbTask = typeof tasks.$inferSelect;
 export type TaskStatus = (typeof taskStatusEnum.enumValues)[number];
 export type DbActivityLog = typeof activityLog.$inferSelect;

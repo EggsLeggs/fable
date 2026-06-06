@@ -228,6 +228,10 @@ export const glossaryEntriesRelations = relations(
       references: [organizations.id],
     }),
     translations: many(glossaryTranslations),
+    submittedByUser: one(users, {
+      fields: [glossaryEntries.submittedBy],
+      references: [users.id],
+    }),
   })
 );
 
