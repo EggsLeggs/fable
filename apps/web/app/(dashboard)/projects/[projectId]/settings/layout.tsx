@@ -23,14 +23,14 @@ export default function ProjectSettingsLayout({ children }: { children: React.Re
         </p>
       </header>
 
-      <nav className="mb-6 flex gap-1 border-b border-border">
+      <nav className="mb-6 flex gap-1 overflow-x-auto border-b border-border [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map(({ href, label }) => {
           const active = pathname === href;
           return (
             <Link
               key={href}
               href={href}
-              className={`-mb-px border-b-2 px-3 pb-2.5 text-sm font-medium transition-colors ${
+              className={`-mb-px shrink-0 border-b-2 px-3 pb-2.5 text-sm font-medium transition-colors ${
                 active
                   ? "border-foreground text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground"
