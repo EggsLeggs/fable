@@ -16,6 +16,8 @@ import {
   Copy,
   Loader2,
   MessageSquare,
+  PanelRight,
+  PanelRightClose,
   MoreHorizontal,
   Search,
   ThumbsDown,
@@ -32,6 +34,12 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { trpc } from "@/lib/trpc/client";
 import { UserDisplayName } from "@/lib/user-display";
 import { SelectCombobox } from "@/components/ui/select-combobox";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 type Props = {
   params: Promise<{ projectId: string; locale: string }>;
@@ -71,6 +79,8 @@ function StateIndicator({ state }: { state: string | null }) {
   }
   return <span className="h-full w-1 shrink-0 bg-red-400" />;
 }
+
+const COMPACT_COMMENTS_QUERY = "(max-width: 1023px)";
 
 const FILTER_LABELS: Record<FilterValue, string> = {
   all: "All",
@@ -154,7 +164,11 @@ function StringListPanel({
   const currentIdx = selectedId ? strings.findIndex((s) => s.id === selectedId) : -1;
 
   return (
-    <div className="flex w-72 shrink-0 flex-col overflow-hidden border-r border-border">
+    <div
+      className={`${
+        selectedId ? "hidden md:flex" : "flex"
+      } w-full shrink-0 flex-col overflow-hidden border-r border-border md:w-72`}
+    >
       {/* Language selector */}
       <div className="flex items-center gap-2 border-b border-border px-3 py-2">
         <div className="relative min-w-0 flex-1">
@@ -357,6 +371,8 @@ function TranslationEditorPanel({
   onSelectString,
   hasPrev,
   hasNext,
+  onBack,
+  onOpenComments,
 }: {
   projectId: string;
   locale: string;
@@ -366,6 +382,8 @@ function TranslationEditorPanel({
   onSelectString: (id: string) => void;
   hasPrev: boolean;
   hasNext: boolean;
+  onBack?: () => void;
+  onOpenComments?: () => void;
 }) {
   const utils = trpc.useUtils();
   const [value, setValue] = useState("");
@@ -376,6 +394,8 @@ function TranslationEditorPanel({
   const translationQuery = trpc.translation.get.useQuery({ keyId, locale });
   const tmQuery = trpc.tm.lookup.useQuery({ keyId, locale });
   const nearbyQuery = trpc.strings.nearby.useQuery({ keyId, locale });
+  const commentsQuery = trpc.comments.list.useQuery({ keyId });
+  const commentCount = commentsQuery.data?.length ?? 0;
 
   const string = stringQuery.data;
   const translationData = translationQuery.data;
@@ -473,22 +493,32 @@ function TranslationEditorPanel({
   if (!string) {
     if (stringQuery.isPending) {
       return (
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex min-w-0 flex-1 items-center justify-center">
           <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
         </div>
       );
     }
     return (
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex min-w-0 flex-1 items-center justify-center">
         <p className="text-sm text-muted-foreground">String not found</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden">
-      {/* Header bar */}
-      <div className="flex items-center gap-2 border-b border-border px-4 py-2">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="flex items-center gap-2 border-b border-border px-3 py-2 md:px-4">
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex shrink-0 items-center gap-0.5 rounded px-1 py-1 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+            aria-label="Back to strings"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Strings
+          </button>
+        )}
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs text-muted-foreground">
             {string.sourceFile?.name && (
@@ -505,6 +535,22 @@ function TranslationEditorPanel({
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
+          {onOpenComments && (
+            <button
+              type="button"
+              onClick={onOpenComments}
+              className="relative flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+              aria-label="Open comments"
+              title="Comments"
+            >
+              <MessageSquare className="h-4 w-4" />
+              {commentCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-0.5 text-[9px] font-medium text-primary-foreground">
+                  {commentCount}
+                </span>
+              )}
+            </button>
+          )}
           <button
             type="button"
             onClick={onNavigatePrev}
@@ -527,7 +573,7 @@ function TranslationEditorPanel({
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="flex flex-col gap-6 p-5">
+        <div className="flex flex-col gap-6 p-4 md:p-5">
           {/* Source string */}
           <section>
             <p className="mb-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wide">Source</p>
@@ -601,8 +647,8 @@ function TranslationEditorPanel({
             </div>
 
             {/* Toolbar */}
-            <div className="mt-2 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1">
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-wrap items-center gap-1">
                 <button
                   type="button"
                   onClick={copySourceToInput}
@@ -626,7 +672,7 @@ function TranslationEditorPanel({
                 type="button"
                 onClick={handleSave}
                 disabled={saveMutation.isPending || !value.trim() || charCountExceeded}
-                className="btn-primary flex items-center gap-1.5 text-xs"
+                className="btn-primary flex w-full items-center justify-center gap-1.5 text-xs sm:w-auto"
                 title="Save (Ctrl+Enter)"
               >
                 {saveMutation.isPending ? (
@@ -678,7 +724,7 @@ function TranslationEditorPanel({
                     >
                       {s.value}
                     </p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {s.translatedByUser && (
                         <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
                           <UserDisplayName user={s.translatedByUser} />
@@ -812,7 +858,7 @@ function TranslationEditorPanel({
 
 // ─── Right Panel: Context & Comments ───────────────────────────────────────
 
-function ContextPanel({ keyId }: { keyId: string }) {
+function CommentsBody({ keyId }: { keyId: string }) {
   const [commentBody, setCommentBody] = useState("");
   const utils = trpc.useUtils();
 
@@ -839,13 +885,7 @@ function ContextPanel({ keyId }: { keyId: string }) {
   const commentsList = commentsQuery.data ?? [];
 
   return (
-    <div className="flex w-80 shrink-0 flex-col overflow-hidden border-l border-border">
-      <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Comments {commentsList.length > 0 && `(${commentsList.length})`}
-        </h2>
-      </div>
-
+    <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex-1 overflow-y-auto">
         {commentsQuery.isPending ? (
           <div className="flex items-center justify-center py-8">
@@ -890,8 +930,7 @@ function ContextPanel({ keyId }: { keyId: string }) {
         )}
       </div>
 
-      {/* Comment input */}
-      <div className="border-t border-border p-3">
+      <div className="shrink-0 border-t border-border p-3">
         <textarea
           value={commentBody}
           onChange={(e) => setCommentBody(e.target.value)}
@@ -924,6 +963,99 @@ function ContextPanel({ keyId }: { keyId: string }) {
   );
 }
 
+function ContextPanel({
+  keyId,
+  collapsed,
+  onCollapsedChange,
+}: {
+  keyId: string;
+  collapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
+}) {
+  const commentsQuery = trpc.comments.list.useQuery({ keyId });
+  const commentsList = commentsQuery.data ?? [];
+
+  return (
+    <div
+      className={`hidden shrink-0 flex-col overflow-hidden border-l border-border transition-all md:flex ${
+        collapsed ? "w-14" : "w-80"
+      }`}
+    >
+      <div
+        className={`flex shrink-0 items-center border-b border-border ${
+          collapsed ? "flex-col justify-center gap-1 py-2" : "justify-between px-4 py-2.5"
+        }`}
+      >
+        {!collapsed && (
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Comments {commentsList.length > 0 && `(${commentsList.length})`}
+          </h2>
+        )}
+        <button
+          type="button"
+          onClick={() => onCollapsedChange(!collapsed)}
+          className="group rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+          aria-label={collapsed ? "Expand comments" : "Collapse comments"}
+          title={collapsed ? "Expand comments" : "Collapse comments"}
+        >
+          {collapsed ? (
+            <PanelRight className="h-4 w-4" />
+          ) : (
+            <PanelRightClose className="h-4 w-4" />
+          )}
+        </button>
+      </div>
+
+      {collapsed ? (
+        <div
+          className="flex flex-1 flex-col items-center pt-2"
+          title={`Comments${commentsList.length > 0 ? ` (${commentsList.length})` : ""}`}
+        >
+          <div className="relative rounded p-2 text-muted-foreground">
+            <MessageSquare className="h-4 w-4" />
+            {commentsList.length > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-0.5 text-[9px] font-medium text-primary-foreground">
+                {commentsList.length}
+              </span>
+            )}
+          </div>
+        </div>
+      ) : (
+        <CommentsBody keyId={keyId} />
+      )}
+    </div>
+  );
+}
+
+function CommentsSheet({
+  keyId,
+  open,
+  onOpenChange,
+}: {
+  keyId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const commentsQuery = trpc.comments.list.useQuery({ keyId });
+  const commentsList = commentsQuery.data ?? [];
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="right"
+        className="flex w-full flex-col gap-0 bg-background p-0 sm:max-w-md"
+      >
+        <SheetHeader className="shrink-0 border-border bg-background">
+          <SheetTitle className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Comments {commentsList.length > 0 && `(${commentsList.length})`}
+          </SheetTitle>
+        </SheetHeader>
+        <CommentsBody keyId={keyId} />
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 // ─── Page ───────────────────────────────────────────────────────────────────
 
 export default function StringsEditorPage({ params }: Props) {
@@ -931,6 +1063,20 @@ export default function StringsEditorPage({ params }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedId = searchParams.get("stringId");
+  const [commentsCollapsed, setCommentsCollapsed] = useState(false);
+  const [commentsSheetOpen, setCommentsSheetOpen] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(COMPACT_COMMENTS_QUERY);
+    setCommentsCollapsed(mq.matches);
+
+    function onChange(e: MediaQueryListEvent) {
+      if (e.matches) setCommentsCollapsed(true);
+    }
+
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   // We need the string list to enable prev/next navigation
   const filter = (searchParams.get("filter") as FilterValue) ?? "all";
@@ -953,6 +1099,13 @@ export default function StringsEditorPage({ params }: Props) {
   function selectString(id: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("stringId", id);
+    router.replace(`/projects/${projectId}/strings/${locale}?${params.toString()}`);
+  }
+
+  function clearSelection() {
+    setCommentsSheetOpen(false);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("stringId");
     router.replace(`/projects/${projectId}/strings/${locale}?${params.toString()}`);
   }
 
@@ -1035,11 +1188,24 @@ export default function StringsEditorPage({ params }: Props) {
             onSelectString={selectString}
             hasPrev={currentIdx > 0}
             hasNext={currentIdx < strings.length - 1}
+            onBack={clearSelection}
+            onOpenComments={() => setCommentsSheetOpen(true)}
           />
-          <ContextPanel key={`comments-${selectedId}`} keyId={selectedId} />
+          <ContextPanel
+            key={`comments-${selectedId}`}
+            keyId={selectedId}
+            collapsed={commentsCollapsed}
+            onCollapsedChange={setCommentsCollapsed}
+          />
+          <CommentsSheet
+            key={`comments-sheet-${selectedId}`}
+            keyId={selectedId}
+            open={commentsSheetOpen}
+            onOpenChange={setCommentsSheetOpen}
+          />
         </>
       ) : (
-        <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
+        <div className="hidden flex-1 flex-col items-center justify-center gap-2 text-center md:flex">
           <MessageSquare className="h-10 w-10 text-muted-foreground/30" />
           <p className="text-sm text-muted-foreground">
             Select a string to start translating

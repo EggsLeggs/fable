@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "@wrksz/themes/client";
 import { useRouter } from "next/navigation";
 import { LogOut, Settings } from "lucide-react";
 import { t } from "@lingui/core/macro";
 import { signOut } from "@/lib/auth-client";
 import { UserAvatar } from "@/components/UserAvatar";
 import { SidebarDropdownPanel } from "@/components/SidebarDropdownPanel";
+import { ThemeSwitcherMenu } from "@/components/ThemeSwitcherMenu";
 
 type Props = {
   userName: string;
@@ -25,12 +25,8 @@ export function UserMenu({
   collapsed,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const { theme, setTheme } = useTheme();
   const router = useRouter();
-
-  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -41,12 +37,6 @@ export function UserMenu({
     if (open) document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, [open]);
-
-  const themes = [
-    { id: "system" as const, label: t`System` },
-    { id: "dark" as const, label: t`Dark` },
-    { id: "light" as const, label: t`Light` },
-  ];
 
   function navigate(href: string) {
     setOpen(false);
@@ -100,24 +90,7 @@ export function UserMenu({
             </button>
           </div>
           <div className="border-t border-border" />
-          <div className="p-1">
-            <p className="px-3 py-2 text-xs text-muted-foreground">{t`Theme`}</p>
-            {themes.map(({ id, label }) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setTheme(id)}
-                className="flex w-full items-center rounded-[5px] px-3 py-2 text-left text-xs hover:bg-secondary"
-              >
-                <span
-                  className={`mr-3 h-1.5 w-1.5 shrink-0 rounded-full bg-foreground ${
-                    mounted && theme === id ? "visible" : "invisible"
-                  }`}
-                />
-                {label}
-              </button>
-            ))}
-          </div>
+          <ThemeSwitcherMenu />
           <div className="border-t border-border" />
           <button
             type="button"
