@@ -45,7 +45,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        261
+        300
       ]
     ],
     "translation": "{0} types"
@@ -157,7 +157,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        92
+        96
       ],
       [
         "components/auth/AuthForm.tsx",
@@ -209,7 +209,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        207
+        212
       ]
     ],
     "translation": "A project is a workspace for your translation files and team."
@@ -245,7 +245,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        456
+        495
       ],
       [
         "components/AppSidebar.tsx",
@@ -333,7 +333,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        126
+        131
       ]
     ],
     "translation": "Add people who should have access to this project."
@@ -345,15 +345,11 @@
     "origin": [
       [
         "components/ProjectSwitcher.tsx",
-        68
+        61
       ],
       [
         "components/ProjectSwitcher.tsx",
-        99
-      ],
-      [
-        "components/ProjectSwitcher.tsx",
-        124
+        104
       ]
     ],
     "translation": "Add project"
@@ -365,7 +361,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        307
+        306
       ]
     ],
     "translation": "Add translator"
@@ -377,7 +373,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        308
+        307
       ]
     ],
     "translation": "Adding..."
@@ -389,7 +385,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        472
+        511
       ]
     ],
     "translation": "All languages"
@@ -438,7 +434,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        258
+        297
       ]
     ],
     "translation": "All types"
@@ -450,7 +446,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        483
+        522
       ]
     ],
     "translation": "All users"
@@ -498,11 +494,11 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        120
+        124
       ],
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        155
+        159
       ],
       [
         "app/pricing/page.tsx",
@@ -522,7 +518,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        355
+        394
       ]
     ],
     "translation": "Any date"
@@ -644,7 +640,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        177
+        181
       ]
     ],
     "translation": "Billing is not configured on this server. Upgrades are unavailable and all accounts use the free tier."
@@ -782,7 +778,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        498
+        537
       ]
     ],
     "translation": "Clear"
@@ -794,7 +790,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        300
+        339
       ]
     ],
     "translation": "Clear selection"
@@ -830,7 +826,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        179
+        184
       ]
     ],
     "translation": "Collaborator"
@@ -1354,7 +1350,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        205
+        210
       ]
     ],
     "translation": "Create a new project"
@@ -1366,7 +1362,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        258
+        316
       ]
     ],
     "translation": "Create project"
@@ -1378,7 +1374,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        258
+        316
       ]
     ],
     "translation": "Creating..."
@@ -1402,7 +1398,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        112
+        116
       ]
     ],
     "translation": "Current plan"
@@ -1418,7 +1414,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        224
+        228
       ]
     ],
     "translation": "Current: {0} chars"
@@ -1666,11 +1662,11 @@
       ],
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        306
+        305
       ],
       [
         "components/NewProjectWizard.tsx",
-        135
+        140
       ]
     ],
     "translation": "Email address"
@@ -1806,7 +1802,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        84
+        89
       ]
     ],
     "translation": "Failed to create project. Please try again."
@@ -1830,7 +1826,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        109
+        114
       ]
     ],
     "translation": "Failed to invite member. Please try again."
@@ -1846,6 +1842,18 @@
       ]
     ],
     "translation": "Failed to invite. Please try again."
+  },
+  "TW/7vv": {
+    "translation": "Failed to load billing information.",
+    "message": "Failed to load billing information.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        86
+      ]
+    ]
   },
   "7if9X1": {
     "message": "Failed to load project.",
@@ -1902,7 +1910,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        153
+        158
       ]
     ],
     "translation": "for unlimited members."
@@ -2115,7 +2123,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        188
+        193
       ]
     ],
     "translation": "Go to project"
@@ -2255,7 +2263,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        143
+        148
       ]
     ],
     "translation": "Invite"
@@ -2271,7 +2279,7 @@
       ],
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        311
+        310
       ]
     ],
     "translation": "Invite by link"
@@ -2307,7 +2315,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        124
+        129
       ]
     ],
     "translation": "Invite team members"
@@ -2323,7 +2331,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        143
+        148
       ]
     ],
     "translation": "Inviting..."
@@ -2416,6 +2424,10 @@
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
         189
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        257
       ]
     ],
     "translation": "Languages your project will be translated into."
@@ -2443,7 +2455,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        575
+        614
       ]
     ],
     "translation": "Load more"
@@ -2463,7 +2475,7 @@
       ],
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        572
+        611
       ],
       [
         "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
@@ -2588,7 +2600,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        138
+        142
       ]
     ],
     "translation": "Manage billing"
@@ -2685,11 +2697,11 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        120
+        124
       ],
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        148
+        152
       ],
       [
         "app/pricing/page.tsx",
@@ -2734,7 +2746,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        203
+        207
       ]
     ],
     "translation": "MT characters this month"
@@ -2758,7 +2770,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        214
+        218
       ]
     ],
     "translation": "MT overage cap"
@@ -2770,7 +2782,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        221
+        226
       ]
     ],
     "translation": "My project"
@@ -2834,7 +2846,7 @@
     "origin": [
       [
         "components/ProjectSwitcher.tsx",
-        163
+        148
       ]
     ],
     "translation": "New project"
@@ -2866,7 +2878,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        103
+        108
       ]
     ],
     "translation": "No account found with that email address."
@@ -2878,7 +2890,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        511
+        550
       ]
     ],
     "translation": "No activity matches your filters."
@@ -2890,7 +2902,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        511
+        550
       ]
     ],
     "translation": "No activity yet."
@@ -2926,7 +2938,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        225
+        229
       ]
     ],
     "translation": "No limit (billed per use)"
@@ -2938,7 +2950,7 @@
     "origin": [
       [
         "components/ProjectCommandMenu.tsx",
-        40
+        41
       ]
     ],
     "translation": "No projects found."
@@ -2962,7 +2974,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        323
+        321
       ]
     ],
     "translation": "No translators yet."
@@ -3087,7 +3099,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        138
+        142
       ]
     ],
     "translation": "Opening..."
@@ -3123,11 +3135,11 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        267
+        266
       ],
       [
         "components/NewProjectWizard.tsx",
-        179
+        184
       ]
     ],
     "translation": "Owner"
@@ -3400,7 +3412,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        214
+        219
       ]
     ],
     "translation": "Project name"
@@ -3448,7 +3460,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        187
+        191
       ]
     ],
     "translation": "Projects"
@@ -3512,7 +3524,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/activity/page.tsx",
-        458
+        497
       ]
     ],
     "translation": "Recent changes and events across this project."
@@ -3524,7 +3536,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        166
+        170
       ]
     ],
     "translation": "Redirecting..."
@@ -3576,7 +3588,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        245
+        249
       ]
     ],
     "translation": "Remove cap"
@@ -3605,6 +3617,10 @@
       [
         "app/(dashboard)/settings/page.tsx",
         448
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        280
       ]
     ],
     "translation": "Remove language"
@@ -3616,7 +3632,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        278
+        277
       ]
     ],
     "translation": "Remove member"
@@ -3628,7 +3644,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        356
+        354
       ]
     ],
     "translation": "Remove translator"
@@ -3640,7 +3656,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        126
+        130
       ]
     ],
     "translation": "Renews"
@@ -3692,7 +3708,7 @@
       ],
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        237
+        241
       ]
     ],
     "translation": "Save"
@@ -3708,7 +3724,7 @@
       ],
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        237
+        241
       ]
     ],
     "translation": "Saving..."
@@ -3720,7 +3736,7 @@
     "origin": [
       [
         "components/ProjectCommandMenu.tsx",
-        23
+        24
       ]
     ],
     "translation": "Search projects"
@@ -3732,7 +3748,7 @@
     "origin": [
       [
         "components/AppSidebar.tsx",
-        139
+        136
       ]
     ],
     "translation": "Search projects (⌘K)"
@@ -3744,11 +3760,7 @@
     "origin": [
       [
         "components/ProjectCommandMenu.tsx",
-        34
-      ],
-      [
-        "components/ProjectSwitcher.tsx",
-        111
+        35
       ]
     ],
     "translation": "Search projects..."
@@ -3761,6 +3773,10 @@
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
         234
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        295
       ]
     ],
     "translation": "Select a language to add..."
@@ -3949,7 +3965,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        195
+        200
       ]
     ],
     "translation": "Skip for now"
@@ -3973,7 +3989,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        228
+        233
       ]
     ],
     "translation": "Slug:"
@@ -4009,7 +4025,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        235
+        240
       ]
     ],
     "translation": "Source language"
@@ -4069,7 +4085,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        102
+        106
       ],
       [
         "components/SidebarAdCard.tsx",
@@ -4085,7 +4101,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        216
+        220
       ]
     ],
     "translation": "Stop machine translation once your monthly usage reaches this limit. This cap applies across all your projects. Leave blank for no cap (you will be billed per character above the 50k included)."
@@ -4138,6 +4154,10 @@
       [
         "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
         188
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        255
       ]
     ],
     "translation": "Target languages"
@@ -4173,7 +4193,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        192
+        196
       ]
     ],
     "translation": "Team members"
@@ -4213,7 +4233,7 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        105
+        110
       ]
     ],
     "translation": "That person is already a member."
@@ -4338,7 +4358,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        251
+        309
       ]
     ],
     "translation": "to create unlimited projects."
@@ -4350,7 +4370,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        197
+        201
       ]
     ],
     "translation": "Translation keys"
@@ -4459,7 +4479,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        292
+        291
       ]
     ],
     "translation": "Translators"
@@ -4483,7 +4503,7 @@
     "origin": [
       [
         "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
-        294
+        293
       ]
     ],
     "translation": "Translators can contribute translations to this project."
@@ -4672,7 +4692,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        168
+        172
       ]
     ],
     "translation": "Upgrade - $26/mo billed annually"
@@ -4684,7 +4704,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        169
+        173
       ]
     ],
     "translation": "Upgrade - $29/mo"
@@ -4704,11 +4724,11 @@
       ],
       [
         "components/NewProjectWizard.tsx",
-        151
+        156
       ],
       [
         "components/NewProjectWizard.tsx",
-        249
+        307
       ],
       [
         "components/SidebarAdCard.tsx",
@@ -4736,7 +4756,7 @@
     "origin": [
       [
         "components/ProjectSwitcher.tsx",
-        154
+        139
       ]
     ],
     "translation": "Upgrade to Pro for more projects"
@@ -4760,7 +4780,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        184
+        188
       ]
     ],
     "translation": "Usage this period"
@@ -4824,7 +4844,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        254
+        258
       ]
     ],
     "translation": "View full pricing details"
@@ -4921,13 +4941,12 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        77
+        82
       ]
     ],
     "translation": "You"
   },
   "46mTv6": {
-    "translation": "You already added this language.",
     "message": "You already added this language.",
     "placeholders": {},
     "comments": [],
@@ -4936,7 +4955,8 @@
         "app/(dashboard)/settings/page.tsx",
         259
       ]
-    ]
+    ],
+    "translation": "You already added this language."
   },
   "9FhlvZ": {
     "message": "You are already part of this workspace.",
@@ -4963,7 +4983,6 @@
     "translation": "You are invited"
   },
   "+zy3Rx": {
-    "translation": "You have added all available languages.",
     "message": "You have added all available languages.",
     "placeholders": {},
     "comments": [],
@@ -4972,7 +4991,8 @@
         "app/(dashboard)/settings/page.tsx",
         241
       ]
-    ]
+    ],
+    "translation": "You have added all available languages."
   },
   "0bqfgW": {
     "message": "You have reached the member limit on the free plan.",
@@ -4981,7 +5001,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        149
+        154
       ]
     ],
     "translation": "You have reached the member limit on the free plan."
@@ -5005,7 +5025,7 @@
     "origin": [
       [
         "components/NewProjectWizard.tsx",
-        247
+        305
       ]
     ],
     "translation": "You have reached the project limit on the free plan."
@@ -5042,7 +5062,7 @@
     "origin": [
       [
         "app/(dashboard)/settings/billing/page.tsx",
-        94
+        98
       ]
     ],
     "translation": "You were referred. Your discount is saved and will be applied when you add your card."

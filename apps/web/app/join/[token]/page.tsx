@@ -16,9 +16,9 @@ export default function JoinPage({ params }: Props) {
   const acceptedRef = useRef(false);
 
   const userQuery = trpc.user.me.useQuery(undefined, { retry: false });
-  const inviteQuery = trpc.organization.validateInviteToken.useQuery({ token });
+  const inviteQuery = trpc.project.validateInviteToken.useQuery({ token });
 
-  const acceptInvite = trpc.organization.acceptInvite.useMutation({
+  const acceptInvite = trpc.project.acceptInvite.useMutation({
     onSuccess: () => {
       router.push("/dashboard");
     },

@@ -1,11 +1,49 @@
 import { z } from "zod";
-import { eq, and, count, ne, sql } from "drizzle-orm";
+import { eq, and, count, ne, or, sql } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
-import { projects, projectLocales, orgMembers, translationKeys, translations, type Db } from "@fable/db";
+import { projects, projectLocales, orgMembers, translationKeys, translations, sourceFiles, ingestJobs, users, type Db } from "@fable/db";
 import { TRPCError } from "@trpc/server";
 import { PLAN_LIMITS, getEffectivePlan } from "@fable/stripe";
 import { logActivity } from "../log-activity";
+import { getMemberDisplayName } from "../user-display";
+
+const inviteLinkTypeSchema = z.enum(["member", "translator"]);
+
+type InviteLinkType = z.infer<typeof inviteLinkTypeSchema>;
+
+function generateInviteToken(): string {
+  return uuid().replace(/-/g, "");
+}
+
+async function generateUniqueInviteToken(
+  db: Db,
+  column: "memberInviteToken" | "translatorInviteToken"
+): Promise<string> {
+  for (let i = 0; i < 5; i++) {
+    const token = generateInviteToken();
+    const clash = await db.query.projects.findFirst({
+      where: eq(projects[column], token),
+      columns: { id: true },
+    });
+    if (!clash) return token;
+  }
+  throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "TOKEN_GENERATION_FAILED" });
+}
+
+function resolveInviteLinkType(
+  project: {
+    memberInviteToken: string | null;
+    memberInviteEnabled: boolean;
+    translatorInviteToken: string | null;
+    translatorInviteEnabled: boolean;
+  },
+  token: string
+): InviteLinkType | null {
+  if (project.memberInviteToken === token && project.memberInviteEnabled) return "member";
+  if (project.translatorInviteToken === token && project.translatorInviteEnabled) return "translator";
+  return null;
+}
 
 const customLocaleSchema = z.object({ name: z.string().min(1), code: z.string().min(1) });
 
@@ -247,6 +285,26 @@ export const projectRouter = router({
         metadata: { locale: input.locale },
       });
 
+      if (ctx.ingestQueue) {
+        const vcsFiles = await ctx.db.query.sourceFiles.findMany({
+          where: and(
+            eq(sourceFiles.projectId, input.projectId),
+            eq(sourceFiles.sourceType, "vcs"),
+            eq(sourceFiles.status, "active")
+          ),
+        });
+        for (const file of vcsFiles) {
+          const ingestJobId = uuid();
+          await ctx.db.insert(ingestJobs).values({
+            id: ingestJobId,
+            sourceFileId: file.id,
+            trigger: "vcs_manual_sync",
+            status: "queued",
+          });
+          await ctx.ingestQueue.add("ingest", { ingestJobId, sourceFileId: file.id }, { jobId: ingestJobId });
+        }
+      }
+
       return locale!;
     }),
 
@@ -385,5 +443,223 @@ export const projectRouter = router({
       const pct = total === 0 ? 0 : Math.round((approvedCount / total) * 100);
 
       return { pct, keyCount, targetLocaleCount: targetLocales.length };
+    }),
+
+  getInviteLinks: protectedProcedure
+    .input(z.object({ projectId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+        columns: {
+          orgId: true,
+          memberInviteToken: true,
+          memberInviteEnabled: true,
+          translatorInviteToken: true,
+          translatorInviteEnabled: true,
+        },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const callerMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, project.orgId)
+        ),
+      });
+      if (!callerMember) throw new TRPCError({ code: "FORBIDDEN" });
+
+      const canManageMember = callerMember.role === "owner";
+      const canManageTranslator = callerMember.role !== "translator";
+
+      return {
+        member: canManageMember
+          ? {
+              enabled: project.memberInviteEnabled,
+              token: project.memberInviteEnabled ? project.memberInviteToken : null,
+            }
+          : null,
+        translator: canManageTranslator
+          ? {
+              enabled: project.translatorInviteEnabled,
+              token: project.translatorInviteEnabled ? project.translatorInviteToken : null,
+            }
+          : null,
+      };
+    }),
+
+  setInviteLink: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        type: inviteLinkTypeSchema,
+        enabled: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: eq(projects.id, input.projectId),
+        columns: { id: true, orgId: true },
+      });
+      if (!project) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const callerMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.userId, ctx.session.user.id),
+          eq(orgMembers.orgId, project.orgId)
+        ),
+      });
+      if (!callerMember) throw new TRPCError({ code: "FORBIDDEN" });
+
+      if (input.type === "member" && callerMember.role !== "owner") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+      if (input.type === "translator" && callerMember.role === "translator") {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      if (input.type === "member") {
+        if (!input.enabled) {
+          await ctx.db
+            .update(projects)
+            .set({ memberInviteEnabled: false, memberInviteToken: null })
+            .where(eq(projects.id, input.projectId));
+          return { enabled: false as const, token: null };
+        }
+
+        const token = await generateUniqueInviteToken(ctx.db, "memberInviteToken");
+        await ctx.db
+          .update(projects)
+          .set({ memberInviteToken: token, memberInviteEnabled: true })
+          .where(eq(projects.id, input.projectId));
+        return { enabled: true as const, token };
+      }
+
+      if (!input.enabled) {
+        await ctx.db
+          .update(projects)
+          .set({ translatorInviteEnabled: false, translatorInviteToken: null })
+          .where(eq(projects.id, input.projectId));
+        return { enabled: false as const, token: null };
+      }
+
+      const token = await generateUniqueInviteToken(ctx.db, "translatorInviteToken");
+      await ctx.db
+        .update(projects)
+        .set({ translatorInviteToken: token, translatorInviteEnabled: true })
+        .where(eq(projects.id, input.projectId));
+      return { enabled: true as const, token };
+    }),
+
+  validateInviteToken: publicProcedure
+    .input(z.object({ token: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: or(
+          eq(projects.memberInviteToken, input.token),
+          eq(projects.translatorInviteToken, input.token)
+        ),
+        columns: {
+          name: true,
+          orgId: true,
+          memberInviteToken: true,
+          memberInviteEnabled: true,
+          translatorInviteToken: true,
+          translatorInviteEnabled: true,
+        },
+        with: { org: { columns: { name: true } } },
+      });
+
+      if (!project) return { valid: false as const };
+
+      const type = resolveInviteLinkType(project, input.token);
+      if (!type) return { valid: false as const };
+
+      return {
+        valid: true as const,
+        orgName: project.org.name,
+        projectName: project.name,
+        role: type,
+      };
+    }),
+
+  acceptInvite: protectedProcedure
+    .input(z.object({ token: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.query.projects.findFirst({
+        where: or(
+          eq(projects.memberInviteToken, input.token),
+          eq(projects.translatorInviteToken, input.token)
+        ),
+        columns: {
+          id: true,
+          orgId: true,
+          memberInviteToken: true,
+          memberInviteEnabled: true,
+          translatorInviteToken: true,
+          translatorInviteEnabled: true,
+        },
+      });
+
+      if (!project) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "INVITE_INVALID" });
+      }
+
+      const type = resolveInviteLinkType(project, input.token);
+      if (!type) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "INVITE_DISABLED" });
+      }
+
+      const existingMember = await ctx.db.query.orgMembers.findFirst({
+        where: and(
+          eq(orgMembers.orgId, project.orgId),
+          eq(orgMembers.userId, ctx.session.user.id)
+        ),
+      });
+      if (existingMember) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "ALREADY_MEMBER" });
+      }
+
+      const role = type === "member" ? "member" : "translator";
+
+      if (role === "member") {
+        const owner = await ctx.db.query.orgMembers.findFirst({
+          where: and(eq(orgMembers.orgId, project.orgId), eq(orgMembers.role, "owner")),
+          with: { user: { columns: { plan: true } } },
+        });
+        if (getEffectivePlan(owner?.user.plan ?? "free") === "free") {
+          const [{ value: memberCount }] = await ctx.db
+            .select({ value: count() })
+            .from(orgMembers)
+            .where(eq(orgMembers.orgId, project.orgId));
+          if (memberCount >= PLAN_LIMITS.free.members) {
+            throw new TRPCError({ code: "FORBIDDEN", message: "MEMBER_LIMIT_REACHED" });
+          }
+        }
+      }
+
+      const joiningUser = await ctx.db.query.users.findFirst({
+        where: eq(users.id, ctx.session.user.id),
+        columns: { id: true, name: true, username: true, email: true },
+      });
+
+      await ctx.db.insert(orgMembers).values({
+        id: uuid(),
+        orgId: project.orgId,
+        userId: ctx.session.user.id,
+        role,
+      });
+
+      await logActivity(ctx.db, {
+        projectId: project.id,
+        userId: ctx.session.user.id,
+        type: "member_joined",
+        metadata: {
+          memberUserId: ctx.session.user.id,
+          memberName: joiningUser ? getMemberDisplayName(joiningUser) : ctx.session.user.id,
+          role,
+        },
+      });
+
+      return { orgId: project.orgId, projectId: project.id, role };
     }),
 });

@@ -1,6 +1,5154 @@
 {
+  "jXfRsI": {
+    "translation": "",
+    "message": "{0} more referrals to unlock {1}",
+    "placeholders": {
+      "0": [
+        "stats.nextMilestone.count - qualifiedCount"
+      ],
+      "1": [
+        "stats.nextMilestone.label"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        239
+      ]
+    ]
+  },
+  "yeltCU": {
+    "translation": "",
+    "message": "{0} referrals",
+    "placeholders": {
+      "0": [
+        "milestone.count"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        68
+      ]
+    ]
+  },
+  "xYG88U": {
+    "translation": "",
+    "message": "{0} types",
+    "placeholders": {
+      "0": [
+        "selectedTypes.length"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        300
+      ]
+    ]
+  },
+  "wOpf8H": {
+    "translation": "",
+    "message": "<0>They sign up and get <1>2 months of Pro free</1> when they upgrade.</0>",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        269
+      ]
+    ]
+  },
+  "wQaj57": {
+    "translation": "",
+    "message": "<0>Your friends get <1>2 months of Pro free</1> when they upgrade.</0>",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        141
+      ]
+    ]
+  },
+  "j4292R": {
+    "translation": "",
+    "message": "$313 billed annually",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        150
+      ]
+    ]
+  },
+  "xKn13Y": {
+    "translation": "",
+    "message": "1 more referral to unlock {0}",
+    "placeholders": {
+      "0": [
+        "stats.nextMilestone.label"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        238
+      ]
+    ]
+  },
+  "XzLpsI": {
+    "translation": "",
+    "message": "1 project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        24
+      ]
+    ]
+  },
+  "+sEbWB": {
+    "translation": "",
+    "message": "1 referral",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        67
+      ]
+    ]
+  },
+  "Q0B7GR": {
+    "translation": "",
+    "message": "1,000 translation keys",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        26
+      ]
+    ]
+  },
+  "R1jRUZ": {
+    "translation": "",
+    "message": "10% off",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        93
+      ]
+    ]
+  },
+  "vOnVAT": {
+    "translation": "",
+    "message": "2 months of Pro free",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        96
+      ],
+      [
+        "components/auth/AuthForm.tsx",
+        228
+      ]
+    ]
+  },
+  "sBvslV": {
+    "translation": "",
+    "message": "3 team members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        25
+      ]
+    ]
+  },
+  "zArA23": {
+    "translation": "",
+    "message": "50,000 MT characters included",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        35
+      ]
+    ]
+  },
+  "7Mv+KR": {
+    "translation": "",
+    "message": "A custom language with that code already exists.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        115
+      ]
+    ]
+  },
+  "QMv7jM": {
+    "translation": "",
+    "message": "A project is a workspace for your translation files and team.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        212
+      ]
+    ]
+  },
+  "VGEHpR": {
+    "translation": "",
+    "message": "A short description of what this project is.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        314
+      ]
+    ]
+  },
+  "AeXO77": {
+    "translation": "",
+    "message": "Account",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        337
+      ]
+    ]
+  },
+  "XJOV1Y": {
+    "translation": "",
+    "message": "Activity",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        495
+      ],
+      [
+        "components/AppSidebar.tsx",
+        72
+      ]
+    ]
+  },
+  "m16xKo": {
+    "translation": "",
+    "message": "Add",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        299
+      ]
+    ]
+  },
+  "bQc0uF": {
+    "translation": "",
+    "message": "Add a custom language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        277
+      ]
+    ]
+  },
+  "uLvjiZ": {
+    "translation": "",
+    "message": "Add a language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        227
+      ]
+    ]
+  },
+  "1wdDm9": {
+    "translation": "",
+    "message": "Add language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        465
+      ]
+    ]
+  },
+  "02T6ht": {
+    "translation": "",
+    "message": "Add languages and your proficiency level, similar to LinkedIn.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        402
+      ]
+    ]
+  },
+  "+4uZsz": {
+    "translation": "",
+    "message": "Add languages that are not in the standard list, such as regional variants or internal codes.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        245
+      ]
+    ]
+  },
+  "M/pFhS": {
+    "translation": "",
+    "message": "Add people who should have access to this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        131
+      ]
+    ]
+  },
+  "aCl9zQ": {
+    "translation": "",
+    "message": "Add project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/ProjectSwitcher.tsx",
+        61
+      ],
+      [
+        "components/ProjectSwitcher.tsx",
+        104
+      ]
+    ]
+  },
+  "qx7kPl": {
+    "translation": "",
+    "message": "Add translator",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        306
+      ]
+    ]
+  },
+  "5A4TZa": {
+    "translation": "",
+    "message": "Adding...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        307
+      ]
+    ]
+  },
+  "r2QauF": {
+    "translation": "",
+    "message": "All languages",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        511
+      ]
+    ]
+  },
+  "p8BqoC": {
+    "translation": "",
+    "message": "All translations are approved immediately without review.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        164
+      ]
+    ]
+  },
+  "XWXPYy": {
+    "message": "All translations must be approved by another admin before they are published.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        172
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "jOeL62": {
+    "translation": "",
+    "message": "All translations must be approved by another team member before they are published.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        172
+      ]
+    ]
+  },
+  "h6zvpR": {
+    "translation": "",
+    "message": "All types",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        297
+      ]
+    ]
+  },
+  "UBpkWM": {
+    "translation": "",
+    "message": "All users",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        522
+      ]
+    ]
+  },
+  "apkgHD": {
+    "translation": "",
+    "message": "Allows projects to sync source files and push translations back as pull requests.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        63
+      ]
+    ]
+  },
+  "gwPMvj": {
+    "translation": "",
+    "message": "Already a member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        108
+      ]
+    ]
+  },
+  "8wYDMp": {
+    "translation": "",
+    "message": "Already have an account?",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        297
+      ]
+    ]
+  },
+  "YkfDoz": {
+    "translation": "",
+    "message": "Annual",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        124
+      ],
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        159
+      ],
+      [
+        "app/pricing/page.tsx",
+        91
+      ],
+      [
+        "components/auth/AuthForm.tsx",
+        257
+      ]
+    ]
+  },
+  "n1XdKd": {
+    "translation": "",
+    "message": "Any date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        394
+      ]
+    ]
+  },
+  "zXe/+5": {
+    "translation": "",
+    "message": "Anyone can view this project's translations and contribute suggestions.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        108
+      ]
+    ]
+  },
+  "Zovgax": {
+    "translation": "",
+    "message": "Anyone can view your profile page.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        504
+      ]
+    ]
+  },
+  "cdkSKe": {
+    "translation": "",
+    "message": "Anyone with the link can join. Disable to revoke access. Re-enabling creates a new link.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/InviteLinkSection.tsx",
+        62
+      ]
+    ]
+  },
+  "+zzRyi": {
+    "translation": "",
+    "message": "Anyone with this link can join as a team member. Only share it with people you trust.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        219
+      ]
+    ],
+    "obsolete": true
+  },
+  "PJgrtt": {
+    "translation": "",
+    "message": "Anyone with this link can join as a translator. Only share it with people you trust.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        301
+      ]
+    ],
+    "obsolete": true
+  },
+  "wTcjQo": {
+    "translation": "",
+    "message": "Audit log",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        48
+      ]
+    ]
+  },
+  "mYntvl": {
+    "translation": "",
+    "message": "Available on this server.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        466
+      ]
+    ]
+  },
+  "sP1VyX": {
+    "translation": "",
+    "message": "Basic information about this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        302
+      ]
+    ]
+  },
+  "R+w/Va": {
+    "translation": "",
+    "message": "Billing",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/layout.tsx",
+        13
+      ]
+    ]
+  },
+  "P1pZsZ": {
+    "translation": "",
+    "message": "Billing is not configured on this server. Upgrades are unavailable and all accounts use the free tier.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        181
+      ]
+    ]
+  },
+  "UtGIJi": {
+    "translation": "",
+    "message": "Both a name and a code are required.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        108
+      ]
+    ]
+  },
+  "dEgA5A": {
+    "translation": "",
+    "message": "Cancel",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        373
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        595
+      ]
+    ]
+  },
+  "8dv4rG": {
+    "translation": "",
+    "message": "Cannot join",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        124
+      ]
+    ]
+  },
+  "mr5CTo": {
+    "translation": "",
+    "message": "Choose a handle",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        191
+      ]
+    ]
+  },
+  "khEQ02": {
+    "message": "Choose a username",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        116
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "jSLEfR": {
+    "translation": "",
+    "message": "Choose how Fable looks on this device.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        87
+      ]
+    ]
+  },
+  "KTL722": {
+    "translation": "",
+    "message": "Choose the language used across the Fable interface.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        70
+      ]
+    ]
+  },
+  "h4XVWF": {
+    "message": "Claim offer",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        46
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "DdoShw": {
+    "translation": "",
+    "message": "Claim your free Pro",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        39
+      ]
+    ]
+  },
+  "hRWvpI": {
+    "translation": "",
+    "message": "Claimed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        76
+      ]
+    ]
+  },
+  "xCJdfg": {
+    "translation": "",
+    "message": "Clear",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        537
+      ]
+    ]
+  },
+  "FBIuPX": {
+    "translation": "",
+    "message": "Clear selection",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        339
+      ]
+    ]
+  },
+  "6erIKy": {
+    "translation": "",
+    "message": "Code (e.g. en-GB)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        288
+      ]
+    ]
+  },
+  "dtQIWT": {
+    "translation": "",
+    "message": "Collaboration",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/layout.tsx",
+        13
+      ]
+    ]
+  },
+  "an/9it": {
+    "translation": "",
+    "message": "Collaborator",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        184
+      ]
+    ]
+  },
+  "bJPo3j": {
+    "translation": "",
+    "message": "Collaborators",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        190
+      ],
+      [
+        "components/AppSidebar.tsx",
+        73
+      ]
+    ]
+  },
+  "mkMLq4": {
+    "translation": "",
+    "message": "Collapse sidebar",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        116
+      ]
+    ]
+  },
+  "AUYALh": {
+    "translation": "",
+    "message": "Coming soon",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        186
+      ]
+    ]
+  },
+  "8CLnho": {
+    "translation": "",
+    "message": "Community support",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        28
+      ]
+    ]
+  },
+  "yd2+us": {
+    "translation": "",
+    "message": "Configure project name, locales, and collaboration settings.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/layout.tsx",
+        22
+      ]
+    ]
+  },
+  "ovVXx8": {
+    "translation": "",
+    "message": "Configure which events trigger notifications for project members.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        235
+      ]
+    ]
+  },
+  "jPpVoJ": {
+    "translation": "",
+    "message": "Confirm deletion",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        585
+      ]
+    ]
+  },
+  "JRQitQ": {
+    "translation": "",
+    "message": "Confirm new password",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        531
+      ]
+    ]
+  },
+  "aGAeJL": {
+    "translation": "",
+    "message": "Confirm with your password",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        569
+      ]
+    ]
+  },
+  "iSLIjg": {
+    "translation": "",
+    "message": "Connect",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        98
+      ]
+    ]
+  },
+  "QHcLEN": {
+    "translation": "",
+    "message": "Connected",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        410
+      ],
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        118
+      ]
+    ]
+  },
+  "9TzudL": {
+    "translation": "",
+    "message": "Connected accounts",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        52
+      ]
+    ]
+  },
+  "z5kV0h": {
+    "translation": "",
+    "message": "Connections",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/layout.tsx",
+        15
+      ]
+    ]
+  },
+  "Bhgd0l": {
+    "translation": "",
+    "message": "Contact us",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        202
+      ]
+    ]
+  },
+  "3gCD+B": {
+    "translation": "",
+    "message": "Continue with email",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        274
+      ]
+    ]
+  },
+  "8tLzmJ": {
+    "translation": "",
+    "message": "Continue without subscribing for now",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        283
+      ]
+    ]
+  },
+  "DECzvu": {
+    "translation": "",
+    "message": "Control how translations move from submission to approval.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        261
+      ]
+    ]
+  },
+  "E5U3o7": {
+    "translation": "",
+    "message": "Control who can see your public profile.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        471
+      ]
+    ]
+  },
+  "S3/HpC": {
+    "translation": "",
+    "message": "Control who can view and contribute to this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        179
+      ]
+    ]
+  },
+  "6V3Ea3": {
+    "translation": "",
+    "message": "Copied",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/InviteLinkSection.tsx",
+        88
+      ]
+    ]
+  },
+  "PiH3UR": {
+    "translation": "",
+    "message": "Copied!",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        189
+      ]
+    ]
+  },
+  "he3ygx": {
+    "translation": "",
+    "message": "Copy",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        189
+      ],
+      [
+        "components/InviteLinkSection.tsx",
+        93
+      ]
+    ]
+  },
+  "JI5PBQ": {
+    "translation": "",
+    "message": "Copy HTML",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        202
+      ]
+    ]
+  },
+  "x7uIlL": {
+    "translation": "",
+    "message": "Copy invite link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/InviteLinkSection.tsx",
+        83
+      ]
+    ]
+  },
+  "DohqH+": {
+    "translation": "",
+    "message": "Copy markdown",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        184
+      ]
+    ]
+  },
+  "me9u2B": {
+    "translation": "",
+    "message": "Could not add language.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        72
+      ]
+    ]
+  },
+  "w0NjGg": {
+    "translation": "",
+    "message": "Could not change password.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        297
+      ]
+    ]
+  },
+  "hyHegz": {
+    "translation": "",
+    "message": "Could not delete account.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        318
+      ]
+    ]
+  },
+  "ZrGsb2": {
+    "translation": "",
+    "message": "Could not delete project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        252
+      ]
+    ]
+  },
+  "0U5h6m": {
+    "translation": "",
+    "message": "Could not join",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        139
+      ]
+    ]
+  },
+  "+REUaD": {
+    "translation": "",
+    "message": "Could not open billing portal. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        59
+      ]
+    ]
+  },
+  "imo1Xn": {
+    "translation": "",
+    "message": "Could not remove language.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        77
+      ]
+    ]
+  },
+  "4H1Lxu": {
+    "translation": "",
+    "message": "Could not remove member.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        100
+      ]
+    ]
+  },
+  "X+7jbg": {
+    "translation": "",
+    "message": "Could not remove translator.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        144
+      ]
+    ]
+  },
+  "EFUL0b": {
+    "translation": "",
+    "message": "Could not start checkout. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        54
+      ]
+    ]
+  },
+  "nDyywM": {
+    "translation": "",
+    "message": "Could not update cap.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        70
+      ]
+    ]
+  },
+  "9sW6Gt": {
+    "translation": "",
+    "message": "Could not update invite link.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        156
+      ]
+    ]
+  },
+  "BGDt6y": {
+    "translation": "",
+    "message": "Could not update profile.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        156
+      ]
+    ]
+  },
+  "4yW5qD": {
+    "translation": "",
+    "message": "Could not update project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        58
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        81
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        243
+      ]
+    ]
+  },
+  "ies64X": {
+    "translation": "",
+    "message": "Could not update source language.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        65
+      ]
+    ]
+  },
+  "d6P2N1": {
+    "translation": "",
+    "message": "Could not verify this referral link. You can still sign up.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        161
+      ]
+    ]
+  },
+  "HSIqMX": {
+    "translation": "",
+    "message": "Create a new project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        210
+      ]
+    ]
+  },
+  "Q7h9s/": {
+    "translation": "",
+    "message": "Create project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        316
+      ]
+    ]
+  },
+  "HM56Bx": {
+    "translation": "",
+    "message": "Creating...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        316
+      ]
+    ]
+  },
+  "Pn2B7/": {
+    "translation": "",
+    "message": "Current password",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        514
+      ]
+    ]
+  },
+  "A+zoTy": {
+    "translation": "",
+    "message": "Current plan",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        116
+      ]
+    ]
+  },
+  "xYsaNl": {
+    "translation": "",
+    "message": "Current: {0} chars",
+    "placeholders": {
+      "0": [
+        "usage.mtCharsCap.toLocaleString()"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        228
+      ]
+    ]
+  },
+  "8Tg/JR": {
+    "translation": "",
+    "message": "Custom",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        190
+      ]
+    ]
+  },
+  "D88QFA": {
+    "translation": "",
+    "message": "Custom contracts",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        51
+      ]
+    ]
+  },
+  "i3FP3S": {
+    "translation": "",
+    "message": "Custom language added.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        129
+      ]
+    ]
+  },
+  "PPV8BU": {
+    "translation": "",
+    "message": "Custom language codes",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        244
+      ]
+    ]
+  },
+  "7Gc7lA": {
+    "translation": "",
+    "message": "Custom language removed.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        147
+      ]
+    ]
+  },
+  "hRbck8": {
+    "translation": "",
+    "message": "Custom MT character limits",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        46
+      ]
+    ]
+  },
+  "Zz6Cxn": {
+    "translation": "",
+    "message": "Danger zone",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        330
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        553
+      ]
+    ]
+  },
+  "pvnfJD": {
+    "translation": "",
+    "message": "Dark",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        63
+      ],
+      [
+        "components/UserMenu.tsx",
+        46
+      ]
+    ]
+  },
+  "7p5kLi": {
+    "translation": "",
+    "message": "Dashboard",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        66
+      ]
+    ]
+  },
+  "As7Osr": {
+    "translation": "",
+    "message": "Date & time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        377
+      ]
+    ]
+  },
+  "tUWfga": {
+    "translation": "",
+    "message": "Dedicated support",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        50
+      ]
+    ]
+  },
+  "ZDGm40": {
+    "translation": "",
+    "message": "Delete account",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        565
+      ]
+    ]
+  },
+  "mp235G": {
+    "translation": "",
+    "message": "Delete project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        342
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        363
+      ]
+    ]
+  },
+  "EF2EU9": {
+    "translation": "",
+    "message": "Deleting...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        363
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        585
+      ]
+    ]
+  },
+  "Nu4oKW": {
+    "translation": "",
+    "message": "Description",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        313
+      ]
+    ]
+  },
+  "+K0AvT": {
+    "translation": "",
+    "message": "Disconnect",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        93
+      ]
+    ]
+  },
+  "ln9/n9": {
+    "translation": "",
+    "message": "Don't have an account?",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        290
+      ]
+    ]
+  },
+  "O3oNi5": {
+    "translation": "",
+    "message": "Email",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        368
+      ]
+    ]
+  },
+  "ATGYL1": {
+    "translation": "",
+    "message": "Email address",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        213
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        305
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        140
+      ]
+    ]
+  },
+  "jvneza": {
+    "translation": "",
+    "message": "Email support",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        41
+      ]
+    ]
+  },
+  "HJ0ou0": {
+    "translation": "",
+    "message": "Embed a badge in your repository's README.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        325
+      ]
+    ]
+  },
+  "xRPn3U": {
+    "translation": "",
+    "message": "Enter your email address",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        206
+      ]
+    ]
+  },
+  "n9V+ps": {
+    "translation": "",
+    "message": "Enter your name",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        181
+      ]
+    ]
+  },
+  "NgaR6B": {
+    "translation": "",
+    "message": "Enter your password",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        575
+      ],
+      [
+        "components/auth/AuthForm.tsx",
+        217
+      ]
+    ]
+  },
+  "Ug8zcH": {
+    "translation": "",
+    "message": "Enter your password to confirm deletion.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        309
+      ]
+    ]
+  },
+  "GpB8YV": {
+    "translation": "",
+    "message": "Enterprise",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        183
+      ]
+    ]
+  },
+  "kz/8m8": {
+    "translation": "",
+    "message": "Everything in Pro",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        45
+      ]
+    ]
+  },
+  "tugdy6": {
+    "translation": "",
+    "message": "Expand sidebar",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        116
+      ]
+    ]
+  },
+  "/QQbWr": {
+    "translation": "",
+    "message": "Failed to add translator. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        134
+      ]
+    ]
+  },
+  "BP9PkD": {
+    "translation": "",
+    "message": "Failed to create project. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        89
+      ]
+    ]
+  },
+  "TaxG+H": {
+    "translation": "",
+    "message": "Failed to disconnect",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        30
+      ]
+    ]
+  },
+  "o8vBGn": {
+    "translation": "",
+    "message": "Failed to invite member. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        114
+      ]
+    ]
+  },
+  "WaCrWv": {
+    "translation": "",
+    "message": "Failed to invite. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        117
+      ]
+    ]
+  },
+  "TW/7vv": {
+    "translation": "",
+    "message": "Failed to load billing information.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        86
+      ]
+    ]
+  },
+  "7if9X1": {
+    "translation": "",
+    "message": "Failed to load project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        182
+      ]
+    ]
+  },
+  "e3Q8DH": {
+    "translation": "",
+    "message": "For growing teams shipping software in multiple languages.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        154
+      ]
+    ]
+  },
+  "061d4F": {
+    "translation": "",
+    "message": "For individuals and small open source projects.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        112
+      ]
+    ]
+  },
+  "JXVQi+": {
+    "translation": "",
+    "message": "For large teams that need custom limits, SSO, and SLAs.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        193
+      ]
+    ]
+  },
+  "W4rVqn": {
+    "translation": "",
+    "message": "for unlimited members.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        158
+      ]
+    ]
+  },
+  "2POOFK": {
+    "translation": "",
+    "message": "Free",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        105
+      ]
+    ]
+  },
+  "scmRyR": {
+    "translation": "",
+    "message": "Full access",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        130
+      ]
+    ]
+  },
+  "Weq9zb": {
+    "translation": "",
+    "message": "General",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/layout.tsx",
+        12
+      ]
+    ]
+  },
+  "fiw56L": {
+    "translation": "",
+    "message": "Generating your link...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        193
+      ]
+    ]
+  },
+  "ZDIydz": {
+    "translation": "",
+    "message": "Get started",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(auth)/signup/page.tsx",
+        24
+      ]
+    ]
+  },
+  "h2b6Pp": {
+    "translation": "",
+    "message": "Get started free",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        120
+      ]
+    ]
+  },
+  "D6vxT1": {
+    "translation": "",
+    "message": "Get your link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        34
+      ]
+    ]
+  },
+  "XsGe9O": {
+    "translation": "",
+    "message": "GitHub badge",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        325
+      ]
+    ]
+  },
+  "/bBVaD": {
+    "translation": "",
+    "message": "GitHub disconnected",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        26
+      ]
+    ]
+  },
+  "7kOQJ9": {
+    "translation": "",
+    "message": "GitHub integration is not configured on this server.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        35
+      ]
+    ]
+  },
+  "pFl81b": {
+    "translation": "",
+    "message": "GitHub integration is not configured on this server. Ask your administrator to set the GitHub App environment variables.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        389
+      ]
+    ]
+  },
+  "V5uM4h": {
+    "translation": "",
+    "message": "GitHub integration requires server configuration. Set GITHUB_APP_ID, GITHUB_PRIVATE_KEY, GITHUB_WEBHOOK_SECRET, and GITHUB_APP_SLUG to enable it.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        110
+      ]
+    ]
+  },
+  "sB4ly6": {
+    "translation": "",
+    "message": "GitHub integration requires server configuration. Set GITHUB_APP_ID, GITHUB_PRIVATE_KEY, GITHUB_WEBHOOK_SECRET, and NEXT_PUBLIC_GITHUB_APP_SLUG to enable it.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        99
+      ]
+    ],
+    "obsolete": true
+  },
+  "xziKPE": {
+    "translation": "",
+    "message": "Glossary",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        39
+      ]
+    ]
+  },
+  "ty6lQJ": {
+    "translation": "",
+    "message": "Glossary access",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        206
+      ]
+    ]
+  },
+  "10Xyas": {
+    "translation": "",
+    "message": "Go to dashboard",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        65
+      ],
+      [
+        "app/join/[token]/page.tsx",
+        113
+      ],
+      [
+        "app/join/[token]/page.tsx",
+        129
+      ]
+    ]
+  },
+  "koCHSy": {
+    "translation": "",
+    "message": "Go to project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        193
+      ]
+    ]
+  },
+  "Nf7oXL": {
+    "translation": "",
+    "message": "Handle",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        355
+      ]
+    ]
+  },
+  "cj8not": {
+    "translation": "",
+    "message": "Handle can only contain lowercase letters, numbers, and underscores.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        70
+      ]
+    ]
+  },
+  "2Ijztz": {
+    "translation": "",
+    "message": "Handle must be 3-30 characters and use only lowercase letters, numbers, and underscores.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        202
+      ]
+    ]
+  },
+  "vNPOQl": {
+    "translation": "",
+    "message": "Handle must be at least 3 characters.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        64
+      ]
+    ]
+  },
+  "8AULTO": {
+    "translation": "",
+    "message": "How it works",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        133
+      ],
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        261
+      ]
+    ]
+  },
+  "FBknns": {
+    "translation": "",
+    "message": "HTML",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        195
+      ]
+    ]
+  },
+  "jLOe+a": {
+    "translation": "",
+    "message": "installation",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        118
+      ]
+    ]
+  },
+  "nbfdhU": {
+    "translation": "",
+    "message": "Integrations",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        71
+      ]
+    ]
+  },
+  "3dioPi": {
+    "translation": "",
+    "message": "Interface language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        69
+      ]
+    ]
+  },
+  "kO3I6g": {
+    "translation": "",
+    "message": "Invalid email or password.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        139
+      ]
+    ]
+  },
+  "MFKlMB": {
+    "translation": "",
+    "message": "Invite",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        214
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        148
+      ]
+    ]
+  },
+  "PWIq/W": {
+    "translation": "",
+    "message": "Invite by link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        230
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        310
+      ]
+    ]
+  },
+  "rCvuwn": {
+    "translation": "",
+    "message": "Invite link invalid",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        60
+      ]
+    ]
+  },
+  "2AL6ct": {
+    "translation": "",
+    "message": "Invite sent.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        106
+      ]
+    ]
+  },
+  "qSfH/A": {
+    "translation": "",
+    "message": "Invite team members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        129
+      ]
+    ]
+  },
+  "LNgO3H": {
+    "translation": "",
+    "message": "Inviting...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        215
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        148
+      ]
+    ]
+  },
+  "uru+Wl": {
+    "translation": "",
+    "message": "Join <0>{0}</0> as a team member.",
+    "placeholders": {
+      "0": [
+        "invite.orgName"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        79
+      ]
+    ]
+  },
+  "RwS1A8": {
+    "translation": "",
+    "message": "Join <0>{0}</0> as a translator.",
+    "placeholders": {
+      "0": [
+        "invite.orgName"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        84
+      ]
+    ]
+  },
+  "vXIe7J": {
+    "translation": "",
+    "message": "Language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        72
+      ]
+    ]
+  },
+  "tj//t2": {
+    "translation": "",
+    "message": "Language name",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        282
+      ]
+    ]
+  },
+  "GAmD3h": {
+    "translation": "",
+    "message": "Languages",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/layout.tsx",
+        14
+      ]
+    ]
+  },
+  "XObUV6": {
+    "translation": "",
+    "message": "Languages you speak",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        401
+      ]
+    ]
+  },
+  "/xLIYF": {
+    "translation": "",
+    "message": "Languages your project will be translated into.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        189
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        257
+      ]
+    ]
+  },
+  "1njn7W": {
+    "translation": "",
+    "message": "Light",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        62
+      ],
+      [
+        "components/UserMenu.tsx",
+        47
+      ]
+    ]
+  },
+  "yQ2kGp": {
+    "translation": "",
+    "message": "Load more",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        614
+      ]
+    ]
+  },
+  "Z3FXyt": {
+    "translation": "",
+    "message": "Loading...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(auth)/login/page.tsx",
+        20
+      ],
+      [
+        "app/(auth)/signup/page.tsx",
+        28
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        611
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        101
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        155
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        297
+      ],
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        82
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        326
+      ],
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        115
+      ],
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        157
+      ]
+    ]
+  },
+  "sQia9P": {
+    "translation": "",
+    "message": "Log in",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        299
+      ]
+    ]
+  },
+  "I0Rpey": {
+    "translation": "",
+    "message": "Log in to join",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        91
+      ]
+    ]
+  },
+  "FgAxTj": {
+    "translation": "",
+    "message": "Log out",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/UserMenu.tsx",
+        126
+      ]
+    ]
+  },
+  "v05zbI": {
+    "message": "Lowercase letters, numbers, and underscores only.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        342
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "G4M4cK": {
+    "translation": "",
+    "message": "Machine translation",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        450
+      ]
+    ]
+  },
+  "jHIB5K": {
+    "translation": "",
+    "message": "Machine translation is not configured on this server. Set OPENAI_API_KEY to enable it.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        472
+      ]
+    ]
+  },
+  "wckWOP": {
+    "translation": "",
+    "message": "Manage",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        80
+      ]
+    ]
+  },
+  "+nqVyF": {
+    "translation": "",
+    "message": "Manage billing",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        142
+      ]
+    ]
+  },
+  "eGHFS3": {
+    "translation": "",
+    "message": "Manage integration",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        417
+      ]
+    ]
+  },
+  "fOceZj": {
+    "translation": "",
+    "message": "Manage who has access to this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        192
+      ]
+    ]
+  },
+  "5CpcDv": {
+    "translation": "",
+    "message": "Manage your account and organisation settings.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/layout.tsx",
+        23
+      ]
+    ]
+  },
+  "u6Hp4N": {
+    "translation": "",
+    "message": "Markdown",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        177
+      ]
+    ]
+  },
+  "gOJyf5": {
+    "translation": "",
+    "message": "Member limit reached.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        115
+      ]
+    ]
+  },
+  "K/UAjZ": {
+    "translation": "",
+    "message": "Member removed.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        98
+      ]
+    ]
+  },
+  "wlQNTg": {
+    "message": "Members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        71
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "+8Nek/": {
+    "translation": "",
+    "message": "Monthly",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        124
+      ],
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        152
+      ],
+      [
+        "app/pricing/page.tsx",
+        80
+      ],
+      [
+        "components/auth/AuthForm.tsx",
+        246
+      ]
+    ]
+  },
+  "KZ7S8D": {
+    "translation": "",
+    "message": "Monthly overage cap",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        37
+      ]
+    ]
+  },
+  "CZvyiO": {
+    "translation": "",
+    "message": "More languages coming soon.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        368
+      ]
+    ],
+    "obsolete": true
+  },
+  "wQtWQO": {
+    "translation": "",
+    "message": "MT characters this month",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        207
+      ]
+    ]
+  },
+  "IFmA9L": {
+    "translation": "",
+    "message": "MT overage at $2 / 100k chars",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        36
+      ]
+    ]
+  },
+  "PKpBnN": {
+    "translation": "",
+    "message": "MT overage cap",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        218
+      ]
+    ]
+  },
+  "cG2RTR": {
+    "translation": "",
+    "message": "My project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        226
+      ]
+    ]
+  },
+  "6YtxFj": {
+    "translation": "",
+    "message": "Name",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        304
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        341
+      ]
+    ]
+  },
+  "VVSh3E": {
+    "translation": "",
+    "message": "Name cannot be empty.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        192
+      ]
+    ]
+  },
+  "/nT6AE": {
+    "translation": "",
+    "message": "New password",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        522
+      ]
+    ]
+  },
+  "6Ylhna": {
+    "translation": "",
+    "message": "New passwords do not match.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        280
+      ]
+    ]
+  },
+  "gKi+a/": {
+    "translation": "",
+    "message": "New project",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/ProjectSwitcher.tsx",
+        148
+      ]
+    ]
+  },
+  "hXzOVo": {
+    "translation": "",
+    "message": "Next",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        80
+      ]
+    ]
+  },
+  "FWCQ7h": {
+    "translation": "",
+    "message": "No account found with that email address.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        111
+      ],
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        130
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        108
+      ]
+    ]
+  },
+  "5PQCyo": {
+    "translation": "",
+    "message": "No activity matches your filters.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        550
+      ]
+    ]
+  },
+  "ZILws9": {
+    "translation": "",
+    "message": "No activity yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        550
+      ]
+    ]
+  },
+  "DikNZe": {
+    "translation": "",
+    "message": "No custom languages added yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        248
+      ]
+    ]
+  },
+  "oyUtf0": {
+    "translation": "",
+    "message": "No languages added yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        407
+      ]
+    ]
+  },
+  "KPV8GA": {
+    "translation": "",
+    "message": "No limit (billed per use)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        229
+      ]
+    ]
+  },
+  "hoP6Ow": {
+    "translation": "",
+    "message": "No projects found.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/ProjectCommandMenu.tsx",
+        41
+      ]
+    ]
+  },
+  "JKVnAm": {
+    "translation": "",
+    "message": "No target languages yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        192
+      ]
+    ]
+  },
+  "IPIOFL": {
+    "translation": "",
+    "message": "No translators yet.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        321
+      ]
+    ]
+  },
+  "nTau8t": {
+    "translation": "",
+    "message": "Not available on this server.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/connections/page.tsx",
+        102
+      ]
+    ]
+  },
+  "iDNBZe": {
+    "translation": "",
+    "message": "Notifications",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        234
+      ]
+    ]
+  },
+  "PZOoYj": {
+    "translation": "",
+    "message": "Notify translators of new strings",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        138
+      ]
+    ]
+  },
+  "hqJLKp": {
+    "translation": "",
+    "message": "Once they complete 3 paid months on a monthly plan, or 1 paid year on an annual plan, you earn a reward.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        147
+      ],
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        275
+      ]
+    ]
+  },
+  "2Elphy": {
+    "translation": "",
+    "message": "Once they complete their first paid month you earn a reward.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        230
+      ]
+    ],
+    "obsolete": true
+  },
+  "biaAbN": {
+    "translation": "",
+    "message": "Only org members can access this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        113
+      ]
+    ]
+  },
+  "OeNbDt": {
+    "translation": "",
+    "message": "Only Pro subscribers can refer people and earn referral rewards.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        125
+      ]
+    ]
+  },
+  "pMLouv": {
+    "translation": "",
+    "message": "Only you can view your profile.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        487
+      ]
+    ]
+  },
+  "iQGjpq": {
+    "translation": "",
+    "message": "OpenAI",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        458
+      ]
+    ]
+  },
+  "PKLY+1": {
+    "translation": "",
+    "message": "Opening...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        142
+      ]
+    ]
+  },
+  "pbzA+s": {
+    "translation": "",
+    "message": "Optional description",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        321
+      ]
+    ]
+  },
+  "/NLOmU": {
+    "translation": "",
+    "message": "Overage cap updated.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        67
+      ]
+    ]
+  },
+  "LtI9AS": {
+    "translation": "",
+    "message": "Owner",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        266
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        184
+      ]
+    ]
+  },
+  "8ZsakT": {
+    "translation": "",
+    "message": "Password",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        513
+      ]
+    ]
+  },
+  "8hWLoE": {
+    "translation": "",
+    "message": "Password must be at least 8 characters.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        284
+      ]
+    ]
+  },
+  "mroTI9": {
+    "translation": "",
+    "message": "Password updated.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        304
+      ]
+    ]
+  },
+  "UbRKMZ": {
+    "translation": "",
+    "message": "Pending",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        207
+      ]
+    ]
+  },
+  "xaP8N3": {
+    "translation": "",
+    "message": "Pending referrals qualify after 3 paid months on a monthly plan, or 1 paid year on an annual plan.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        212
+      ]
+    ]
+  },
+  "MQB+qM": {
+    "translation": "",
+    "message": "Pending referrals qualify once the person completes their first paid month.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        167
+      ]
+    ],
+    "obsolete": true
+  },
+  "uy1P97": {
+    "translation": "",
+    "message": "Permanently delete this project and all associated translation keys, locales, and data. This cannot be undone.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        332
+      ]
+    ]
+  },
+  "keefR0": {
+    "translation": "",
+    "message": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        555
+      ]
+    ]
+  },
+  "rYG2u6": {
+    "translation": "",
+    "message": "Please wait...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        269
+      ]
+    ]
+  },
+  "gL/sdV": {
+    "translation": "",
+    "message": "Popular",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        134
+      ]
+    ]
+  },
+  "snJ7+l": {
+    "translation": "",
+    "message": "Pre-translate keys with GPT-4o-mini. Requires a Pro plan and an OpenAI API key on the server.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/integrations/page.tsx",
+        460
+      ]
+    ]
+  },
+  "Q6hhn8": {
+    "translation": "",
+    "message": "Preferences",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/layout.tsx",
+        12
+      ]
+    ]
+  },
+  "zwBp5t": {
+    "translation": "",
+    "message": "Private",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        112
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        485
+      ]
+    ]
+  },
+  "3fPjUY": {
+    "translation": "",
+    "message": "Pro",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        140
+      ]
+    ]
+  },
+  "dTCh4j": {
+    "translation": "",
+    "message": "Pro includes 50,000 MT characters per month. Additional characters are billed at $2 per 100,000 chars. Set a monthly cap in billing settings to control spend.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        215
+      ]
+    ]
+  },
+  "58I/g0": {
+    "translation": "",
+    "message": "Pro required",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        123
+      ]
+    ]
+  },
+  "vERlcd": {
+    "translation": "",
+    "message": "Profile",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/layout.tsx",
+        11
+      ]
+    ]
+  },
+  "4Pj7ow": {
+    "translation": "",
+    "message": "Profile privacy",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        470
+      ]
+    ]
+  },
+  "xZ+amS": {
+    "translation": "",
+    "message": "Progress to next reward",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        223
+      ]
+    ]
+  },
+  "oJj+pj": {
+    "translation": "",
+    "message": "Project deleted.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        248
+      ]
+    ]
+  },
+  "tjbyOy": {
+    "translation": "",
+    "message": "Project details",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        302
+      ]
+    ]
+  },
+  "OyIC0Q": {
+    "translation": "",
+    "message": "Project name",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        310
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        219
+      ]
+    ]
+  },
+  "3imqku": {
+    "translation": "",
+    "message": "Project name cannot be empty.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        277
+      ]
+    ]
+  },
+  "R4sPvr": {
+    "translation": "",
+    "message": "Project name does not match.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        289
+      ]
+    ]
+  },
+  "Wsk5pi": {
+    "translation": "",
+    "message": "Project Settings",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/layout.tsx",
+        20
+      ]
+    ]
+  },
   "+0B+ue": {
-    "message": "Projekte",
+    "message": "Projects",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        191
+      ]
+    ],
     "translation": "Projekte"
+  },
+  "7d1a0d": {
+    "translation": "",
+    "message": "Public",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        107
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        502
+      ]
+    ]
+  },
+  "iW9XkE": {
+    "translation": "",
+    "message": "Public & private projects",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        27
+      ]
+    ]
+  },
+  "hi3Du/": {
+    "translation": "",
+    "message": "Qualified",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        203
+      ]
+    ]
+  },
+  "uNQ6eB": {
+    "translation": "",
+    "message": "Read only",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        120
+      ]
+    ]
+  },
+  "C/oPwX": {
+    "translation": "",
+    "message": "Recent changes and events across this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/activity/page.tsx",
+        497
+      ]
+    ]
+  },
+  "QDcqps": {
+    "translation": "",
+    "message": "Redirecting...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        170
+      ]
+    ]
+  },
+  "6nfq/M": {
+    "translation": "",
+    "message": "Refer friends",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        31
+      ]
+    ]
+  },
+  "YaFKza": {
+    "translation": "",
+    "message": "Referrals",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/layout.tsx",
+        14
+      ]
+    ]
+  },
+  "aseki4": {
+    "translation": "",
+    "message": "Referred by <0>@{0}</0>",
+    "placeholders": {
+      "0": [
+        "referral.referrerHandle"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        167
+      ]
+    ]
+  },
+  "kE8al3": {
+    "translation": "",
+    "message": "Remove cap",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        249
+      ]
+    ]
+  },
+  "/4xynG": {
+    "translation": "",
+    "message": "Remove custom language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        267
+      ]
+    ]
+  },
+  "842eib": {
+    "translation": "",
+    "message": "Remove language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        216
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        448
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        280
+      ]
+    ]
+  },
+  "99VIgC": {
+    "translation": "",
+    "message": "Remove member",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        277
+      ]
+    ]
+  },
+  "gjxInF": {
+    "translation": "",
+    "message": "Remove translator",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        354
+      ]
+    ]
+  },
+  "ZRYAMN": {
+    "translation": "",
+    "message": "Renews",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        130
+      ]
+    ]
+  },
+  "jeW3qs": {
+    "translation": "",
+    "message": "Require a second team member to approve team member translations",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        155
+      ]
+    ]
+  },
+  "i3Lu0E": {
+    "translation": "",
+    "message": "Require approval for translator submissions",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        148
+      ]
+    ]
+  },
+  "4cJ0hF": {
+    "translation": "",
+    "message": "Rewards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        246
+      ]
+    ]
+  },
+  "tfDRzk": {
+    "translation": "",
+    "message": "Save",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        116
+      ],
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        241
+      ]
+    ]
+  },
+  "XvjC4F": {
+    "translation": "",
+    "message": "Saving...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        116
+      ],
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        241
+      ]
+    ]
+  },
+  "blFttG": {
+    "translation": "",
+    "message": "Search projects",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/ProjectCommandMenu.tsx",
+        24
+      ]
+    ]
+  },
+  "6rVzU9": {
+    "translation": "",
+    "message": "Search projects (⌘K)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        136
+      ]
+    ]
+  },
+  "RVZJWQ": {
+    "translation": "",
+    "message": "Search projects...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/ProjectCommandMenu.tsx",
+        35
+      ]
+    ]
+  },
+  "4i5PKy": {
+    "translation": "",
+    "message": "Select a language to add...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        234
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        295
+      ]
+    ]
+  },
+  "QuYWkI": {
+    "translation": "",
+    "message": "Send a notification to project translators when new translation keys are added.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        139
+      ]
+    ]
+  },
+  "qrlg/M": {
+    "translation": "",
+    "message": "Set what translators can do with the organisation glossary on this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        207
+      ]
+    ]
+  },
+  "Tz0i8g": {
+    "translation": "",
+    "message": "Settings",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/layout.tsx",
+        21
+      ],
+      [
+        "components/AppSidebar.tsx",
+        74
+      ],
+      [
+        "components/UserMenu.tsx",
+        97
+      ]
+    ]
+  },
+  "YCaTyL": {
+    "translation": "",
+    "message": "Share Fable and earn rewards when your referrals upgrade.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        32
+      ]
+    ]
+  },
+  "RSN2f0": {
+    "translation": "",
+    "message": "Share this link. Anyone who signs up gets <0>2 months of Pro free</0> when they upgrade.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        175
+      ]
+    ]
+  },
+  "cmPUO0": {
+    "translation": "",
+    "message": "Share your link with a friend or on social media.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        265
+      ]
+    ]
+  },
+  "e+RpCP": {
+    "translation": "",
+    "message": "Sign up",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        292
+      ]
+    ]
+  },
+  "LuPlkQ": {
+    "translation": "",
+    "message": "Sign up and start trial",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        272
+      ]
+    ]
+  },
+  "J6f6xz": {
+    "translation": "",
+    "message": "Sign up below, then add your card on the next screen to start your trial. Your referral discount is applied automatically.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        232
+      ]
+    ]
+  },
+  "YEWle9": {
+    "translation": "",
+    "message": "Sign up failed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        92
+      ]
+    ]
+  },
+  "B1DM/W": {
+    "translation": "",
+    "message": "Sign up to join",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        94
+      ]
+    ]
+  },
+  "yrlCvg": {
+    "translation": "",
+    "message": "Sign up with email",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        273
+      ]
+    ]
+  },
+  "Ejjrq6": {
+    "translation": "",
+    "message": "Simple, transparent pricing",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        63
+      ]
+    ]
+  },
+  "cVvidz": {
+    "translation": "",
+    "message": "Site language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        367
+      ]
+    ],
+    "obsolete": true
+  },
+  "hnlGzG": {
+    "translation": "",
+    "message": "Skip for now",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        200
+      ]
+    ]
+  },
+  "zEcnBA": {
+    "translation": "",
+    "message": "SLA",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        49
+      ]
+    ]
+  },
+  "GJd/q+": {
+    "translation": "",
+    "message": "Slug:",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        233
+      ]
+    ]
+  },
+  "fWsBTs": {
+    "translation": "",
+    "message": "Something went wrong. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        141
+      ],
+      [
+        "components/auth/AuthForm.tsx",
+        117
+      ],
+      [
+        "components/auth/AuthForm.tsx",
+        147
+      ]
+    ]
+  },
+  "pX7IvN": {
+    "translation": "",
+    "message": "Source language",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        167
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        240
+      ]
+    ]
+  },
+  "osoTPV": {
+    "translation": "",
+    "message": "Source language updated.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        62
+      ]
+    ]
+  },
+  "sBJ5MF": {
+    "translation": "",
+    "message": "Sources",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        68
+      ]
+    ]
+  },
+  "j83mxq": {
+    "translation": "",
+    "message": "SSO / SAML",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        47
+      ]
+    ]
+  },
+  "LG9V8Q": {
+    "translation": "",
+    "message": "Start free. Upgrade when your team grows.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        66
+      ]
+    ]
+  },
+  "IpKSKO": {
+    "translation": "",
+    "message": "Start trial",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        106
+      ],
+      [
+        "components/SidebarAdCard.tsx",
+        46
+      ]
+    ]
+  },
+  "2wW0OO": {
+    "translation": "",
+    "message": "Stop machine translation once your monthly usage reaches this limit. This cap applies across all your projects. Leave blank for no cap (you will be billed per character above the 50k included).",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        220
+      ]
+    ]
+  },
+  "UN1oif": {
+    "translation": "",
+    "message": "Strings",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        67
+      ]
+    ]
+  },
+  "L3+fF1": {
+    "translation": "",
+    "message": "Suggest",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        125
+      ]
+    ]
+  },
+  "D+NlUC": {
+    "translation": "",
+    "message": "System",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        61
+      ],
+      [
+        "components/UserMenu.tsx",
+        45
+      ]
+    ]
+  },
+  "+X/Yu2": {
+    "translation": "",
+    "message": "Target languages",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        188
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        255
+      ]
+    ]
+  },
+  "GtycJ/": {
+    "translation": "",
+    "message": "Tasks",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        70
+      ]
+    ]
+  },
+  "KM6m8p": {
+    "translation": "",
+    "message": "Team",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        199
+      ]
+    ]
+  },
+  "T0u3ig": {
+    "translation": "",
+    "message": "Team members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        196
+      ]
+    ]
+  },
+  "ZkIpkX": {
+    "translation": "",
+    "message": "Team members have full access to the project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        201
+      ]
+    ]
+  },
+  "CiPcmX": {
+    "translation": "",
+    "message": "That person is already a collaborator or translator.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        132
+      ]
+    ]
+  },
+  "F/0wIT": {
+    "translation": "",
+    "message": "That person is already a member.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        113
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        110
+      ]
+    ]
+  },
+  "ycWG+O": {
+    "translation": "",
+    "message": "The language your strings are written in. All translations are derived from this.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        168
+      ]
+    ]
+  },
+  "FEr96N": {
+    "translation": "",
+    "message": "Theme",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/preferences/page.tsx",
+        86
+      ],
+      [
+        "components/UserMenu.tsx",
+        102
+      ]
+    ]
+  },
+  "KPgwpw": {
+    "translation": "",
+    "message": "This handle is already taken.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        80
+      ]
+    ]
+  },
+  "R4ZYPB": {
+    "translation": "",
+    "message": "This invite link is invalid or has been disabled.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        62
+      ]
+    ]
+  },
+  "t8wQ8b": {
+    "translation": "",
+    "message": "This language is already added.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/languages/page.tsx",
+        94
+      ]
+    ]
+  },
+  "iONOLk": {
+    "message": "This username is already taken.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        59
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "8fmY9E": {
+    "translation": "",
+    "message": "This workspace has reached its member limit.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        126
+      ]
+    ]
+  },
+  "n9nSNJ": {
+    "translation": "",
+    "message": "Time format",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        387
+      ]
+    ]
+  },
+  "40Gx0U": {
+    "translation": "",
+    "message": "Timezone",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        378
+      ]
+    ]
+  },
+  "15E3l8": {
+    "translation": "",
+    "message": "to create unlimited projects.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        309
+      ]
+    ]
+  },
+  "HUFkzc": {
+    "translation": "",
+    "message": "Translation keys",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        201
+      ]
+    ]
+  },
+  "iyUSAT": {
+    "translation": "",
+    "message": "Translation memory",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        40
+      ]
+    ]
+  },
+  "Y4WAkf": {
+    "translation": "",
+    "message": "Translation status",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        143
+      ]
+    ]
+  },
+  "Uql8FM": {
+    "translation": "",
+    "message": "Translation workflow",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        260
+      ]
+    ]
+  },
+  "kAy5R9": {
+    "translation": "",
+    "message": "Translations",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/AppSidebar.tsx",
+        69
+      ]
+    ]
+  },
+  "nqUH4O": {
+    "translation": "",
+    "message": "Translator added.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        125
+      ]
+    ]
+  },
+  "/McTML": {
+    "translation": "",
+    "message": "Translator removed.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        142
+      ]
+    ]
+  },
+  "oqxzSc": {
+    "message": "Translator translations are approved immediately. Admins require another admin to approve their translations.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        170
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "fbaV5S": {
+    "translation": "",
+    "message": "Translator translations are approved immediately. Team members require another team member to approve their translations.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        170
+      ]
+    ]
+  },
+  "cW8Uak": {
+    "translation": "",
+    "message": "Translators",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        291
+      ]
+    ]
+  },
+  "tKigsn": {
+    "translation": "",
+    "message": "Translators can add and edit glossary terms directly.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        131
+      ]
+    ]
+  },
+  "CcG0QY": {
+    "translation": "",
+    "message": "Translators can contribute translations to this project.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        293
+      ]
+    ]
+  },
+  "DLeP14": {
+    "translation": "",
+    "message": "Translators can suggest new glossary terms for review.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        126
+      ]
+    ]
+  },
+  "sJcJOJ": {
+    "translation": "",
+    "message": "Translators can view glossary terms but cannot edit or suggest.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        121
+      ]
+    ]
+  },
+  "V+V6yJ": {
+    "translation": "",
+    "message": "Translators must have their translations approved by a team member. Team members can approve their own translations.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        167
+      ]
+    ]
+  },
+  "jk1tjT": {
+    "message": "Translators must have their translations approved by an admin. Admins can approve their own translations.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        167
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "KDw4GX": {
+    "translation": "",
+    "message": "Try again",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        151
+      ]
+    ]
+  },
+  "Fz9hzg": {
+    "translation": "",
+    "message": "Type the project name to confirm",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        347
+      ]
+    ]
+  },
+  "DYqTfJ": {
+    "translation": "",
+    "message": "Unlimited projects",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        32
+      ]
+    ]
+  },
+  "aiDeB9": {
+    "translation": "",
+    "message": "Unlimited team members",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        33
+      ]
+    ]
+  },
+  "9bQpOB": {
+    "translation": "",
+    "message": "Unlimited translation keys",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        34
+      ]
+    ]
+  },
+  "3kYtXZ": {
+    "translation": "",
+    "message": "Unlock unlimited projects, MT translation, webhooks, and more.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        52
+      ]
+    ]
+  },
+  "EkH9pt": {
+    "translation": "",
+    "message": "Update",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        109
+      ]
+    ]
+  },
+  "Q3MPWA": {
+    "translation": "",
+    "message": "Update password",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        546
+      ]
+    ]
+  },
+  "B44Dtg": {
+    "translation": "",
+    "message": "Updated.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/page.tsx",
+        268
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        179
+      ]
+    ]
+  },
+  "RXbEvi": {
+    "translation": "",
+    "message": "Updating...",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        109
+      ],
+      [
+        "app/(dashboard)/settings/page.tsx",
+        546
+      ]
+    ]
+  },
+  "c5AXEX": {
+    "translation": "",
+    "message": "Upgrade - $26/mo billed annually",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        172
+      ]
+    ]
+  },
+  "1oY18c": {
+    "translation": "",
+    "message": "Upgrade - $29/mo",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        173
+      ]
+    ]
+  },
+  "IelE1h": {
+    "translation": "",
+    "message": "Upgrade to Pro",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        128
+      ],
+      [
+        "app/pricing/page.tsx",
+        163
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        156
+      ],
+      [
+        "components/NewProjectWizard.tsx",
+        307
+      ],
+      [
+        "components/SidebarAdCard.tsx",
+        51
+      ]
+    ]
+  },
+  "n8UPAF": {
+    "translation": "",
+    "message": "Upgrade to Pro and share your referral link.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        137
+      ]
+    ]
+  },
+  "RCGq1r": {
+    "translation": "",
+    "message": "Upgrade to Pro for more projects",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/ProjectSwitcher.tsx",
+        139
+      ]
+    ]
+  },
+  "w5jipA": {
+    "translation": "",
+    "message": "Upgrades are not available on this server.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        167
+      ]
+    ]
+  },
+  "D5hokV": {
+    "translation": "",
+    "message": "Usage this period",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        188
+      ]
+    ]
+  },
+  "7sNhEz": {
+    "message": "Username",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        341
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "Tv+LWr": {
+    "message": "Username can only contain lowercase letters, numbers, and underscores.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        49
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "AX8SoU": {
+    "message": "Username must be 3-30 characters and use only lowercase letters, numbers, and underscores.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        203
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "KxuDVb": {
+    "message": "Username must be at least 3 characters.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        43
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "OHNnYf": {
+    "translation": "",
+    "message": "View full pricing details",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        258
+      ]
+    ]
+  },
+  "y7e9aS": {
+    "translation": "",
+    "message": "View plans",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        54
+      ]
+    ]
+  },
+  "2q/Q7x": {
+    "translation": "",
+    "message": "Visibility",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        178
+      ]
+    ]
+  },
+  "v1kQyJ": {
+    "translation": "",
+    "message": "Webhooks",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/pricing/page.tsx",
+        38
+      ]
+    ]
+  },
+  "9eF5oV": {
+    "translation": "",
+    "message": "Welcome back",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(auth)/login/page.tsx",
+        16
+      ]
+    ]
+  },
+  "edLse2": {
+    "message": "When on, admins cannot approve their own translations - another admin must review them.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        156
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "Fsylpw": {
+    "translation": "",
+    "message": "When on, team members cannot approve their own translations - another team member must review them.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        156
+      ]
+    ]
+  },
+  "PWNh8X": {
+    "translation": "",
+    "message": "When on, translations from translators go into a review queue before being approved. When off, translator translations are approved immediately.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/settings/collaboration/page.tsx",
+        149
+      ]
+    ]
+  },
+  "kWJmRL": {
+    "translation": "",
+    "message": "You",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        82
+      ]
+    ]
+  },
+  "46mTv6": {
+    "translation": "",
+    "message": "You already added this language.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        259
+      ]
+    ]
+  },
+  "9FhlvZ": {
+    "translation": "",
+    "message": "You are already part of this workspace.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        110
+      ]
+    ]
+  },
+  "ynb8A4": {
+    "translation": "",
+    "message": "You are invited",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/join/[token]/page.tsx",
+        76
+      ]
+    ]
+  },
+  "+zy3Rx": {
+    "translation": "",
+    "message": "You have added all available languages.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        241
+      ]
+    ]
+  },
+  "0bqfgW": {
+    "translation": "",
+    "message": "You have reached the member limit on the free plan.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        154
+      ]
+    ]
+  },
+  "bqo9+3": {
+    "translation": "",
+    "message": "You have reached the member limit on the free plan. <0>Upgrade to Pro</0> for unlimited members.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/projects/[projectId]/collaborators/page.tsx",
+        220
+      ]
+    ]
+  },
+  "Q0jFzZ": {
+    "translation": "",
+    "message": "You have reached the project limit on the free plan.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/NewProjectWizard.tsx",
+        305
+      ]
+    ]
+  },
+  "BgDtpf": {
+    "translation": "",
+    "message": "You were referred. Add your card for <0>2 months of Pro free</0>.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        41
+      ]
+    ]
+  },
+  "iU+riZ": {
+    "message": "You were referred. Upgrade now for <0>2 months of Pro free</0>.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/SidebarAdCard.tsx",
+        41
+      ]
+    ],
+    "translation": "",
+    "obsolete": true
+  },
+  "cIhdWD": {
+    "translation": "",
+    "message": "You were referred. Your discount is saved and will be applied when you add your card.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/billing/page.tsx",
+        98
+      ]
+    ]
+  },
+  "d9hAC8": {
+    "translation": "",
+    "message": "Your display name shown across Fable.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        342
+      ]
+    ]
+  },
+  "q8yluz": {
+    "translation": "",
+    "message": "Your name",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        349
+      ]
+    ]
+  },
+  "THGKf0": {
+    "translation": "",
+    "message": "Your public identity on Fable.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        338
+      ]
+    ]
+  },
+  "9GOiAc": {
+    "translation": "",
+    "message": "Your referral discount will be applied when you upgrade to Pro.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "components/auth/AuthForm.tsx",
+        233
+      ]
+    ]
+  },
+  "65DeLY": {
+    "translation": "",
+    "message": "Your referral link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        172
+      ]
+    ]
+  },
+  "hMnKHS": {
+    "translation": "",
+    "message": "Your referrals",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/referrals/page.tsx",
+        199
+      ]
+    ]
+  },
+  "G0TSel": {
+    "translation": "",
+    "message": "Your unique @handle. Lowercase letters, numbers, and underscores only.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "app/(dashboard)/settings/page.tsx",
+        356
+      ]
+    ]
   }
 }

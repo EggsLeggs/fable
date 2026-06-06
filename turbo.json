@@ -40,6 +40,16 @@
     "db:studio": {
       "cache": false,
       "persistent": true
+    },
+    "lingui:extract": {
+      "cache": false
+    },
+    "lingui:compile": {
+      "cache": false
+    },
+    "lingui:extract:watch": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

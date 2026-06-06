@@ -302,7 +302,7 @@ const count = t`{count, plural, one {# key} other {# keys}}`;
 ### Development workflow
 
 1. Wrap new UI strings with `t\`...\`` or `<Trans>`.
-2. Run `npm run lingui:extract` from `apps/web/` to update the `.json` catalogs.
+2. Run `npm run lingui:extract` from the repo root to update the `.json` catalogs.
 3. Send the non-English `.json` files to translators (or use Lingo.dev CI).
 4. Run `npm run lingui:compile` before building to regenerate the `.ts` files.
 

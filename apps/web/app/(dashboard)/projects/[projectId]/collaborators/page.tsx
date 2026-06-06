@@ -144,14 +144,14 @@ export default function CollaboratorsPage({ params }: Props) {
     onError: (err) => toast.error(err.message ?? t`Could not remove translator.`),
   });
 
-  const inviteLinksQuery = trpc.organization.getInviteLinks.useQuery(
-    { orgId: orgId ?? "" },
-    { enabled: !!orgId }
+  const inviteLinksQuery = trpc.project.getInviteLinks.useQuery(
+    { projectId },
+    { enabled: !!projectId }
   );
 
-  const setInviteLink = trpc.organization.setInviteLink.useMutation({
+  const setInviteLink = trpc.project.setInviteLink.useMutation({
     onSuccess: () => {
-      void utils.organization.getInviteLinks.invalidate({ orgId });
+      void utils.project.getInviteLinks.invalidate({ projectId });
     },
     onError: (err) => toast.error(err.message ?? t`Could not update invite link.`),
   });
@@ -231,8 +231,7 @@ export default function CollaboratorsPage({ params }: Props) {
               inviteLink={inviteLinksQuery.data?.member ?? null}
               isPending={setInviteLink.isPending}
               onToggle={(enabled) => {
-                if (!orgId) return;
-                setInviteLink.mutate({ orgId, type: "member", enabled });
+                setInviteLink.mutate({ projectId, type: "member", enabled });
               }}
             />
           </div>
@@ -312,8 +311,7 @@ export default function CollaboratorsPage({ params }: Props) {
               inviteLink={inviteLinksQuery.data?.translator ?? null}
               isPending={setInviteLink.isPending}
               onToggle={(enabled) => {
-                if (!orgId) return;
-                setInviteLink.mutate({ orgId, type: "translator", enabled });
+                setInviteLink.mutate({ projectId, type: "translator", enabled });
               }}
             />
           </div>

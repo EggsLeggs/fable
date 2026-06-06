@@ -144,7 +144,7 @@ export const users = pgTable("user", {
     .default("private"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
-  // Billing — plan belongs to the user, limits apply to their org
+  // Billing - plan belongs to the user, limits apply to their org
   plan: planEnum("plan").notNull().default("free"),
   planStatus: planStatusEnum("plan_status").notNull().default("active"),
   billingCycle: billingCycleEnum("billing_cycle").notNull().default("monthly"),
@@ -206,10 +206,6 @@ export const organizations = pgTable("organization", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
-  memberInviteToken: text("member_invite_token").unique(),
-  memberInviteEnabled: boolean("member_invite_enabled").notNull().default(false),
-  translatorInviteToken: text("translator_invite_token").unique(),
-  translatorInviteEnabled: boolean("translator_invite_enabled").notNull().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
 });
@@ -248,6 +244,10 @@ export const projects = pgTable(
     customLocales: jsonb("custom_locales").$type<CustomLocale[]>().notNull().default([]),
     translatorApprovalRequired: boolean("translator_approval_required").notNull().default(true),
     adminSelfReviewRequired: boolean("admin_self_review_required").notNull().default(false),
+    memberInviteToken: text("member_invite_token").unique(),
+    memberInviteEnabled: boolean("member_invite_enabled").notNull().default(false),
+    translatorInviteToken: text("translator_invite_token").unique(),
+    translatorInviteEnabled: boolean("translator_invite_enabled").notNull().default(false),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },
