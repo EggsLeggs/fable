@@ -85,7 +85,7 @@ export function HomeNav({ isLoggedIn, localiseUrl }: HomeNavProps) {
         )}
       >
         <nav className="relative flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-sm font-bold tracking-tight">
+          <Link href="/" className="flex items-center gap-2 text-sm font-bold font-serif tracking-tight">
             <FableIcon className="h-5 w-auto" />
             fable
           </Link>

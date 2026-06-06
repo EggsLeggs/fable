@@ -19,7 +19,7 @@ export default function SignupPage() {
     <main className="h-screen pt-20 sm:pt-0">
       <div className="flex h-full flex-col items-center justify-start px-4 sm:justify-center">
         <div className="flex w-full max-w-md flex-col items-center">
-          <Link href="/" className="mb-6 flex items-center gap-2 text-sm font-bold tracking-tight text-foreground">
+          <Link href="/" className="mb-6 flex items-center gap-2 text-sm font-bold font-serif tracking-tight text-foreground">
             <FableIcon className="h-6 w-auto" />
             fable
           </Link>

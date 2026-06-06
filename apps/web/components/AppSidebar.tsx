@@ -59,7 +59,7 @@ export function AppSidebar({
           <Link
             href="/dashboard"
             aria-label="Fable"
-            className="flex items-center gap-2 px-2 text-sm font-bold tracking-tight text-sidebar-foreground"
+            className="flex items-center gap-2 px-2 text-sm font-bold font-serif tracking-tight text-sidebar-foreground"
           >
             <FableIcon className="h-5 w-auto shrink-0" />
             <span>fable</span>

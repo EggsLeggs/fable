@@ -131,7 +131,7 @@ export default async function RootPage() {
       {/* Footer */}
       <footer className="border-t border-border bg-background">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">
-          <span className="text-sm font-bold tracking-tight">fable</span>
+          <span className="text-sm font-bold font-serif tracking-tight">fable</span>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <Link href="/pricing" className="hover:text-foreground transition-colors">
               Pricing
