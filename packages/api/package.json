@@ -11,6 +11,7 @@
     "./integration-config": "./src/integration-config.ts"
   },
   "dependencies": {
+    "@fable/ai": "*",
     "@fable/auth": "*",
     "@fable/db": "*",
     "@fable/logger": "*",

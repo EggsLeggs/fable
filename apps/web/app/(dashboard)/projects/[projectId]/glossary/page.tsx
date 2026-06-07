@@ -9,6 +9,7 @@ import {
   X,
   BookOpen,
   ShieldOff,
+  Lock,
 } from "lucide-react";
 import { t } from "@lingui/core/macro";
 import { toast } from "sonner";
@@ -363,6 +364,35 @@ export default function GlossaryPage({ params }: Props) {
   const addButtonLabel = isAdmin
     ? t`Add term`
     : t`Suggest term`;
+
+  if (context && !context.planAvailable) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <div>
+          <h1 className="text-lg font-semibold">{t`Glossary`}</h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {t`Approved terms are used to guide machine translation.`}
+          </p>
+        </div>
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-border py-16 text-center">
+          <Lock className="h-8 w-8 text-muted-foreground/40" />
+          <p className="text-sm font-medium">{t`Upgrade plan to unlock feature`}</p>
+          <a
+            href="/pricing"
+            className="text-sm text-muted-foreground underline-offset-2 hover:underline"
+          >
+            {t`View full pricing details`}
+          </a>
+          <a
+            href="/settings/billing"
+            className="mt-1 inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            {t`Upgrade to Pro`}
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6">

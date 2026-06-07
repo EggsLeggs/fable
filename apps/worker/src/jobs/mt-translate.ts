@@ -1,9 +1,48 @@
 import type { Job } from "bullmq";
 import { eq, and } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
-import { db, translationKeys, translations, orgMembers, users } from "@fable/db";
-import { createOpenAIAdapter } from "@fable/ai";
+import {
+  db,
+  translationKeys,
+  translations,
+  translationMemory,
+  glossaryEntries,
+  glossaryTranslations,
+  orgMembers,
+  users,
+} from "@fable/db";
+import { createOpenAIAdapter, createMubitClient, mubitAgentId } from "@fable/ai";
+import type { TmHit, GlossaryEntry } from "@fable/ai";
 import { reportMtUsage, resetMtUsageIfDue, getEffectivePlan, isStripeConfigured } from "@fable/stripe";
+
+function levenshtein(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
+    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        dp[i]![j] = dp[i - 1]![j - 1]!;
+      } else {
+        dp[i]![j] =
+          1 + Math.min(dp[i - 1]![j]!, dp[i]![j - 1]!, dp[i - 1]![j - 1]!);
+      }
+    }
+  }
+  return dp[m]![n]!;
+}
+
+function tmSimilarity(a: string, b: string): number {
+  if (a === b) return 1;
+  if (a.length === 0 || b.length === 0) return 0;
+  const aLower = a.toLowerCase();
+  const bLower = b.toLowerCase();
+  const maxLen = Math.max(aLower.length, bLower.length);
+  const dist = levenshtein(aLower, bLower);
+  return (maxLen - dist) / maxLen;
+}
 
 export interface MtTranslatePayload {
   keyId: string;
@@ -68,14 +107,89 @@ export async function handleMtTranslate(
     throw new Error(`MT_CAP_REACHED: monthly overage limit of ${mtCharsCap} chars reached`);
   }
 
+  const sourceText = sourceTranslation.value;
+
+  // Fetch TM entries and score by similarity
+  const tmEntries = await db.query.translationMemory.findMany({
+    where: and(
+      eq(translationMemory.orgId, key.project.orgId),
+      eq(translationMemory.sourceLocale, sourceLocale),
+      eq(translationMemory.targetLocale, targetLocale)
+    ),
+    limit: 200,
+  });
+
+  const tmHits: TmHit[] = tmEntries
+    .map((entry) => ({
+      sourceText: entry.sourceText,
+      targetText: entry.targetText,
+      similarity: tmSimilarity(sourceText, entry.sourceText),
+    }))
+    .filter((h) => h.similarity >= 0.8)
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, 5);
+
+  // Fetch approved glossary entries with their target locale translations
+  const glossaryData = await db.query.glossaryEntries.findMany({
+    where: and(
+      eq(glossaryEntries.orgId, key.project.orgId),
+      eq(glossaryEntries.status, "approved")
+    ),
+    with: { translations: true },
+  });
+
+  const glossaryEntriesForTranslation: GlossaryEntry[] = glossaryData.map((entry) => {
+    const localTranslation = entry.translations.find(
+      (gt) => gt.locale === targetLocale
+    );
+    return {
+      term: entry.term,
+      translation: localTranslation?.translation ?? null,
+      forbidden: entry.forbidden,
+      caseSensitive: entry.caseSensitive,
+    };
+  });
+
+  const mubit = createMubitClient();
+  const agentId = mubitAgentId(key.project.id, targetLocale);
+
+  const mubitContext = mubit
+    ? await mubit.getContext(
+        agentId,
+        `Translate from ${sourceLocale} to ${targetLocale}: "${sourceText.slice(0, 120)}"`
+      )
+    : "";
+
   const result = await ai.translate({
     sourceLocale,
     targetLocale,
-    sourceText: sourceTranslation.value,
+    sourceText,
     keyDescription: key.description ?? undefined,
-    tmHits: [],
-    glossaryEntries: [],
+    tmHits,
+    glossaryEntries: glossaryEntriesForTranslation,
+    mubitContext: mubitContext || undefined,
   });
+
+  if (mubit) {
+    void mubit
+      .ingest(agentId, [
+        {
+          intent: "trace",
+          lesson_scope: "global",
+          content: `MT translated "${sourceText.slice(0, 200)}" (${sourceLocale}) as "${result.translation.slice(0, 200)}" (${targetLocale}) — awaiting human review`,
+          metadata: {
+            keyId,
+            keyName: key.key,
+            projectId: key.project.id,
+            sourceLocale,
+            targetLocale,
+            confidence: result.confidence,
+            usedTmHit: result.usedTmHit,
+          },
+        },
+      ])
+      .catch(() => {});
+  }
 
   const existing = key.translations.find((t) => t.locale === targetLocale);
 

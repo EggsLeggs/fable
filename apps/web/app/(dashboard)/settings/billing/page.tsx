@@ -64,11 +64,18 @@ export default function BillingPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
   const [capInput, setCapInput] = useState("");
   const [capSaving, setCapSaving] = useState(false);
+  const [codeInput, setCodeInput] = useState("");
+  const [copiedCode, setCopiedCode] = useState(false);
 
   const usageQuery = trpc.billing.getUsage.useQuery();
   const usage = usageQuery.data;
   const isPro = usage?.plan === "pro";
+  const isProSubscriber = usage?.isProSubscriber ?? false;
   const billingAvailable = usage?.billingAvailable ?? false;
+
+  const myCodeQuery = trpc.referral.getMyCode.useQuery(undefined, {
+    enabled: isProSubscriber && billingAvailable,
+  });
 
   const checkoutMutation = trpc.billing.checkout.useMutation({
     onSuccess: ({ url }) => { window.location.href = url; },
@@ -78,6 +85,15 @@ export default function BillingPage() {
   const portalMutation = trpc.billing.portal.useMutation({
     onSuccess: ({ url }) => { window.location.href = url; },
     onError: (err) => toast.error(err.message ?? t`Could not open billing portal. Please try again.`),
+  });
+
+  const applyCodeMutation = trpc.referral.applyCode.useMutation({
+    onSuccess: () => {
+      void usageQuery.refetch();
+      setCodeInput("");
+      toast.success(t`Referral code applied. Your 2 months free will be added at checkout.`);
+    },
+    onError: (err) => toast.error(err.message ?? t`Invalid referral code.`),
   });
 
   const updateCapMutation = trpc.billing.updateMtCap.useMutation({
@@ -92,6 +108,12 @@ export default function BillingPage() {
       setCapSaving(false);
     },
   });
+
+  function handleCopyCode(code: string) {
+    void navigator.clipboard.writeText(code);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  }
 
   function handleSaveCap() {
     setCapSaving(true);
@@ -123,6 +145,32 @@ export default function BillingPage() {
             >
               {t`Start trial`}
             </a>
+          </Section>
+        )}
+
+        {!isProSubscriber && billingAvailable && !usage?.wasReferred && (
+          <Section
+            title={t`Have a referral code?`}
+            description={t`Enter a code from a friend to unlock 2 months of Pro free when you upgrade.`}
+          >
+            <div className="flex flex-wrap items-center gap-3">
+              <input
+                type="text"
+                placeholder={t`Enter code`}
+                value={codeInput}
+                onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
+                maxLength={16}
+                className="w-36 rounded-md border border-border bg-background px-3 py-1.5 text-sm uppercase tracking-wider placeholder:normal-case placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+              />
+              <button
+                type="button"
+                className="btn-secondary text-sm"
+                onClick={() => applyCodeMutation.mutate({ code: codeInput })}
+                disabled={!codeInput.trim() || applyCodeMutation.isPending}
+              >
+                {applyCodeMutation.isPending ? t`Applying...` : t`Apply`}
+              </button>
+            </div>
           </Section>
         )}
 
@@ -260,6 +308,30 @@ export default function BillingPage() {
                 </button>
               )}
             </div>
+          </Section>
+        )}
+
+        {isProSubscriber && billingAvailable && (
+          <Section
+            title={t`Refer a friend`}
+            description={t`Share your code. Your friend gets 2 months of Pro free, and you earn rewards for each person who subscribes.`}
+          >
+            {myCodeQuery.isLoading ? (
+              <p className="text-sm text-muted-foreground">{t`Loading...`}</p>
+            ) : myCodeQuery.data?.code ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <code className="rounded-md border border-border bg-muted px-3 py-1.5 text-sm font-mono tracking-widest">
+                  {myCodeQuery.data.code}
+                </code>
+                <button
+                  type="button"
+                  className="btn-secondary text-sm"
+                  onClick={() => handleCopyCode(myCodeQuery.data!.code)}
+                >
+                  {copiedCode ? t`Copied!` : t`Copy code`}
+                </button>
+              </div>
+            ) : null}
           </Section>
         )}
 

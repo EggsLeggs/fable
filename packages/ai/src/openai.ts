@@ -22,6 +22,7 @@ export function createOpenAIAdapter(apiKey?: string): LLMAdapter {
           keyDescription: params.keyDescription,
           tmHits: params.tmHits,
           glossaryEntries: params.glossaryEntries,
+          mubitContext: params.mubitContext,
         }
       );
 
