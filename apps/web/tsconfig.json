@@ -1,6 +1,7 @@
 {
   "extends": "@fable/tsconfig/nextjs.json",
   "compilerOptions": {
+    "jsx": "preserve",
     "paths": {
       "@/*": ["./*"]
     }
