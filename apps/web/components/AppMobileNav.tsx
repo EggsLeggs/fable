@@ -23,6 +23,7 @@ import {
   navIconClass,
   projectIdFromPathname,
 } from "@/lib/app-nav-items";
+import { FableIcon } from "@/components/FableIcon";
 
 type Props = {
   userName: string;
@@ -83,8 +84,14 @@ export function AppMobileNav({
         <SheetContent side="left" className="min-h-0 p-0">
           <SheetHeader>
             <SheetTitle>
-              <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
-                fable
+              <Link
+                href="/dashboard"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Fable"
+                className="flex items-center gap-2"
+              >
+                <FableIcon className="h-5 w-auto" />
+                <span>fable</span>
               </Link>
             </SheetTitle>
           </SheetHeader>

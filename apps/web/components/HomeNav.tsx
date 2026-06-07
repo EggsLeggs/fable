@@ -12,6 +12,7 @@ import {
   SheetTitle,
   SheetClose,
 } from "@/components/ui/sheet";
+import { FableIcon } from "@/components/FableIcon";
 
 interface HomeNavProps {
   isLoggedIn: boolean;
@@ -84,7 +85,8 @@ export function HomeNav({ isLoggedIn, localiseUrl }: HomeNavProps) {
         )}
       >
         <nav className="relative flex items-center justify-between">
-          <Link href="/" className="text-sm font-bold tracking-tight">
+          <Link href="/" className="flex items-center gap-2 text-sm font-bold font-serif tracking-tight">
+            <FableIcon className="h-5 w-auto" />
             fable
           </Link>
           <div
@@ -149,7 +151,12 @@ export function HomeNav({ isLoggedIn, localiseUrl }: HomeNavProps) {
     <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
       <SheetContent side="right">
         <SheetHeader>
-          <SheetTitle>fable</SheetTitle>
+          <SheetTitle>
+            <span className="flex items-center gap-2">
+              <FableIcon className="h-5 w-auto" />
+              fable
+            </span>
+          </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-1 p-4">
           <SheetClose asChild>
