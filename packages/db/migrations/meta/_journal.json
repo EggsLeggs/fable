@@ -43,6 +43,13 @@
       "when": 1780708740549,
       "tag": "0005_add-format-override",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781000000000,
+      "tag": "0006_add-translation-pattern",
+      "breakpoints": true
     }
   ]
 }
