@@ -20,6 +20,7 @@ export const translateParamsSchema = z.object({
   keyDescription: z.string().optional(),
   tmHits: z.array(tmHitSchema).default([]),
   glossaryEntries: z.array(glossaryEntrySchema).default([]),
+  mubitContext: z.string().optional(),
 });
 
 export const translateResultSchema = z.object({

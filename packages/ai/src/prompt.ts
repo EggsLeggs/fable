@@ -8,12 +8,17 @@ export function buildTranslatePrompt(
     keyDescription?: string;
     tmHits?: TmHit[];
     glossaryEntries?: GlossaryEntry[];
+    mubitContext?: string;
   } = {}
 ): string {
   const parts: string[] = [
     `Translate the following text from ${sourceLocale} to ${targetLocale}.`,
     `Return only the translated text with no explanation or surrounding quotes.`,
   ];
+
+  if (opts.mubitContext) {
+    parts.push(`\nLearned preferences for this project:\n${opts.mubitContext}`);
+  }
 
   if (opts.keyDescription) {
     parts.push(`\nContext: ${opts.keyDescription}`);
