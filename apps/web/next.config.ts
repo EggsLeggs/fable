@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@fable/api", "@fable/ui", "@fable/auth", "@fable/logger"],
+  transpilePackages: ["@fable/api", "@fable/ui", "@fable/auth", "@fable/logger", "@fable/ingest"],
   output: "standalone",
   serverExternalPackages: ["better-auth", "@better-auth/kysely-adapter", "kysely"],
   experimental: {

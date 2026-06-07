@@ -5,7 +5,7 @@ import { eq, and } from "drizzle-orm";
 import { auth } from "@fable/auth";
 import { db, sourceFiles, ingestJobs, orgMembers, projects } from "@fable/db";
 import { detectFormat } from "@fable/formats";
-import { getIngestQueue } from "@/lib/queues";
+import { ingestSourceFile } from "@fable/ingest";
 import { logActivity } from "@fable/api/log-activity";
 
 export const dynamic = "force-dynamic";
@@ -115,11 +115,7 @@ export async function POST(
       status: "queued",
     });
 
-    await getIngestQueue().add(
-      "ingest",
-      { ingestJobId, sourceFileId: existingFile.id },
-      { jobId: `ingest:upload:${ingestJobId}` }
-    );
+    await ingestSourceFile({ ingestJobId, sourceFileId: existingFile.id });
 
     await logActivity(db, {
       projectId,
@@ -153,11 +149,7 @@ export async function POST(
     status: "queued",
   });
 
-  await getIngestQueue().add(
-    "ingest",
-    { ingestJobId, sourceFileId },
-    { jobId: `ingest:upload:${ingestJobId}` }
-  );
+  await ingestSourceFile({ ingestJobId, sourceFileId });
 
   await logActivity(db, {
     projectId,

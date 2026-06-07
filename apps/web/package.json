@@ -18,6 +18,7 @@
     "@fable/auth": "*",
     "@fable/db": "*",
     "@fable/formats": "*",
+    "@fable/ingest": "*",
     "@fable/logger": "*",
     "@fable/stripe": "*",
     "@fable/ui": "*",
