@@ -7,3 +7,4 @@ export type {
 } from "./adapter";
 export { createOpenAIAdapter } from "./openai";
 export { buildTranslatePrompt } from "./prompt";
+export { MubitClient, createMubitClient, mubitAgentId } from "./mubit";

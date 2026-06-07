@@ -11,7 +11,7 @@ import {
   orgMembers,
   users,
 } from "@fable/db";
-import { createOpenAIAdapter } from "@fable/ai";
+import { createOpenAIAdapter, createMubitClient, mubitAgentId } from "@fable/ai";
 import type { TmHit, GlossaryEntry } from "@fable/ai";
 import { reportMtUsage, resetMtUsageIfDue, getEffectivePlan, isStripeConfigured } from "@fable/stripe";
 
@@ -150,6 +150,16 @@ export async function handleMtTranslate(
     };
   });
 
+  const mubit = createMubitClient();
+  const agentId = mubitAgentId(key.project.id, targetLocale);
+
+  const mubitContext = mubit
+    ? await mubit.getContext(
+        agentId,
+        `Translate from ${sourceLocale} to ${targetLocale}: "${sourceText.slice(0, 120)}"`
+      )
+    : "";
+
   const result = await ai.translate({
     sourceLocale,
     targetLocale,
@@ -157,7 +167,29 @@ export async function handleMtTranslate(
     keyDescription: key.description ?? undefined,
     tmHits,
     glossaryEntries: glossaryEntriesForTranslation,
+    mubitContext: mubitContext || undefined,
   });
+
+  if (mubit) {
+    void mubit
+      .ingest(agentId, [
+        {
+          intent: "trace",
+          lesson_scope: "global",
+          content: `MT translated "${sourceText.slice(0, 200)}" (${sourceLocale}) as "${result.translation.slice(0, 200)}" (${targetLocale}) — awaiting human review`,
+          metadata: {
+            keyId,
+            keyName: key.key,
+            projectId: key.project.id,
+            sourceLocale,
+            targetLocale,
+            confidence: result.confidence,
+            usedTmHit: result.usedTmHit,
+          },
+        },
+      ])
+      .catch(() => {});
+  }
 
   const existing = key.translations.find((t) => t.locale === targetLocale);
 
