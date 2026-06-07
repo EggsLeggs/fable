@@ -87,13 +87,11 @@ export default function BillingPage() {
     onError: (err) => toast.error(err.message ?? t`Could not open billing portal. Please try again.`),
   });
 
-  const applyCodeMutation = trpc.referral.applyCode.useMutation({
-    onSuccess: () => {
-      void usageQuery.refetch();
-      setCodeInput("");
-      toast.success(t`Referral code applied. Your 2 months free will be added at checkout.`);
+  const checkoutWithPromoMutation = trpc.billing.checkoutWithPromoCode.useMutation({
+    onSuccess: ({ url }) => {
+      window.location.href = url;
     },
-    onError: (err) => toast.error(err.message ?? t`Invalid referral code.`),
+    onError: (err) => toast.error(err.message ?? t`Invalid promo code.`),
   });
 
   const updateCapMutation = trpc.billing.updateMtCap.useMutation({
@@ -150,26 +148,52 @@ export default function BillingPage() {
 
         {!isProSubscriber && billingAvailable && !usage?.wasReferred && (
           <Section
-            title={t`Have a referral code?`}
-            description={t`Enter a code from a friend to unlock 2 months of Pro free when you upgrade.`}
+            title={t`Have a promo code?`}
+            description={t`Enter a referral code or Stripe coupon code. You will be taken to checkout with the discount applied.`}
           >
-            <div className="flex flex-wrap items-center gap-3">
-              <input
-                type="text"
-                placeholder={t`Enter code`}
-                value={codeInput}
-                onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
-                maxLength={16}
-                className="w-36 rounded-md border border-border bg-background px-3 py-1.5 text-sm uppercase tracking-wider placeholder:normal-case placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-              />
-              <button
-                type="button"
-                className="btn-secondary text-sm"
-                onClick={() => applyCodeMutation.mutate({ code: codeInput })}
-                disabled={!codeInput.trim() || applyCodeMutation.isPending}
-              >
-                {applyCodeMutation.isPending ? t`Applying...` : t`Apply`}
-              </button>
+            <div className="space-y-3">
+              <div className="flex items-center gap-1 rounded-lg border border-border bg-muted p-0.5 text-xs w-fit">
+                <button
+                  type="button"
+                  onClick={() => setBillingCycle("monthly")}
+                  className={`rounded-md px-3 py-1 transition-colors ${billingCycle === "monthly" ? "bg-background font-medium shadow-sm" : "text-muted-foreground"}`}
+                >
+                  {t`Monthly`}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBillingCycle("annual")}
+                  className={`rounded-md px-3 py-1 transition-colors ${billingCycle === "annual" ? "bg-background font-medium shadow-sm" : "text-muted-foreground"}`}
+                >
+                  {t`Annual`}
+                  <span className="ml-1 text-[10px] font-semibold text-emerald-600">-10%</span>
+                </button>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <input
+                  type="text"
+                  placeholder={t`Enter code`}
+                  value={codeInput}
+                  onChange={(e) => setCodeInput(e.target.value)}
+                  maxLength={50}
+                  className="w-48 rounded-md border border-border bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                />
+                <button
+                  type="button"
+                  className="btn-secondary text-sm"
+                  onClick={() =>
+                    checkoutWithPromoMutation.mutate({
+                      code: codeInput,
+                      billingCycle,
+                    })
+                  }
+                  disabled={!codeInput.trim() || checkoutWithPromoMutation.isPending}
+                >
+                  {checkoutWithPromoMutation.isPending
+                    ? t`Redirecting...`
+                    : t`Continue to checkout`}
+                </button>
+              </div>
             </div>
           </Section>
         )}

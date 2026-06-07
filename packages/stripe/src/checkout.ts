@@ -9,6 +9,7 @@ export async function createCheckoutSession({
   returnBaseUrl,
   trialDays,
   couponId,
+  promotionCodeId,
   successPath = "/settings/billing?success=true",
   cancelPath = "/settings/billing?canceled=true",
 }: {
@@ -18,13 +19,15 @@ export async function createCheckoutSession({
   returnBaseUrl: string;
   trialDays?: number;
   couponId?: string;
+  promotionCodeId?: string;
   successPath?: string;
   cancelPath?: string;
 }): Promise<string> {
   const planPriceId =
     billingCycle === "annual" ? PRICE_IDS.proAnnual : PRICE_IDS.proMonthly;
 
-  const requiresCardUpfront = Boolean(couponId || trialDays);
+  const hasDiscount = Boolean(couponId || promotionCodeId);
+  const requiresCardUpfront = Boolean(hasDiscount || trialDays);
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
@@ -34,11 +37,15 @@ export async function createCheckoutSession({
       { price: PRICE_IDS.mtMetered },
     ],
     metadata: { userId },
-    ...(couponId ? { discounts: [{ coupon: couponId }] } : {}),
+    ...(promotionCodeId
+      ? { discounts: [{ promotion_code: promotionCodeId }] }
+      : couponId
+        ? { discounts: [{ coupon: couponId }] }
+        : {}),
     ...(requiresCardUpfront ? { payment_method_collection: "always" as const } : {}),
     subscription_data: {
       metadata: { userId },
-      ...(!couponId && trialDays ? { trial_period_days: trialDays } : {}),
+      ...(!hasDiscount && trialDays ? { trial_period_days: trialDays } : {}),
     },
     success_url: `${returnBaseUrl}${successPath}`,
     cancel_url: `${returnBaseUrl}${cancelPath}`,

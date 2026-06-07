@@ -3,8 +3,20 @@ import { eq, and, count } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
 import { users, organizations, orgMembers, projects, translationKeys, type Db } from "@fable/db";
-import { createCheckoutSession, createPortalSession, PLAN_LIMITS, getEffectivePlan, isStripeConfigured } from "@fable/stripe";
+import {
+  createCheckoutSession,
+  createPortalSession,
+  createReferralCoupon,
+  PLAN_LIMITS,
+  getEffectivePlan,
+  isStripeConfigured,
+  resolveStripePromoCode,
+} from "@fable/stripe";
 import { assertStripeConfigured } from "../integration-config";
+
+function isProSubscriber(user: { plan: string; lifetimePro: boolean }): boolean {
+  return user.plan === "pro" || user.lifetimePro;
+}
 
 async function getOwnerOrg(db: Db, userId: string) {
   const membership = await db.query.orgMembers.findFirst({
@@ -92,6 +104,87 @@ export const billingRouter = router({
       },
     };
   }),
+
+  checkoutWithPromoCode: protectedProcedure
+    .input(
+      z.object({
+        code: z.string().min(1).max(50),
+        billingCycle: z.enum(["monthly", "annual"]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      assertStripeConfigured();
+
+      const userId = ctx.session.user.id;
+      const code = input.code.trim();
+
+      const user = await ctx.db.query.users.findFirst({
+        where: eq(users.id, userId),
+        columns: {
+          plan: true,
+          stripeCustomerId: true,
+          referredBy: true,
+          stripeReferralCouponId: true,
+        },
+      });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+      if (user.plan !== "free") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You already have an active plan",
+        });
+      }
+
+      let couponId: string | undefined;
+      let promotionCodeId: string | undefined;
+
+      const referrer = await ctx.db.query.users.findFirst({
+        where: eq(users.referralCode, code.toUpperCase()),
+        columns: { id: true, plan: true, lifetimePro: true },
+      });
+
+      if (referrer && isProSubscriber(referrer) && referrer.id !== userId) {
+        if (!user.referredBy) {
+          await ctx.db
+            .update(users)
+            .set({ referredBy: referrer.id })
+            .where(eq(users.id, userId));
+        }
+
+        couponId = user.stripeReferralCouponId ?? undefined;
+        if (!couponId) {
+          couponId = await createReferralCoupon(userId);
+          await ctx.db
+            .update(users)
+            .set({ stripeReferralCouponId: couponId })
+            .where(eq(users.id, userId));
+        }
+      } else {
+        const resolved = await resolveStripePromoCode(code);
+        if (!resolved) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Invalid promo code" });
+        }
+        if (resolved.type === "coupon") {
+          couponId = resolved.id;
+        } else {
+          promotionCodeId = resolved.id;
+        }
+      }
+
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+      const url = await createCheckoutSession({
+        userId,
+        billingCycle: input.billingCycle,
+        stripeCustomerId: user.stripeCustomerId,
+        returnBaseUrl: appUrl,
+        couponId,
+        promotionCodeId,
+      });
+
+      return { url };
+    }),
 
   checkout: protectedProcedure
     .input(
