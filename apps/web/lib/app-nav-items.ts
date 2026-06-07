@@ -9,6 +9,7 @@ import {
   Settings,
   Users,
   BookOpen,
+  ShieldCheck,
   Brain,
   type LucideIcon,
 } from "lucide-react";
@@ -24,6 +25,7 @@ export type AppNavHref =
   | "translations"
   | "tasks"
   | "glossary"
+  | "qa"
   | "tm"
   | "integrations"
   | "activity"
@@ -44,6 +46,7 @@ export function getAppNavItems(): AppNavItem[] {
     { href: "translations", label: t`Translations`, Icon: Languages },
     { href: "tasks", label: t`Tasks`, Icon: ListChecks },
     { href: "glossary", label: t`Glossary`, Icon: BookOpen },
+    { href: "qa", label: t`QA Checks`, Icon: ShieldCheck },
     { href: "tm", label: t`Translation Memory`, Icon: Brain },
     { href: "integrations", label: t`Integrations`, Icon: Plug },
     { href: "activity", label: t`Activity`, Icon: Activity },
