@@ -2,7 +2,10 @@
   "name": "fable",
   "license": "AGPL-3.0-or-later",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "postinstall": "node scripts/patch-kysely.cjs",
     "dev": "turbo dev",
@@ -24,5 +27,8 @@
   "packageManager": "npm@10.9.2",
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "fable": "file:"
   }
 }
