@@ -3,6 +3,7 @@ import { eq, and, ne, inArray } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { createMubitClient, mubitAgentId } from "@fable/ai";
 import {
   translations,
   translationKeys,
@@ -171,6 +172,27 @@ export const translationRouter = router({
         },
       });
 
+      if (resultingState === "approved") {
+        const mubit = createMubitClient();
+        if (mubit) {
+          void mubit
+            .ingest(mubitAgentId(project.id, input.locale), [
+              {
+                intent: "lesson",
+                lesson_scope: "global",
+                content: `Human-written ${input.locale} translation for key "${key.key}": "${input.value.slice(0, 300)}"`,
+                metadata: {
+                  projectId: project.id,
+                  keyId: input.keyId,
+                  locale: input.locale,
+                  outcome: "human_written",
+                },
+              },
+            ])
+            .catch(() => {});
+        }
+      }
+
       return { savedId: savedId!, resultingState };
     }),
 
@@ -259,6 +281,25 @@ export const translationRouter = router({
         },
       });
 
+      const mubit = createMubitClient();
+      if (mubit && translation.value) {
+        void mubit
+          .ingest(mubitAgentId(project.id, translation.locale), [
+            {
+              intent: "lesson",
+              lesson_scope: "global",
+              content: `Approved ${translation.locale} translation for key "${translation.key.key}": "${translation.value.slice(0, 300)}"`,
+              metadata: {
+                projectId: project.id,
+                keyId: translation.keyId,
+                locale: translation.locale,
+                outcome: "approved",
+              },
+            },
+          ])
+          .catch(() => {});
+      }
+
       return { success: true };
     }),
 
@@ -302,6 +343,25 @@ export const translationRouter = router({
           translationValue: translation.value?.slice(0, 120) ?? undefined,
         },
       });
+
+      const mubit = createMubitClient();
+      if (mubit && translation.value) {
+        void mubit
+          .ingest(mubitAgentId(translation.key.project.id, translation.locale), [
+            {
+              intent: "lesson",
+              lesson_scope: "global",
+              content: `Rejected ${translation.locale} translation for key "${translation.key.key}": "${translation.value.slice(0, 300)}" was not acceptable`,
+              metadata: {
+                projectId: translation.key.project.id,
+                keyId: translation.keyId,
+                locale: translation.locale,
+                outcome: "rejected",
+              },
+            },
+          ])
+          .catch(() => {});
+      }
 
       return { success: true };
     }),

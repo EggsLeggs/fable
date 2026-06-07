@@ -5,6 +5,7 @@ FROM base AS pruner
 WORKDIR /app
 RUN npm install -g turbo@2
 COPY . .
+RUN node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('package.json','utf8'));delete p.dependencies;fs.writeFileSync('package.json',JSON.stringify(p,null,2))"
 RUN turbo prune @fable/web --docker
 
 # --- install: resolve deps from pruned lockfile ---

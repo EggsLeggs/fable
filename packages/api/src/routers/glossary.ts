@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
+import { getEffectivePlan } from "@fable/stripe";
 import {
   glossaryEntries,
   glossaryTranslations,
@@ -36,6 +37,16 @@ async function resolveGlossaryAccess(
   return { project, member };
 }
 
+async function assertGlossaryPlanAccess(db: Db, orgId: string) {
+  const owner = await db.query.orgMembers.findFirst({
+    where: and(eq(orgMembers.orgId, orgId), eq(orgMembers.role, "owner")),
+    with: { user: { columns: { plan: true } } },
+  });
+  if (getEffectivePlan(owner?.user.plan ?? "free") === "free") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "PLAN_UPGRADE_REQUIRED" });
+  }
+}
+
 export const glossaryRouter = router({
   getContext: protectedProcedure
     .input(z.object({ projectId: z.string() }))
@@ -45,9 +56,15 @@ export const glossaryRouter = router({
         ctx.session.user.id,
         input.projectId
       );
+      const owner = await ctx.db.query.orgMembers.findFirst({
+        where: and(eq(orgMembers.orgId, project.orgId), eq(orgMembers.role, "owner")),
+        with: { user: { columns: { plan: true } } },
+      });
+      const planAvailable = getEffectivePlan(owner?.user.plan ?? "free") !== "free";
       return {
         glossaryAccess: project.glossaryAccess,
         role: member.role,
+        planAvailable,
       };
     }),
 
@@ -60,13 +77,7 @@ export const glossaryRouter = router({
         input.projectId
       );
 
-      const isAdmin = (ADMIN_ROLES as readonly string[]).includes(member.role);
-      if (!isAdmin && project.glossaryAccess === "readonly" && member.role === "translator") {
-        // readonly translators can still view — access is not blocked, only writes are
-      }
-      if (!isAdmin && member.role === "translator" && project.glossaryAccess === "readonly") {
-        // fall through — readonly translators see approved entries
-      }
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       const entries = await ctx.db.query.glossaryEntries.findMany({
         where: and(
@@ -91,6 +102,8 @@ export const glossaryRouter = router({
         ctx.session.user.id,
         input.projectId
       );
+
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -129,6 +142,8 @@ export const glossaryRouter = router({
         input.projectId
       );
 
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
+
       const isAdmin = (ADMIN_ROLES as readonly string[]).includes(member.role);
 
       if (!isAdmin && member.role === "translator") {
@@ -162,11 +177,13 @@ export const glossaryRouter = router({
   approve: protectedProcedure
     .input(z.object({ id: z.string(), projectId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { member } = await resolveGlossaryAccess(
+      const { project, member } = await resolveGlossaryAccess(
         ctx.db,
         ctx.session.user.id,
         input.projectId
       );
+
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -185,11 +202,13 @@ export const glossaryRouter = router({
   reject: protectedProcedure
     .input(z.object({ id: z.string(), projectId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { member } = await resolveGlossaryAccess(
+      const { project, member } = await resolveGlossaryAccess(
         ctx.db,
         ctx.session.user.id,
         input.projectId
       );
+
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -214,11 +233,13 @@ export const glossaryRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { member } = await resolveGlossaryAccess(
+      const { project, member } = await resolveGlossaryAccess(
         ctx.db,
         ctx.session.user.id,
         input.projectId
       );
+
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -238,11 +259,13 @@ export const glossaryRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.string(), projectId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { member } = await resolveGlossaryAccess(
+      const { project, member } = await resolveGlossaryAccess(
         ctx.db,
         ctx.session.user.id,
         input.projectId
       );
+
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -265,11 +288,13 @@ export const glossaryRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { member } = await resolveGlossaryAccess(
+      const { project, member } = await resolveGlossaryAccess(
         ctx.db,
         ctx.session.user.id,
         input.projectId
       );
+
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
         throw new TRPCError({ code: "FORBIDDEN" });
@@ -313,11 +338,13 @@ export const glossaryRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { member } = await resolveGlossaryAccess(
+      const { project, member } = await resolveGlossaryAccess(
         ctx.db,
         ctx.session.user.id,
         input.projectId
       );
+
+      await assertGlossaryPlanAccess(ctx.db, project.orgId);
 
       if (!(ADMIN_ROLES as readonly string[]).includes(member.role)) {
         throw new TRPCError({ code: "FORBIDDEN" });
