@@ -51,7 +51,7 @@
     "geist": "^1.7.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^1.17.0",
-    "next": "16.2.6",
+    "next": "16.2.11",
     "react": "^19",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19",
